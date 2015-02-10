@@ -1,10 +1,11 @@
+# Cargo configuration file
 
-[package]
+[package] # Metadata about the package
 
 name = "hello_world"
 version = "0.0.1"
 authors = [ "Luke Schoen <ltfschoen@gmail.com>" ]
 
-[[bin]]
+[[bin]] # Informs Cargo we want a binary executable build outcome
 
 name = "hello_world"
