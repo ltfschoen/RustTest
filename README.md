@@ -3,6 +3,11 @@ README
 
 Applied code using the book [The Rust Programming Language](http://doc.rust-lang.org/)
 
+Progress
+-------
+
+Completed up to "Chapter 2.4 Variable Bindings".
+
 Requirements
 -------
 
