@@ -6,10 +6,9 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 Requirements
 -------
 
-* [Rust Compiler](http://doc.rust-lang.org/book/installing-rust.html)
-  ``` 
-    $ rustc --version
-    rustc 1.0.0-nightly
+* [Rust Compiler Version 1.0.0-nightly](http://doc.rust-lang.org/book/installing-rust.html)
+  ```
+    rustc --version
   ```
 
 Setup
