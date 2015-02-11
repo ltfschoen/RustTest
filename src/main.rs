@@ -1,8 +1,25 @@
-/*
-  Rust is an Expression-Based Systems language.
-  Declare main function
-*/
+/// Note: The first line in Markdown is the 'summary' line
+///
+/// # Main
+///
+/// * Rust is an Expression-Based Systems language.
+/// * Rust's document comments support Markdown notation for exporting to HTML with [rustdoc](http://doc.rust-lang.org/book/documentation.html) and parsed by the [hoedown]https://github.com/hoedown/hoedown) Library
+/// * Generate documentation with rustdoc ./src/main.rs
+/// * Run tests with rustdoc --test ./src/main.rs
+
+/// ```
+/// let a = 1000;
+/// ```
+
+#[doc = "
+Directly apply Rust document comments using the doc attribute on items.
+The Rust compiler otherwise converts triple slash-based document comments to doc
+attributes on items implicitly.
+"]
+
+//Declare main function
 fn main() {
+    //! Note: This document comment uses ! to apply it to the comment parent rather than what follows.
 
     // Metaprogramming calling a macro and passing staticaly allocated string arg
     println!("Hello, world!");
