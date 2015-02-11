@@ -6,7 +6,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 Progress
 -------
 
-Completed up to "Chapter 2.4 Variable Bindings".
+Completed up to "Chapter 2.7 Comments".
 
 Requirements
 -------
@@ -39,6 +39,11 @@ Setup
     ```
     ./target/hello_world
     ```
+
+Rust Docs
+-------
+
+* Refer to separate branch [feature/rustdocs](https://github.com/ltfschoen/RustTest/compare/feature/rustdocs?expand=1) for attempt at using rustdocs (unsuccessful as no HTML file was generated in the /docs/ directory when ```rustdoc ./src/main.rs``` was run, and no tests are run when ```rustdoc --test ./src/main.rs``` is run)
 
 Other Links
 -------
