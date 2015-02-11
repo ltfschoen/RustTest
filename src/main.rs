@@ -1,4 +1,5 @@
 /*
+  Rust is an Expression-Based Systems language.
   Declare main function
 */
 fn main() {
@@ -44,4 +45,29 @@ fn main() {
     let c: i32 = if b == 20 { 25 } else { 15 };  // Explicitely specify 'c' as of Integer Type
     println!("b is: {}", b); // Interpret interpolation with moustaches
     println!("c is: {}", c);
+
+    incr(b, c); // Call Fn passing Args
+    print_sum(b, c); // Call Fn passing Args
+}
+
+// All control paths must Return a Value
+fn incr(m: i32, n: i32) -> i32 {
+    if n < m { 
+      return n; // Early Return
+    } else {
+      println!("incrementing n from: {}", n);
+      return n + 10;
+    }
+}
+
+/* 
+  Rust forces Declare expected Type of incoming Fn Args. Type Inference in Fn body.
+  Rust allows Declaration expected Type of outgoing Return Value after '->'
+*/ 
+fn print_sum(m: i32, n: i32) -> () { // Return the Unit Type () (aka nil)
+    if m < n {
+      println!("sum with m < n is: {}", m + n);
+    } else {
+      println!("sum with m >= n is: {}", m + n);
+    }
 }
