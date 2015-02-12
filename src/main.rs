@@ -48,7 +48,34 @@ fn main() {
 
     incr(b, c); // Call Fn passing Args
     print_sum(b, c); // Call Fn passing Args
+
+    // Compound Data Structure Type Tuple is simple fixed size ordered list where &str is String Slice
+    let tuple1: (i32, &str) = (1, "hello"); // Mutable. Type annotated. Without: let x = (1, "hello");
+    let mut tuple2: (i32, i32) = (1, 2); // Type annotated. Without: let x = (1, "hello");
+    let tuple3: (i32, i32) = (3, 4);
+
+    if tuple2 != tuple3 {
+        tuple2 = tuple3; // Assign Tuple to another Mutable Tuple (with same Arity and Types)
+        println!("tuple2 and tuple3 not equal so assigning");
+    } else {
+        println!("tuple2 and tuple3 do not have same Arity, Types, Order, and Value, not assigning");
+    }
+
+    /*
+      Destructuring Let (access parameters of Tuple).
+      Let statement performs Multiple Bindings assignments when LHS and RHS Pattern Match
+    */
+    let (t1, t2) = tuple2;
+
+    println!("t1 and t2 is {}", t1 + t2); // Note: Expects t1 and t2 to be same Type
+
+    // Tuples to return Multiple Values from a Function
+    let (tnt1, tnt2) = next_two(5);
+    println!("tnt1, tnt2 = {}, {}", tnt1, tnt2);
 }
+
+// Returned Tuple is a Single Value (containing Multiple Values)
+fn next_two(x: i32) -> (i32, i32) { (x + 1, x + 2) }
 
 // All control paths must Return a Value
 fn incr(m: i32, n: i32) -> i32 {
