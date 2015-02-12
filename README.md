@@ -6,17 +6,15 @@ About
 
 Applied code using the book [The Rust Programming Language](http://doc.rust-lang.org/).
 
-[Rust is a general purpose, multi-paradigm, compiled programming language developed by Mozilla Research](http://en.wikipedia.org/wiki/Rust_%28programming_language%29).
-
-[Rust's goal is to provide the safety and convenience of modern programming languages, while still offering the efficiency and low-level control that C and C++ offer.](http://blog.rust-lang.org/2014/09/15/Rust-1.0.html). Rust is a systems language ([see slides](http://huonw.github.io/rust-sydney-feb15/)).
+[Rust is a general purpose, multi-paradigm, compiled programming language developed by Mozilla Research](http://en.wikipedia.org/wiki/Rust_%28programming_language%29). [Rust's goal is to provide the safety and convenience of modern programming languages, while still offering the efficiency and low-level control that C and C++ offer.](http://blog.rust-lang.org/2014/09/15/Rust-1.0.html). Rust is a systems language ([see slides](http://huonw.github.io/rust-sydney-feb15/)).
 
 Key Terminology of the Rust language and ecosystem:
 
-  - Cargo: Package Manager for the Rust language for shipping Rust Crates to others. Cargo.toml configuration file defines dependencies and the build process.
-  - Crates.io: Central location (similar to Node.js' [npmjs.org](npmjs.org) and Ruby's [rubygems.org](rubygems.org) that serve as one-stop-shops for Bundler dependencies) to publish, discover, and download Rust language Crates (Rust Libraries)
-  - Crates: Libraries (aka Packages) that may either just produce an executable or a shared library. They are included as dependencies in Rust projects' Cargo.toml file. Crates may interoperate with other crates, so a Cargo manifest file declares the dependencies of each Crate. [Read more here](http://blog.rust-lang.org/2014/11/20/Cargo.html)
-  - Modules: Rust's Module System is used to partition code (Modules) within a Crate. It facilitates the software engineering practice of splitting projects into smaller more manageable parts and with an interface whereby functionality may be public or private. Modules is defined with ```mod my_module``` (where ```my_module``` is the associated name identifer). Sub-modules (and Functions inside them) are defined and referred to by using the ```::``` notation (i.e. ```my_module::my_sub_module::my_function()```). Import External Crates (link separate files containing a Crate and its associated Modules) with ```extern create my_module;```. Private Interfaces are the default in Rust. Modules and Functions may be exported as Public Interfaces instead by prefixing with the ```pub``` keyword (i.e. ```pub mod my_module``` or ```pub fn my_function```) [Read more here](http://smallcultfollowing.com/rust-int-variations/imem-umem/guide-crates.html)
-  - Rust [Releases Channel System](http://blog.rust-lang.org/2014/09/15/Rust-1.0.html): Nightly (latest updates including unstable features and libraries that may change), Beta (excludes unstable updates), Stable
+  - **Cargo**: Package Manager for the Rust language for shipping Rust Crates to others. Cargo.toml configuration file defines dependencies and the build process.
+  - **Crates.io**: Central location (similar to Node.js' [npmjs.org](npmjs.org) and Ruby's [rubygems.org](rubygems.org) that serve as one-stop-shops for Bundler dependencies) to publish, discover, and download Rust language Crates (Rust Libraries)
+  - **Crates**: Libraries (aka Packages) that may either just produce an executable or a shared library. They are included as dependencies in Rust projects' Cargo.toml file. Crates may interoperate with other crates, so a Cargo manifest file declares the dependencies of each Crate. [Read more here](http://blog.rust-lang.org/2014/11/20/Cargo.html)
+  - **Modules**: Rust's Module System is used to partition code (Modules) within a Crate. It facilitates the software engineering practice of splitting projects into smaller more manageable parts and with an interface whereby functionality may be public or private. Modules is defined with ```mod my_module``` (where ```my_module``` is the associated name identifer). Sub-modules (and Functions inside them) are defined and referred to by using the ```::``` notation (i.e. ```my_module::my_sub_module::my_function()```). Import External Crates (link separate files containing a Crate and its associated Modules) with ```extern create my_module;```. Private Interfaces are the default in Rust. Modules and Functions may be exported as Public Interfaces instead by prefixing with the ```pub``` keyword (i.e. ```pub mod my_module``` or ```pub fn my_function```) [Read more here](http://smallcultfollowing.com/rust-int-variations/imem-umem/guide-crates.html)
+  - **Rust [Releases Channel System](http://blog.rust-lang.org/2014/09/15/Rust-1.0.html)**: Nightly (latest updates including unstable features and libraries that may change), Beta (excludes unstable updates), Stable
 
 Progress
 -------
@@ -34,7 +32,7 @@ Requirements
 Setup
 -------
 
-1. **Update Rust Nightly build and Cargo (Rust's Package Manager). Perform this regularly after [Rust installed](rust-lang.org))
+1. **Update Rust** Nightly build and Cargo (Rust's Package Manager). Perform this regularly after [Rust installed](rust-lang.org))
   ```
   curl -sS https://static.rust-lang.org/rustup.sh | sudo bash
   ```
