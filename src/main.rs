@@ -72,6 +72,79 @@ fn main() {
     // Tuples to return Multiple Values from a Function
     let (tnt1, tnt2) = next_two(5);
     println!("tnt1, tnt2 = {}, {}", tnt1, tnt2);
+
+    try_structs();
+
+    try_tuple_structs();
+
+    try_newtype();
+}
+
+/*
+  Rust Structs are of Record Type form similar to Tuples.
+  Elements in Structs each have a Name (aka Field/Member) and a Type
+*/
+
+// Declare a Struct with a name (camel case). Values Immutable by Default
+struct PointInSpace {
+    x: i32,
+    y: i32
+}
+
+fn try_structs() {
+  // Create Instance (Mutable) of Struct using Let and set each Field (any order)
+  let mut origin = PointInSpace { x: 0, y: 0 }; // origin: PointInSpace
+
+  origin.x = 20;
+
+  println!("Origin is at ({}, {})", origin.x, origin.y); // Dot Notation to access Fields
+}
+
+/*
+  Rust Tuple Structs are a hybrid data type similar to Tuple and Struct.
+  Elements in Tuple Structs DO NOT have a Name, they only have a Type.
+  Structs are preferred over Tuple Structs since they have actual Names for Elements.
+*/
+
+// Declare a Tuple Struct.
+// struct Color { i32, i32, i32 };
+// struct PointInWater { i32, i32, i32 };
+
+// Implement Tuple Structs using Structs (with element field names) as Tuple Structs not working
+// and give error: expected `:`, found `,`
+struct Color {
+  red: i32,
+  blue: i32,
+  green: i32
+}
+
+struct PointInWater {
+  x: i32,
+  y: i32,
+  z: i32
+}
+
+// fn try_tuple_structs() {
+//   let black = Color(0, 0, 0);
+//   let origin = Point(0, 0, 0);
+// }
+
+// Implement Tuple Structs using Structs (with element field names) as Tuple Structs not working:
+// and give error: expected `:`, found `,`
+fn try_tuple_structs() {
+  let black = Color { red :0, blue: 0, green: 0 };
+  let origin = PointInWater { x: 0, y: 0, z: 0 };
+}
+
+// Declare a Newtype.
+struct Inches (i32);
+
+// Newtypes are Tuple Structs with only One Element
+fn try_newtype() {
+  let length = Inches(10);
+  // Extract inner Integer Type by Desctructing the Let
+  let Inches(integer_length) = length; // Assigns length
+  println!("Newtype length is {} inches", integer_length);
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
