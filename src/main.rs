@@ -104,36 +104,24 @@ fn try_structs() {
   Rust Tuple Structs are a hybrid data type similar to Tuple and Struct.
   Elements in Tuple Structs DO NOT have a Name, they only have a Type.
   Structs are preferred over Tuple Structs since they have actual Names for Elements.
+  Note: Tuple Structs must use round brackets and colon
 */
 
-// Declare a Tuple Struct.
-// struct Color { i32, i32, i32 };
-// struct PointInWater { i32, i32, i32 };
+struct Color (
+  i32,
+  i32,
+  i32
+);
 
-// Implement Tuple Structs using Structs (with element field names) as Tuple Structs not working
-// and give error: expected `:`, found `,`
-struct Color {
-  red: i32,
-  blue: i32,
-  green: i32
-}
+struct PointInWater (
+  i32, 
+  i32, 
+  i32
+);
 
-struct PointInWater {
-  x: i32,
-  y: i32,
-  z: i32
-}
-
-// fn try_tuple_structs() {
-//   let black = Color(0, 0, 0);
-//   let origin = Point(0, 0, 0);
-// }
-
-// Implement Tuple Structs using Structs (with element field names) as Tuple Structs not working:
-// and give error: expected `:`, found `,`
 fn try_tuple_structs() {
-  let black = Color { red :0, blue: 0, green: 0 };
-  let origin = PointInWater { x: 0, y: 0, z: 0 };
+  let black = Color(0, 0, 0);
+  let origin = PointInWater(0, 0, 0);
 }
 
 // Declare a Newtype.
