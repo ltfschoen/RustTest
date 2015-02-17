@@ -54,6 +54,9 @@ fn main() {
     let mut tuple2: (i32, i32) = (1, 2); // Type annotated. Without: let x = (1, "hello");
     let tuple3: (i32, i32) = (3, 4);
 
+    // Note that for a Tuple with a Single value the trailing commas are mandatory
+    let (x,): (i32,) = (1,);
+
     if tuple2 != tuple3 {
         tuple2 = tuple3; // Assign Tuple to another Mutable Tuple (with same Arity and Types)
         println!("tuple2 and tuple3 not equal so assigning");
@@ -78,6 +81,8 @@ fn main() {
     try_tuple_structs();
 
     try_newtype();
+
+    try_enums();
 }
 
 /*
@@ -127,12 +132,30 @@ fn try_tuple_structs() {
 // Declare a Newtype.
 struct Inches (i32);
 
-// Newtypes are Tuple Structs with only One Element
+// Newtypes are Tuple Structs with only One Element. Beneficial for creating 
+// New Types similar to others (Cloning)
 fn try_newtype() {
   let length = Inches(10);
   // Extract inner Integer Type by Desctructing the Let
-  let Inches(integer_length) = length; // Assigns length
+  let Inches(integer_length) = length; // Assigns length to integer_length
   println!("Newtype length is {} inches", integer_length);
+}
+
+// Enums variants are a "Sum Type" that ties a set of alternatives to a specific name
+fn try_enums() {
+  // Define a Character to be either a Digit or Other. The alternative names may be 
+  // used via their fully scoped names i.e. Character::Other
+  // Sub-datastructure types allowable in an Enum include Structs, Tuple Structs
+  // Enums do not have access to operators: ==, !=, *, +, <, >=
+
+  enum Character {
+    Digit(i32), // Character::Digit is a name tied to an i32
+    Other, // Other is just a name (not tied to a specific Type)
+  }
+
+  // Assignment
+  let ten  = Character::Digit(10);
+
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
