@@ -1,5 +1,7 @@
 // Import the Ordering Enum from the Rust Standard Library
 // http://doc.rust-lang.org/std/cmp/enum.Ordering.html
+// Note: Enums are a powerful tool for data representation and 'generics' may be used
+// to make Enums generic across Types to become even more powerful.
 // Ordering Enum form used for Comparisons
 // enum Ordering {
 //   Less,
@@ -8,7 +10,12 @@
 // }
 // :: Symbol indicates a Namespace
 // 'std' Module contains Sub-Module 'cmp' containing Sub-Sub-Module 'Ordering'
-use std::cmp::Ordering;
+// The Enum Variants (Equal, Less, Greater) have been imported instead of just the Ordering
+// Namespace itself to achieve compactness and convenience. This avoids full scoping and 
+// avoids long notation (i.e. use just Equal instead of Ordering::Equal), however name conflicts
+// may arise (so it is best practice to import and apply the Namespace combined with a
+// Variants together)
+use std::cmp::Ordering::{self, Equal, Less, Greater};
 
 // Configure the Ordering Enum
 // 'cmp' is a Function that compares two given parameters and returns an Ordering
@@ -16,9 +23,9 @@ use std::cmp::Ordering;
 // may be Ordering:Less, Ordering::Greater, or Ordering::Equal
 // Variants of the Enum (Ordering) are Namespaced under the Enum itself.
 fn cmp(a: i32, b: i32) -> Ordering {
-  if a < b      { Ordering::Less }
-  else if a > b { Ordering::Greater }
-  else          { Ordering::Equal }
+  if a < b      { Less }
+  else if a > b { Greater }
+  else          { Equal }
 }
 
 /*
@@ -187,14 +194,9 @@ fn try_enums() {
   // and we discover which one by using Conditional Operators to check
   let ordering = cmp(x, y);
 
-  if ordering == Ordering::Less {
-      println!("Less");
-  } else if ordering == Ordering::Greater {
-      println!("Greater");
-  } else if ordering == Ordering::Equal {
-      println!("Equal");
-  }
-
+  if ordering == Less { println!("Less"); }
+  else if ordering == Greater { println!("Greater"); } 
+  else if ordering == Equal { println!("Equal"); }
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
