@@ -1,3 +1,26 @@
+// Import the Ordering Enum from the Rust Standard Library
+// http://doc.rust-lang.org/std/cmp/enum.Ordering.html
+// Ordering Enum form used for Comparisons
+// enum Ordering {
+//   Less,
+//   Equal,
+//   Greater,
+// }
+// :: Symbol indicates a Namespace
+// 'std' Module contains Sub-Module 'cmp' containing Sub-Sub-Module 'Ordering'
+use std::cmp::Ordering;
+
+// Configure the Ordering Enum
+// 'cmp' is a Function that compares two given parameters and returns an Ordering
+// where depending on the difference between these parameters, the returned Ordering 
+// may be Ordering:Less, Ordering::Greater, or Ordering::Equal
+// Variants of the Enum (Ordering) are Namespaced under the Enum itself.
+fn cmp(a: i32, b: i32) -> Ordering {
+  if a < b      { Ordering::Less }
+  else if a > b { Ordering::Greater }
+  else          { Ordering::Equal }
+}
+
 /*
   Rust is an Expression-Based Systems language.
   Declare main function
@@ -155,6 +178,22 @@ fn try_enums() {
 
   // Assignment
   let ten  = Character::Digit(10);
+
+  let x = 5;
+  let y = 10;
+
+  // 'ordering' variable is of Ordering type (ordering: Ordering)
+  // so it contains one of the three values defined in the 'cmp' Function
+  // and we discover which one by using Conditional Operators to check
+  let ordering = cmp(x, y);
+
+  if ordering == Ordering::Less {
+      println!("Less");
+  } else if ordering == Ordering::Greater {
+      println!("Greater");
+  } else if ordering == Ordering::Equal {
+      println!("Equal");
+  }
 
 }
 
