@@ -1,3 +1,33 @@
+// Import the Ordering Enum from the Rust Standard Library
+// http://doc.rust-lang.org/std/cmp/enum.Ordering.html
+// Note: Enums are a powerful tool for data representation and 'generics' may be used
+// to make Enums generic across Types to become even more powerful.
+// Ordering Enum form used for Comparisons
+// enum Ordering {
+//   Less,
+//   Equal,
+//   Greater,
+// }
+// :: Symbol indicates a Namespace
+// 'std' Module contains Sub-Module 'cmp' containing Sub-Sub-Module 'Ordering'
+// The Enum Variants (Equal, Less, Greater) have been imported instead of just the Ordering
+// Namespace itself to achieve compactness and convenience. This avoids full scoping and 
+// avoids long notation (i.e. use just Equal instead of Ordering::Equal), however name conflicts
+// may arise (so it is best practice to import and apply the Namespace combined with a
+// Variants together)
+use std::cmp::Ordering;
+
+// Configure the Ordering Enum
+// 'cmp' is a Function that compares two given parameters and returns an Ordering
+// where depending on the difference between these parameters, the returned Ordering 
+// may be Ordering:Less, Ordering::Greater, or Ordering::Equal
+// Variants of the Enum (Ordering) are Namespaced under the Enum itself.
+fn cmp(a: i32, b: i32) -> Ordering {
+  if a < b      { Ordering::Less }
+  else if a > b { Ordering::Greater }
+  else          { Ordering::Equal }
+}
+
 /*
   Rust is an Expression-Based Systems language.
   Declare main function
@@ -83,6 +113,8 @@ fn main() {
     try_newtype();
 
     try_enums();
+
+    try_pattern_matching();
 }
 
 /*
@@ -156,6 +188,48 @@ fn try_enums() {
   // Assignment
   let ten  = Character::Digit(10);
 
+  let x = 5;
+  let y = 10;
+
+  // // 'ordering' variable is of Ordering type (ordering: Ordering)
+  // // so it contains one of the three values defined in the 'cmp' Function
+  // // and we discover which one by using Conditional Operators to check
+  // let ordering = cmp(x, y);
+
+  // if ordering == Ordering::Less { println!("Less"); }
+  // else if ordering == Ordering::Greater { println!("Greater"); } 
+  // else if ordering == Ordering::Equal { println!("Equal"); }
+
+  // Replace the above 'if/else' with 'match' Pattern Matching instead
+  // with less noise and which supports Exhaustiveness Checking across all
+  // possible Variants of the Ordering Enum
+  match cmp(x, y) {
+      Ordering::Less => println!("less"),
+      Ordering::Greater => println!("greater"),
+      Ordering::Equal => println!("equal"),
+  }
+}
+
+// Pattern Matching is implemented by 'match' and allows elegantly deconstructing Enums
+// (known as the Sum Type in Type Theory) whilst using the 'match' keyword 
+// instead of avoiding 'if/else' (for multiple or a complex set of option cases)
+fn try_pattern_matching() {
+  let x = 5;
+
+  // 'match' takes Expression and branches into Arms depending on its Value.
+  // Evaluation is performed only on the matching Arm.
+  match x {
+    // Arms are of the form 'val => expression'
+    1 => println!("one"),
+    2 => println!("two"),
+    3 => println!("three"),
+    4 => println!("four"),
+    5 => println!("five"),
+    // Exhaustiveness Checking ensures all possible patterns of Values are covered 
+    // with the '_' Catch-all- Arm so if any Expression used that were not included 
+    // (not all bases covered) it prevents a compile error (as '_' will match)
+    _ => println!("something else"),
+  }
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
