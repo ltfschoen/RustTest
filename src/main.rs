@@ -122,6 +122,21 @@ fn main() {
     o = try_loops(n);
 
     println!("o is {}", o);
+
+    // String Slices (aka String Literals) of Type &str are Statically Allocated (i.e. saved inside compiled program 
+    // and existing for entire run duration). The have fixed size and cannot be mutated (i.e. let mut). 
+    // stringLiteral is a binding reference to another string that is the Statically Allocated String Slice.
+    let mut stringLiteral: &str = "String Slice / String Literal"; // Should not be able to declare as 'let mut'
+    // In-Memory Strings (formerly StrBuf) allocate memorary and control their data. They cannot be converted into 
+    // the equivalent of a &'static str (Static String) like a &str, as In-Memory Strings are not pre-configured 
+    // to live for the entire lifetime of the compiled program like &str. They can infact be converted from String 
+    // into a slice &'a str by using the as_slice() method (retaining its original String lifetime)
+    let mut stringInMemory: String = "In-Memory String".to_string();
+
+    stringLiteral = try_strings(stringLiteral, stringInMemory);
+
+    println!("stringLiteral is {}", stringLiteral);
+
 }
 
 /*
@@ -289,6 +304,47 @@ fn try_loops(n: i32) -> (i32) {
   }
 
   return o;
+}
+
+// Strings are a re-sizable Data Structure. 
+// String is a sequence of Unicode scalar values validly encoded as a stream of UTF-8 bytes.
+// Strings may contain null bytes (as they are not null-terminated)
+
+fn try_strings(s_l: &str, s_m: String) -> &str {
+
+  let mut _s_m: String = s_m; // Declare s_m as a mutable local variable _s_m
+
+  let mut _s: String = s_l.to_string();
+  _s.push_str(", is a growable string and is guaranteed to be UTF-8");
+  println!("{}", _s);
+
+  // Function to Convert Type &str into Type String (cheap solution that allocates it to memory)
+  fn convert_to_string_in_memory_taking_string_in_memory(memory_string: String) {
+    let memory_string_slice: &str = memory_string.as_slice();
+    println!("Converted Type &str (String Slice / Literal) into Type String (In-Memory String): {}", memory_string_slice);
+  }
+
+  // Coerce Type &str into Type String
+  convert_to_string_in_memory_taking_string_in_memory(_s_m);
+
+  // Function to Convert Type String into Type &str
+  fn convert_to_string_literal_taking_string_slice(slice: &str) {
+    println!("Converted Type String (In-Memory String) into Type &str (String Slice / Literal): {}", slice);
+  }
+
+  // Coerce Type String into Type &str by prefixing with an & symbol
+  convert_to_string_literal_taking_string_slice(&_s);
+
+  // The following attempt to perform the same conversion with the parameter passed into the function gives error:
+  //   - error: use of moved value: `s_m`
+  //   - note: `s_m` moved here because it has type `collections::string::String`, which is moved by default
+  //   - use `ref` to override
+
+  // let mut _s_m2: String = s_m.to_string(); // Declare s_m as a mutable local variable _s_m
+
+  // convert_to_string_literal_taking_string_slice(&_s_m2);
+
+  return s_l;
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
