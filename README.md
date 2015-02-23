@@ -19,7 +19,7 @@ Key Terminology of the Rust language and ecosystem:
 Progress
 -------
 
-Completed up to "Chapter 2.7 Comments".
+Completed up to and including "Chapter 2.11 Strings".
 
 Requirements
 -------
