@@ -127,6 +127,7 @@ fn main() {
     // and existing for entire run duration). The have fixed size and cannot be mutated (i.e. let mut). 
     // stringLiteral is a binding reference to another string that is the Statically Allocated String Slice.
     let mut stringLiteral: &str = "String Slice / String Literal"; // Should not be able to declare as 'let mut'
+
     // In-Memory Strings (formerly StrBuf) allocate memorary and control their data. They cannot be converted into 
     // the equivalent of a &'static str (Static String) like a &str, as In-Memory Strings are not pre-configured 
     // to live for the entire lifetime of the compiled program like &str. They can infact be converted from String 
