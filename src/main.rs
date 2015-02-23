@@ -182,11 +182,24 @@ fn try_enums() {
 
   enum Character {
     Digit(i32), // Character::Digit is a name tied to an i32
-    Other, // Other is just a name (not tied to a specific Type)
+    Missing, // Missing is just a name (not tied to a specific Type)
   }
 
   // Assignment
-  let ten  = Character::Digit(10);
+  let a  = Character::Digit(10);
+  let b = Character::Missing;
+
+  // Retrieve values contained in Enums, Error Handling where function output does not 
+  // match the expected Type
+  match a {
+    Character::Digit(n) => print!("\na is {} ", n),
+    Character::Missing => print!("\na is missing"),
+  }
+
+  match b {
+    Character::Digit(n) => print!("\nb is {}", n),
+    Character::Missing => print!("\nb is missing"),
+  }
 
   let x = 5;
   let y = 10;
@@ -200,14 +213,21 @@ fn try_enums() {
   // else if ordering == Ordering::Greater { println!("Greater"); } 
   // else if ordering == Ordering::Equal { println!("Equal"); }
 
-  // Replace the above 'if/else' with 'match' Pattern Matching instead
+  // Replace the above 'if/else' with 'match' Pattern Matching expression instead
   // with less noise and which supports Exhaustiveness Checking across all
   // possible Variants of the Ordering Enum
+  println!("{}", match cmp(x, y) {
+    Ordering::Less => "\nless",
+    Ordering::Greater => "\ngreater",
+    Ordering::Equal => "\nequal",
+  });
+
+  // Equivalent to the above
   match cmp(x, y) {
-      Ordering::Less => println!("less"),
-      Ordering::Greater => println!("greater"),
-      Ordering::Equal => println!("equal"),
-  }
+    Ordering::Less => println!("\nless"),
+    Ordering::Greater => println!("\ngreater"),
+    Ordering::Equal => println!("\nequal"),
+  };
 }
 
 // Pattern Matching is implemented by 'match' and allows elegantly deconstructing Enums
