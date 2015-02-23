@@ -115,6 +115,13 @@ fn main() {
     try_enums();
 
     try_pattern_matching();
+
+    let n: i32 = 4;
+    let mut o: i32 = 0;
+
+    o = try_loops(n);
+
+    println!("o is {}", o);
 }
 
 /*
@@ -250,6 +257,38 @@ fn try_pattern_matching() {
     // (not all bases covered) it prevents a compile error (as '_' will match)
     _ => println!("something else"),
   }
+}
+
+fn try_loops(n: i32) -> (i32) {
+  let mut o = 0;
+  // For Loop with variable m over Iterator Expression 0..n (with start and end positions)
+  // that produces a series of elements where each element is a loop itertion fetched from 
+  // the Iterator and bound to the variable m during each cycle through the loop body.
+  // The Iterator is upper bound exclusive and so prints 0 through to n-1
+
+  for m in 0..n {
+    if m % 2 == 0 { continue; } // Approval condition only processes even iterations.
+    println!("for loop with: {}", m);
+    o += m;
+  }
+
+  let mut done: bool = false;
+
+  println!("{}", o);
+
+  while !done {
+    o += o - 2;
+    println!("while loop with: {}", o);
+    if o % 3 == 0 { done = true; }
+  }
+
+  // Infinite Loop intentionally
+  loop { // Use this instead of while true {}
+    o -= 1;
+    if o % 7 == 0 { break; } // End iteration early
+  }
+
+  return o;
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
