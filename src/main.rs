@@ -345,7 +345,7 @@ fn try_strings(s_l: &str, s_m: String) -> &str {
 
   // convert_to_string_literal_taking_string_slice(&_s_m2);
 
-  return s_l;
+  return "Test String to override the value of the String Slice / Literal that we are supposedly not meant to be able to mutate";
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
