@@ -70,6 +70,7 @@ Rust Docs
 Other Links
 -------
 
+* [Rust Community Forums](http://users.rust-lang.org/)
 * [Rust on Reddit (Official Discussion Forums)](http://www.reddit.com/r/rust/)
 * [Play Rust](https://play.rust-lang.org/)
   - Click "Evaluate" to run code
