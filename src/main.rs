@@ -22,12 +22,16 @@ use std::cmp::Ordering;
 // Importing the module with only one level of qualification is best practice (avoid prefixing with std::)
 use std::old_io;
 
+// Import the Random Number Generation Module
+// http://doc.rust-lang.org/std/rand/fn.random.html
+use std::rand;
+
 // Configure the Ordering Enum
 // 'cmp' is a Function that compares two given parameters and returns an Ordering
 // where depending on the difference between these parameters, the returned Ordering 
 // may be Ordering:Less, Ordering::Greater, or Ordering::Equal
 // Variants of the Enum (Ordering) are Namespaced under the Enum itself.
-fn cmp(a: i32, b: i32) -> Ordering {
+fn cmp(a: u64, b: u64) -> Ordering {
   if a < b      { Ordering::Less }
   else if a > b { Ordering::Greater }
   else          { Ordering::Equal }
@@ -50,8 +54,27 @@ fn main() {
                   // String (without valid value the program terminates. handles error message explicitely)
                   .expect("Failed to read line"); 
 
+    // parse() function takes a &str and converts it to say u32
+
+    // The following two lines of code are equivalent
+    // where Result returned by parse is converted into an Option by using the ok method as well
+    // let input_num = input.parse::<u32>(); // input_num: Option<u32>
+    // The parse() Function receives all input from Standard Input including line breaks (i.e. \n) such as "4\n"
+    // so trim() method defined on &str to remove those aspects
+    // i32 allows both positive and negative inputs
+    let input_num: Result<i32, _> = input.trim().parse(); // input_num: Result<i32, <i32 as FromStr>::Err>
+
+    // Unwrap input_num that has the type Option<u32> rather than u32 by using 'match'
+    let unwrapped_num = match input_num {
+        Ok(unwrapped_num) => unwrapped_num,
+        Err(_) => {
+            println!("Please input a number!");
+            return;
+        }
+    };
+
     // Metaprogramming calling a macro and passing staticaly allocated string arg
-    println!("Hello, {}", input);
+    println!("Hello, {}", unwrapped_num);
 
     /* 
       Variable binding expression. 
@@ -157,6 +180,8 @@ fn main() {
     try_arrays();
 
     try_vectors();
+
+    try_random_numbers();
 }
 
 /*
@@ -403,6 +428,28 @@ fn try_vectors() {
 
   println!("v_mut length change from {} to {}", v_mut_length_before, v_mut.len() );
 
+}
+
+fn try_random_numbers() {
+  // Modulo returns remainder of division. Use 100 it to limit random 
+  // values to b/w 0 and 99 (+1 for b/w 1 and 100)
+  // Explicit type hinting used so Rust knows range within which to generate
+  let secret_number: u64 = (rand::random::<u64>() % 100) + 1; // i32 secret
+
+  println!("Secret number is: {}", secret_number);
+
+  let guess: u64 = (rand::random::<u64>() % 100) + 1;
+
+  println!("Guess is: {}", guess);
+
+  match cmp(guess, secret_number) {
+      Ordering::Less => println!("Too small"),
+      Ordering::Greater => println!("Too big!"),
+      Ordering::Equal => {
+        println!("You win");
+        return; // Exit when win
+      },
+  }
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
