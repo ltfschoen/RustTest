@@ -17,6 +17,11 @@
 // Variants together)
 use std::cmp::Ordering;
 
+// Import the Standard Input std::old_io module of the Module System that contains function stdin()
+// where 'std' is Rust's Standard Library
+// Importing the module with only one level of qualification is best practice (avoid prefixing with std::)
+use std::old_io;
+
 // Configure the Ordering Enum
 // 'cmp' is a Function that compares two given parameters and returns an Ordering
 // where depending on the difference between these parameters, the returned Ordering 
@@ -34,8 +39,19 @@ fn cmp(a: i32, b: i32) -> Ordering {
 */
 fn main() {
 
+    // Standard Input
+    println!("Enter your name...");
+
+    // Note that the read_line() method may be called on result of stdin() and may return a line of input
+    // (i.e. when using terminal, but perhaps not for a cron job)
+    let input = old_io::stdin() // std::old_io::stdio::StdinReader
+                  .read_line() // IoResult<String> is a Generic form to match any type of input
+                  .ok() // Option<String> (assumes valid result, same as Match statement)
+                  // String (without valid value the program terminates. handles error message explicitely)
+                  .expect("Failed to read line"); 
+
     // Metaprogramming calling a macro and passing staticaly allocated string arg
-    println!("Hello, world!");
+    println!("Hello, {}", input);
 
     /* 
       Variable binding expression. 
