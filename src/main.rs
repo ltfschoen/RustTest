@@ -26,6 +26,8 @@ use std::old_io;
 // http://doc.rust-lang.org/std/rand/fn.random.html
 use std::rand;
 
+use std::str;
+
 // Configure the Ordering Enum
 // 'cmp' is a Function that compares two given parameters and returns an Ordering
 // where depending on the difference between these parameters, the returned Ordering 
@@ -166,16 +168,33 @@ fn main() {
 
         // String Slices (aka String Literals) of Type &str are Statically Allocated (i.e. saved inside compiled program 
         // and existing for entire run duration). The have fixed size and cannot be mutated (i.e. let mut). 
+        // String Slices have an associated lifetime.
         // stringLiteral is a binding reference to another string that is the Statically Allocated String Slice.
+        // stringLiteral is a &'static str
+        // String Slices are a pointer and a length (similar to Vector Slices) so they offer a 
+        // view into an already-allocated string (stringLiteral or String)
         let mut stringLiteral: &str = "String Slice / String Literal"; // Should not be able to declare as 'let mut'
 
-        // In-Memory Strings (formerly StrBuf) allocate memorary and control their data. They cannot be converted into 
+        // String Slices when used as function arguments are written without an explicit lifetime
+        // and so their lifetime is inferred
+        fn take_slice(slice: &str) {
+          println!("Got: {}", slice);
+        }
+
+        take_slice(stringLiteral);
+
+        // In-Memory Strings (formerly StrBuf) allocate memory (heap-allocated) and control their data. They cannot be converted into 
         // the equivalent of a &'static str (Static String) like a &str, as In-Memory Strings are not pre-configured 
         // to live for the entire lifetime of the compiled program like &str. They can infact be converted from String 
         // into a slice &'a str by using the as_slice() method (retaining its original String lifetime)
+        // Strings are growable and UTF-8. Strings may be created from a String Slice with the to_string() method
         let mut stringInMemory: String = "In-Memory String".to_string();
+        stringInMemory.push_str(" Modified");
 
-        stringLiteral = try_strings(stringLiteral, stringInMemory);
+        // Functions that pass a reference (i.e. prefixed &) are automatically coerced to a String Slice
+        stringLiteral = try_strings(stringLiteral, stringInMemory, &stringLiteral);
+
+        println!("stringLiteral trim() is {}", stringLiteral.trim() );
 
         println!("stringLiteral is {}", stringLiteral);
 
@@ -184,6 +203,8 @@ fn main() {
         try_vectors();
 
         try_random_numbers();
+
+        try_strings_again();
     }
 }
 
@@ -358,13 +379,16 @@ fn try_loops(n: i32) -> (i32) {
 // String is a sequence of Unicode scalar values validly encoded as a stream of UTF-8 bytes.
 // Strings may contain null bytes (as they are not null-terminated)
 
-fn try_strings(s_l: &str, s_m: String) -> &str {
+fn try_strings(s_l: &str, s_m: String, s_m_ref: &str) -> &'static str {
 
   let mut _s_m: String = s_m; // Declare s_m as a mutable local variable _s_m
 
   let mut _s: String = s_l.to_string();
   _s.push_str(", is a growable string and is guaranteed to be UTF-8");
   println!("{}", _s);
+
+  // s_m_ref is a reference to a String that has been automatically coerced into String Slice
+  let mut _s_m_ref: String = s_m_ref.to_string();
 
   // Function to Convert Type &str into Type String (cheap solution that allocates it to memory)
   fn convert_to_string_in_memory_taking_string_in_memory(memory_string: String) {
@@ -392,7 +416,21 @@ fn try_strings(s_l: &str, s_m: String) -> &str {
 
   // convert_to_string_literal_taking_string_slice(&_s_m2);
 
-  return "Test String to override the value of the String Slice / Literal that we are supposedly not meant to be able to mutate";
+  // Return a the Static String Slice below by explicitly defining the return type as &'static str (rather than just &str)
+  // so that the function definition knows what parameter to associate the lifetime of the return value with when
+  // there is a second reference parameter. This overcomes Lifetime Inference.
+  // See http://users.rust-lang.org/t/signatures-of-functions-with-borrowed-return-type-value-lifetimes-and-mutability-of-string-literals/519
+  return "Test String to override the non-mutable value of the String Slice / Literal\n\n\n";
+}
+
+// Strings (sequence of Unicode Scalar values encoded as stream of UTF-8 bytes)
+// Strings are not null terminated and may contain null bytes
+fn try_strings_again() {
+
+      // Convert Stack-Allocated Array of Bytes into a &str (String Slice)
+      let z: &[u8] = &[b'a', b'b'];
+      let stack_str: &str = str::from_utf8(z).unwrap();
+      println!("stack_str is: {}", stack_str.to_string());
 }
 
 // Arrays (sequence of elements of same "List" Type and of fixed length)
