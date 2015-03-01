@@ -138,6 +138,9 @@ fn main() {
 
     println!("stringLiteral is {}", stringLiteral);
 
+    try_arrays();
+
+    try_vectors();
 }
 
 /*
@@ -346,6 +349,44 @@ fn try_strings(s_l: &str, s_m: String) -> &str {
   // convert_to_string_literal_taking_string_slice(&_s_m2);
 
   return "Test String to override the value of the String Slice / Literal that we are supposedly not meant to be able to mutate";
+}
+
+// Arrays (sequence of elements of same "List" Type and of fixed length)
+// Arrays are immutable by default
+// Arrays "List" Type has T notation [T; N]
+fn try_arrays() {
+  let arr_imm = [1, 2, 3, 4]; 
+
+  println!("arr_imm element 2 is: {}", arr_imm[2]);
+
+  // Declare and initialise each element with value of 0
+  let mut arr_mut = [0; 3];
+
+  // Slices of Type &[T] are created from an existing variable
+  let arr_mut_slice = &arr_mut[1..3]; // Slice with only elements at index 1 and 2
+
+  println!("arr_mut has {} elements", arr_mut.len());
+  println!("arr_mut_slice has {} elements", arr_mut_slice.len());
+
+  for e in arr_mut.iter() {
+    println!("arr_mut element e: {}", e);
+  }
+
+}
+
+// Vectors are Arrays of "dynamic" length implemented as standard library Type Vec<T>
+// Vectors allocate their data on the heap 
+// Vectors are to Slices what String is to &str
+// Vectors are created using the vec! macro
+fn try_vectors() {
+  let mut v_mut = vec![1, 2, 3];
+
+  let v_mut_length_before = v_mut.len();
+
+  v_mut.push(4);
+
+  println!("v_mut length change from {} to {}", v_mut_length_before, v_mut.len() );
+
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
