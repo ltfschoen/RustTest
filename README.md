@@ -48,7 +48,7 @@ Setup
     ```
     ./main
     ```
-  * Option #2 (Build and Run)
+  * Option #2 (Separate Build and Run)
     - Build (in accordance with the Cargo.toml configuration file's metadata and build outcome requirements, and assuming the source code is in the /src directory it generates a binary executable file 'hello_world' and dependencies in /target folder of current directory, and generates Cargo.lock to track dependencies)
     ```
     cargo build
@@ -57,6 +57,7 @@ Setup
     ```
     ./target/hello_world
     ```
+  * Option #3 (Combined Build and Run)
     - Build and Run (combined with [Cargo](http://doc.crates.io/guide.html))
     ```
     cargo run
@@ -71,6 +72,7 @@ Other Links
 -------
 
 * [Rust Community Forums](http://users.rust-lang.org/)
+* [Rust Standard Library](http://doc.rust-lang.org/std/)
 * [Rust on Reddit (Official Discussion Forums)](http://www.reddit.com/r/rust/)
 * [Play Rust](https://play.rust-lang.org/)
   - Click "Evaluate" to run code
