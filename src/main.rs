@@ -204,7 +204,12 @@ fn main() {
 
         try_random_numbers();
 
-        try_strings_again();
+        let stringToBorrow = "borrow";
+        let stringToOwn = "own".to_string();
+
+        try_strings_again(stringToBorrow, stringToOwn);
+
+        try_indexing_strings();
     }
 }
 
@@ -425,12 +430,21 @@ fn try_strings(s_l: &str, s_m: String, s_m_ref: &str) -> &'static str {
 
 // Strings (sequence of Unicode Scalar values encoded as stream of UTF-8 bytes)
 // Strings are not null terminated and may contain null bytes
-fn try_strings_again() {
+// Use Borrowing (&str) unless Ownership (String) required to avoid complex Lifetimes
+fn try_strings_again(stringToBorrow: &str, stringToOwn: String) {
 
       // Convert Stack-Allocated Array of Bytes into a &str (String Slice)
       let z: &[u8] = &[b'a', b'b'];
       let stack_str: &str = str::from_utf8(z).unwrap();
       println!("stack_str is: {}", stack_str.to_string());
+
+      // Generic Function over different types
+      fn getStringLength(param: &str) -> usize {
+        param.len()
+      }
+
+      println!("stringToBorrow length is {}", getStringLength(stringToBorrow) );
+      println!("stringToOwn length is {}", getStringLength(&stringToOwn) );
 }
 
 // Arrays (sequence of elements of same "List" Type and of fixed length)
@@ -491,6 +505,38 @@ fn try_random_numbers() {
         return; // Exit when win
       },
   }
+}
+
+fn try_indexing_strings() {
+
+  // Access a character of a UTF-8 string by iterating, which is an O(n) operation
+  // by using three levels of Unicode (and associated Encodings)
+  // Do not use direct indexing as each character may be a variable no. of bytes
+
+  let stringOfChars = "u͔n͈̰̎i̙̮͚̦c͚̉o̼̩̰͗d͔̆̓ͥé";
+
+  // 1. Rust iterator to iterate over each Byte of the Underlying Data Type (Code Units for storage)
+  //    Note: Individual Byte representation of each Code Point
+  //    i.e. 117 248 155 ...
+  for letter in stringOfChars.bytes() {
+      println!("{}", letter);
+  }
+
+  // 2. Rust iterator to iterate over each Character (Code Points / Unicode Scalar Values)
+  //    Note: Individual Code Points of each Grapheme are printed (some Combine Characters)
+  //    i.e. u ͔ n ̎ ͈ ̰ i
+  for letter in stringOfChars.chars() {
+      println!("{}", letter);
+  }
+
+  // 3. Rust iterator to iterate over each Visible Character (Graphemes)
+  //    Note: 'letter' has type &str 
+  //    (single Grapheme may consist of multiple Code Points)
+  //    i.e. u͔n͈̰̎i̙̮͚̦
+  for letter in stringOfChars.graphemes(true) {
+      println!("{}", letter);
+  }
+
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
