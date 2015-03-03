@@ -204,7 +204,10 @@ fn main() {
 
         try_random_numbers();
 
-        try_strings_again();
+        let stringToBorrow = "borrow";
+        let stringToOwn = "own".to_string();
+
+        try_strings_again(stringToBorrow, stringToOwn);
     }
 }
 
@@ -425,12 +428,21 @@ fn try_strings(s_l: &str, s_m: String, s_m_ref: &str) -> &'static str {
 
 // Strings (sequence of Unicode Scalar values encoded as stream of UTF-8 bytes)
 // Strings are not null terminated and may contain null bytes
-fn try_strings_again() {
+// Use Borrowing (&str) unless Ownership (String) required to avoid complex Lifetimes
+fn try_strings_again(stringToBorrow: &str, stringToOwn: String) {
 
       // Convert Stack-Allocated Array of Bytes into a &str (String Slice)
       let z: &[u8] = &[b'a', b'b'];
       let stack_str: &str = str::from_utf8(z).unwrap();
       println!("stack_str is: {}", stack_str.to_string());
+
+      // Generic Function over different types
+      fn getStringLength(param: &str) -> usize {
+        param.len()
+      }
+
+      println!("stringToBorrow length is {}", getStringLength(stringToBorrow) );
+      println!("stringToOwn length is {}", getStringLength(&stringToOwn) );
 }
 
 // Arrays (sequence of elements of same "List" Type and of fixed length)
