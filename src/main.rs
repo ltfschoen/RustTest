@@ -1,3 +1,5 @@
+// main.rs is Crate Root of a Binary Crate
+
 // Import the Ordering Enum from the Rust Standard Library
 // http://doc.rust-lang.org/std/cmp/enum.Ordering.html
 // Note: Enums are a powerful tool for data representation and 'generics' may be used
@@ -28,6 +30,9 @@ use std::rand;
 
 use std::str;
 
+// Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
+extern crate hello_world;
+
 // Configure the Ordering Enum
 // 'cmp' is a Function that compares two given parameters and returns an Ordering
 // where depending on the difference between these parameters, the returned Ordering 
@@ -46,6 +51,8 @@ fn cmp(a: u64, b: u64) -> Ordering {
 fn main() {
 
     loop {
+
+        println!("Hello in German: {}", hello_world::german::greetings::guten_tag() );
 
         // Standard Input
         println!("Enter your name...");
