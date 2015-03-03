@@ -33,6 +33,11 @@ use std::str;
 // Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
 extern crate hello_world;
 
+// Import Crate Modules into current scope using shorter names
+// Best Practice is to import the module rather than the function directly
+// to avoid namespace conflict
+use hello_world::german::{greetings, farewells}; // Shortcut syntax to import nultiple names from same Module
+
 // Configure the Ordering Enum
 // 'cmp' is a Function that compares two given parameters and returns an Ordering
 // where depending on the difference between these parameters, the returned Ordering 
@@ -52,7 +57,7 @@ fn main() {
 
     loop {
 
-        println!("Hello in German: {}", hello_world::german::greetings::guten_tag() );
+        println!("Hello in German: {}", greetings::guten_tag() );
 
         // Standard Input
         println!("Enter your name...");
