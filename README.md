@@ -20,7 +20,7 @@ Key Terminology of the Rust language and ecosystem:
 Progress
 -------
 
-Up to 3. II: Intermediate Rust
+Up to 3. II: Intermediate Rust - 3.3 Tests - The test module
 
 Requirements
 -------
