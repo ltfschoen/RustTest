@@ -2,8 +2,8 @@
 // that does not directly map to internal code organisation
 // 'pub use' declaration brings Functions into scope at this level of 
 // Module hierarchy so internal organisation does not define the External Interface
-pub use self::greetings::guten_tag;
-pub use self::farewells::auf_wiedersehen;
+pub use self::greetings::*; // Wildcard alternative instead of specific '::guten_tag
+pub use self::farewells::*;
 
 pub mod greetings; // greetings.rs
 
