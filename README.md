@@ -1,6 +1,8 @@
 README
 ============
 
+[![Build Status](https://api.travis-ci.org/ltfschoen/RustTest.svg)](https://travis-ci.org/ltfschoen/RustTest)
+
 About
 -------
 

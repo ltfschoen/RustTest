@@ -1,0 +1,4 @@
+# Refer to the following for instructions http://docs.travis-ci.com/user/getting-started/
+language: rust
+script: cargo build
+sudo: false
