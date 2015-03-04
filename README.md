@@ -92,6 +92,9 @@ Other Links
   - Click "Evaluate" to run code
 * [Crates.io (Rust Community Crate Host)](https://crates.io/).
 * [Rust Sydney Meetup Slides by Huon](http://huonw.github.io/rust-sydney-feb15/)
+* [Pointers Cheatsheet](http://doc.rust-lang.org/book/pointers.html#cheat-sheet)
+  - [Stack vs Heap](http://stackoverflow.com/questions/79923/what-and-where-are-the-stack-and-heap)
+
 
 Help
 -------
