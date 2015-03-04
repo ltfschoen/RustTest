@@ -45,6 +45,8 @@ pub fn add_two(a: i32) -> i32 {
 //
 ///////////
 
+extern crate test;
+
 // cfg Attribute allows grouping of Unit Tests separate from rest of Crate
 // cfg Attribute only compiles containing code when running tests saving compile time
 
@@ -55,9 +57,18 @@ mod tests {
       // (i.e. it_adds_two() ) from the parent directory into scope
       use super::*;
 
+      // Import the Test Crate containing Benchmarking support
+      use test::Bencher;
+
       // Tests (run with 'cargo test')
       // Note that the '#[test]' prefix indicates a Test Function
       // Note: 'echo $?' returns non-zero status code if any tests fail
+
+      ///////////
+      //  
+      // UNIT TESTS
+      //
+      ///////////
 
       #[test]
       fn it_works() {
@@ -84,6 +95,22 @@ mod tests {
       #[test]
       fn it_adds_two() {
           assert_eq!(4, add_two(2));
+      }
+
+      ///////////
+      //  
+      // BENCHMARK TESTS
+      //
+      ///////////
+
+      // bench Attribute and associated Benchmark Tests take an
+      // argument '&mut Bencher' into their functions. 'Bencher'
+      // provides the 'iter' method and a closure containing
+      // code to be benchmarked
+
+      #[bench]
+      fn bench_add_two(b: &mut Bencher) {
+          b.iter(|| add_two(2));
       }
 
 }
