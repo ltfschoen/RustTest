@@ -57,8 +57,9 @@ mod tests {
       // (i.e. it_adds_two() ) from the parent directory into scope
       use super::*;
 
-      // Import the Test Crate containing Benchmarking support
+      // Import the Test Crate containing Benchmarking and Optimisation support
       use test::Bencher;
+      use test::black_box;
 
       // Tests (run with 'cargo test')
       // Note that the '#[test]' prefix indicates a Test Function
@@ -111,6 +112,22 @@ mod tests {
       #[bench]
       fn bench_add_two(b: &mut Bencher) {
           b.iter(|| add_two(2));
+      }
+
+      // Benchmarks may be unexpectantly changed when compiled with
+      // Optimisations activated causing the compiler to remove calculations that
+      // it thinks have no external effects.
+      // Overcome by prefixing with 'return' in the the iter() block
+      // or by using the generic test::black_box function (an opaque
+      // black box to the optimising that forces it to consider any arg
+      // as used)
+
+      #[bench]
+      fn bench_xor_1000_ints(b: &mut Bencher) {
+          b.iter(|| {
+              let n = black_box(1000); // test::black_box
+              (0..n).fold(0, |old, new| old ^ new);
+          });
       }
 
 }
