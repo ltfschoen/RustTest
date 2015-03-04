@@ -72,6 +72,7 @@ Rust Docs
 Other Links
 -------
 
+* [Rust CI Dashboard & Rust Projects](http://www.rust-ci.org/)
 * [Rust Community Forums](http://users.rust-lang.org/)
 * [Rust Standard Library](http://doc.rust-lang.org/std/)
 * [Rust on Reddit (Official Discussion Forums)](http://www.reddit.com/r/rust/)
