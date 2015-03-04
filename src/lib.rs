@@ -1,37 +1,16 @@
 // lib.rs is a Library Crate
 
-///////////
-//  
-// MODULES
-//
-///////////
+// Module-level documentation uses triple graves and exclamation mark
+// Note: When 'cargo run' is performed, _0 is generated as the name of the
+//       documentation module tests. They auto-increment as more tests added.
 
-// Crate Root Module containing Sub-Modules
-// Build with 'cargo build' to produce 
-// compiled .rlib in 'target' directory
-//  ls target
-mod english {
-      // Sub-Modules Declared
-      // english::us_english
-      mod greetings {
-            // Sub-Module Contents
-            fn hello() -> String {
-              "Hello.".to_string()
-            }
-      }
-
-      // Export a Public Interface (Private is Default)
-      mod farewells {
-            fn goodbye() -> String {
-              "Goodbye.".to_string()
-            }
-      }
-}
-
-// Module Declaration for Multiple Files
-// Rust expects a 'german.rs' or
-// 'german/mod.rs' file with Module contents
-pub mod german;
+//! The `hello_world` crate provides functions that add numbers to other numbers.
+//!
+//! # Examples
+//!
+//! ```
+//! assert_eq!(4, hello_world::add_two(2));
+//! ```
 
 ///////////
 //  
@@ -39,9 +18,26 @@ pub mod german;
 //
 ///////////
 
+// Function-level documentation uses triple graves
+
+/// This function adds two to its argument.
+///
+/// # Examples
+///
+/// ```
+/// use hello_world::add_two;
+///
+/// assert_eq!(4, add_two(2));
+/// ```
 pub fn add_two(a: i32) -> i32 {
     a + 2
 }
+
+///////////
+//  
+// MODULES
+//
+///////////
 
 ///////////
 //  
@@ -91,3 +87,36 @@ mod tests {
       }
 
 }
+
+///////////
+//  
+// ROOT MODULE AND SUB-MODULES
+//
+///////////
+
+// Crate Root Module containing Sub-Modules
+// Build with 'cargo build' to produce 
+// compiled .rlib in 'target' directory
+//  ls target
+mod english {
+      // Sub-Modules Declared
+      // english::us_english
+      mod greetings {
+            // Sub-Module Contents
+            fn hello() -> String {
+              "Hello.".to_string()
+            }
+      }
+
+      // Export a Public Interface (Private is Default)
+      mod farewells {
+            fn goodbye() -> String {
+              "Goodbye.".to_string()
+            }
+      }
+}
+
+// Module Declaration for Multiple Files
+// Rust expects a 'german.rs' or
+// 'german/mod.rs' file with Module contents
+pub mod german;
