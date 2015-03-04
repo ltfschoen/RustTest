@@ -222,6 +222,8 @@ fn main() {
         try_strings_again(stringToBorrow, stringToOwn);
 
         try_indexing_strings();
+
+        try_pointers();
     }
 }
 
@@ -548,6 +550,29 @@ fn try_indexing_strings() {
   for letter in stringOfChars.graphemes(true) {
       println!("{}", letter);
   }
+
+}
+
+
+// Rust has many Types of Pointers
+// Note:
+//   - Variable Bindings and Pointers are of different Types and cannot be added together
+fn try_pointers() {
+
+  // New Variable Binding gives a Name to this Value to be stored on the Stack
+  // i.e. Value 5 stored at Memory Stack address 0xd3e030
+  let varBinding1: i32 = 5; // Val 5 stored at 0x000001 (Memory Stack address)
+  let varBinding2: i32  = 10; // Val 10 stored at 0x000002 (Memory Stack address)
+
+  // 1. Rust's "Reference" Pointer Type
+  let varReferencePointer1: &i32 = &varBinding1; // Val 0x000001 stored at 0x000003 (Memory Stack address)
+
+  // Print the Memory Stack address where varReferencePointer1 is stored
+  println!("{:p}", varReferencePointer1); // i.e. 0x000003
+
+  // Dereference the Pointer using the * Operator to access the Value at the
+  // Memory Stack address that it points to
+   println!("{}", *varReferencePointer1 + varBinding2);
 
 }
 
