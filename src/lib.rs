@@ -1,5 +1,11 @@
 // lib.rs is a Library Crate
 
+///////////
+//  
+// MODULES
+//
+///////////
+
 // Crate Root Module containing Sub-Modules
 // Build with 'cargo build' to produce 
 // compiled .rlib in 'target' directory
@@ -27,7 +33,31 @@ mod english {
 // 'german/mod.rs' file with Module contents
 pub mod german;
 
+///////////
+//  
+// HELPER METHODS
+//
+///////////
+
+pub fn add_two(a: i32) -> i32 {
+    a + 2
+}
+
+///////////
+//  
+// UNIT TESTING MODULE
+//
+///////////
+
+// cfg Attribute allows grouping of Unit Tests separate from rest of Crate
+// cfg Attribute only compiles containing code when running tests saving compile time
+
+#[cfg(test)]
 mod tests {
+
+      // use Declaration (glob Feature) required to bring Helper Functions 
+      // (i.e. it_adds_two() ) from the parent directory into scope
+      use super::*;
 
       // Tests (run with 'cargo test')
       // Note that the '#[test]' prefix indicates a Test Function
@@ -53,10 +83,6 @@ mod tests {
         assert_eq!("english", "german");
         // assert_eq!("english", "english");
         // panic!("PLEASE PANIC WHEN PANIC! USED");
-      }
-
-      pub fn add_two(a: i32) -> i32 {
-          a + 2
       }
 
       #[test]
