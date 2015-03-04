@@ -40,7 +40,7 @@ Setup
   curl -sS https://static.rust-lang.org/rustup.sh | sudo bash
   ```
 
-2. **Setup RustTest**
+2. **Build, and Run**
   * Clone or fork [RustTest repository](https://github.com/ltfschoen/RustTest.git)
   * Option #1 (Compile and Run)
     - Compile (generates an executable file 'main' in current directory)
@@ -64,6 +64,16 @@ Setup
     - Build and Run (combined with [Cargo](http://doc.crates.io/guide.html))
     ```
     cargo run
+    ```
+
+3. **Unit & Integration Tests**
+    ```
+    cargo test
+    ```
+
+4. **Benchmark Tests**
+    ```
+    cargo bench
     ```
 
 Rust Docs
