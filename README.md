@@ -30,6 +30,7 @@ TODO
 * Convert Function and Variable names to snake case instead of camel case
 * Change to 4-space indentation
 * Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
+* Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
 
 Requirements
 -------
