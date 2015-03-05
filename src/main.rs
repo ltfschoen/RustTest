@@ -556,24 +556,63 @@ fn try_indexing_strings() {
 
 // Rust has many Types of Pointers
 // Note:
-//   - Variable Bindings and Pointers are of different Types and cannot be added together
+// - Variable Bindings and Pointers are of different Types and cannot be added together
+// - Pointers may allocate Heap memory addresses (not on the Stack)
+// - Pointers used when unknown memory allocation requirements at compile time
+//   for structures that may change in size. Instead deal with at runtime and
+//   simply use pointer at compile time. 
+//
 fn try_pointers() {
 
   // New Variable Binding gives a Name to this Value to be stored on the Stack
   // i.e. Value 5 stored at Memory Stack address 0xd3e030
-  let varBinding1: i32 = 5; // Val 5 stored at 0x000001 (Memory Stack address)
-  let varBinding2: i32  = 10; // Val 10 stored at 0x000002 (Memory Stack address)
+  let var_binding1: i32 = 5; // Val 5 stored at 0x000001 (Memory Stack address)
+  let var_binding2: i32  = 10; // Val 10 stored at 0x000002 (Memory Stack address)
 
   // 1. Rust's "Reference" Pointer Type
-  let varReferencePointer1: &i32 = &varBinding1; // Val 0x000001 stored at 0x000003 (Memory Stack address)
+  //    - Immutable by default
+  //    - Zero overhead (safety checks by compiler at compile time,
+  //      which is Region Points aka Lifetimes Theory, where Named Value stored on
+  //      the Stack is valid from where Declared to when it goes Out of Scope
+  //    where LHS is a "reference" to the RHS
+  let mut var_reference_pointer1: &i32 = &var_binding1; // Val 0x000001 stored at 0x000003 (Memory Stack address)
 
-  // Print the Memory Stack address where varReferencePointer1 is stored
-  println!("{:p}", varReferencePointer1); // i.e. 0x000003
+  // Not permitted to assign to an immutable borrowed reference pointer
+  // *var_reference_pointer1 = 20;
 
-  // Dereference the Pointer using the * Operator to access the Value at the
-  // Memory Stack address that it points to
-   println!("{}", *varReferencePointer1 + varBinding2);
+  // Print the Memory Stack address where var_reference_pointer1 is stored
+  // using the pointer format string
+  println!("{:p}", var_reference_pointer1); // i.e. 0x000003
 
+  let mut var_reference_pointer1 = &30;
+
+  if var_reference_pointer1 == &30 {
+    let var_reference_pointer2 = &mut &var_reference_pointer1;
+    let var_reference_pointer3 = &mut &var_reference_pointer1;
+  }
+
+  // Mutable borrowed reference pointers are not allowed to alias 
+  // more than once until borrow ends
+  let mut var_reference_pointer4 = 40;
+  let alias_1 = &mut var_reference_pointer4;
+  // let alias_2 = &mut var_reference_pointer4;
+
+  println!("{:p}", var_reference_pointer1);
+
+  // Dereference the Pointer using the * Dereferencing Operator to 
+  // access the Value at the Memory Stack address that it points to
+  println!("{}", *var_reference_pointer1 + var_binding2);
+
+  // Also prints the Value of var_reference_pointer1 since
+  // println! performs Automatic Dereferencing of it
+  println!("{}", var_reference_pointer1 + var_binding2);
+
+  // Note that the following code works without the reference operators
+  fn take_my_pointer(p: &i32) -> i32 {
+    *p + 1
+  }
+
+  println!("{}", take_my_pointer(&var_reference_pointer1) );
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
