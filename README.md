@@ -22,7 +22,14 @@ Key Terminology of the Rust language and ecosystem:
 Progress
 -------
 
-Up to 3. II: Intermediate Rust - 3.3 Tests - The test module
+Up to 3. II: Intermediate Rust - 3.4 Pointers - Best practices
+
+TODO
+-------
+
+* Convert Function and Variable names to snake case instead of camel case
+* Change to 4-space indentation
+* Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
 
 Requirements
 -------
@@ -92,6 +99,7 @@ Other Links
   - Click "Evaluate" to run code
 * [Crates.io (Rust Community Crate Host)](https://crates.io/).
 * [Rust Sydney Meetup Slides by Huon](http://huonw.github.io/rust-sydney-feb15/)
+* [Pointers, Ownership & Lifetimes](http://paulkoerbitz.de/posts/Understanding-Pointers-Ownership-and-Lifetimes-in-Rust.html)
 * [Pointers Cheatsheet](http://doc.rust-lang.org/book/pointers.html#cheat-sheet)
   - [Stack vs Heap](http://stackoverflow.com/questions/79923/what-and-where-are-the-stack-and-heap)
 
