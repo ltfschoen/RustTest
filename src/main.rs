@@ -684,8 +684,43 @@ fn try_recursive_data_structures() {
 // http://doc.rust-lang.org/std/rc/index.html
 fn try_reference_counted_boxes() {
 
+    // Data Structures
+    struct Galaxy {
+        name: String
+    }
 
+    struct Planet {
+        id: i32,
+        owner: Rc<Galaxy>
+    }
 
+    struct Star {
+        id: i32,
+        owner: Rc<Galaxy>
+    }
+
+    // Create a Reference-Counted Galaxy (Owner)
+    let planet_of_a_galaxy1 : Rc<Galaxy> = Rc::new(
+        Galaxy { name: String::from_str("Milky Way") }
+    );
+
+    // Create Planets and Stars belonging to the Galaxy (Owner)
+    // Increment the Reference-Count by cloning the Rc<T> object
+    let earth = Planet { id: 1, owner: planet_of_a_galaxy1.clone() };
+    let mars = Planet { id: 2, owner: planet_of_a_galaxy1.clone() };
+
+    // Drops only the galaxy_owner1 Reference-Count object (not the Galaxy it wraps)
+    // Galaxy it wraps remains allocated whilst other Rc<T> objects still point to it.
+    // Rc<T> wrapper
+    drop(planet_of_a_galaxy1);
+
+    println!("Earth {} owned by {}", earth.id, earth.owner.name);
+    println!("Mars {} owned by {}", mars.id, mars.owner.name);
+
+    // End of method destruction of:
+    // - earth, mars
+    // - last counted references to the Galaxy
+    // - Milky Way
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
