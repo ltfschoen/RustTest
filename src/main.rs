@@ -30,8 +30,16 @@ use std::rand;
 
 use std::str;
 
-// Import Reference-Counting
+// Import Reference-Counted Pointer Type (over immutable values)
 use std::rc::Rc;
+
+// Import Weak Pointers for Reference-Counting (the weak version of Rc<T>)
+use std::rc::Weak;
+
+// Import RefCell for Reference-Counting to provide Interior Mutability 
+// (for Heap allocated T with many readers) by wrapping objects to be
+// mutated to achieve mutability through a Shared Reference
+use std::cell::RefCell;
 
 // Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
 extern crate hello_world;
@@ -686,7 +694,21 @@ fn try_reference_counted_boxes() {
 
     // Data Structures
     struct Galaxy {
-        name: String
+        name: String,
+        // RefCell used to store the Galaxy's vector of Planets so we may
+        // mutate it through a Shared Reference.
+        // Weak<T> Reference Pointers are used, as they do not contribute to the total
+        // Reference-Count and because doing so avoids memory leaks (where objects 
+        // remain allocated to memory) that may otherwise result 
+        // from just using Strong Rc<T> Reference Pointers between Galaxy and planets
+        // (which may result in cycles between objects where two objects point at each other
+        // and prevent Reference-Counts reaching zero because at least one of them must be mutable).
+        // This problem arises because Rc<T> enforces memory safety by only giving Shared Reference
+        // to the object it wraps, which do not allow direct mutation.
+        // To overcome this, we have imported std::cell::RefCell for Reference-Counting to provide 
+        // Interior Mutability and the wrapping of objects to be mutated to achieve mutability through 
+        // a Shared Reference. RefCell enforces Rust borrowing rules at runtime.
+        planets: RefCell<Vec<Weak<Planet>>>
     }
 
     struct Planet {
@@ -700,27 +722,45 @@ fn try_reference_counted_boxes() {
     }
 
     // Create a Reference-Counted Galaxy (Owner)
-    let planet_of_a_galaxy1 : Rc<Galaxy> = Rc::new(
-        Galaxy { name: String::from_str("Milky Way") }
+    let my_galaxy1 : Rc<Galaxy> = Rc::new(
+        Galaxy { 
+            name: "Milky Way".to_string(), // String::from_str("Milky Way")
+            planets: RefCell::new(Vec::new())
+        }
     );
 
     // Create Planets and Stars belonging to the Galaxy (Owner)
     // Increment the Reference-Count by cloning the Rc<T> object
-    let earth = Planet { id: 1, owner: planet_of_a_galaxy1.clone() };
-    let mars = Planet { id: 2, owner: planet_of_a_galaxy1.clone() };
+    let earth = Planet { id: 1, owner: my_galaxy1.clone() };
+    let mars = Planet { id: 2, owner: my_galaxy1.clone() };
 
-    // Drops only the galaxy_owner1 Reference-Count object (not the Galaxy it wraps)
-    // Galaxy it wraps remains allocated whilst other Rc<T> objects still point to it.
-    // Rc<T> wrapper
-    drop(planet_of_a_galaxy1);
+    // Add different planets (i.e. Earth, Mars) to the Galaxy by
+    // mutably borrowing from RefCell, since Galaxy's "planets"
+    // property holds its planets
+    // my_galaxy1.planets.borrow_mut().push(earth.clone().downgrade());
+    // my_galaxy1.planets.borrow_mut().push(mars.clone().downgrade());
+
+    // Iterate over the planets in a galaxy and print to stdout
+    // Since planet_opt is a Weak Reference (i.e. Weak<Planet>) it cannot 
+    // guarantee its objects are still allocated, so we must turn them into 
+    // Strong References by calling upgrade() on them, which in turn returns
+    // Option, containing a reference to our object if it still exists
+    for planet_opt in my_galaxy1.planets.borrow().iter() {
+        let planet = planet_opt.upgrade().unwrap();
+        println!("Planet {} owned by {}", planet.id, planet.owner.name);
+    }
+
+    // Drops only the my_galaxy1 (owner) Reference-Count object (not the Galaxy it wraps)
+    // Galaxy it wraps remains allocated whilst other Rc<T> objects still point to the Rc<T> wrapper
+    drop(my_galaxy1);
 
     println!("Earth {} owned by {}", earth.id, earth.owner.name);
     println!("Mars {} owned by {}", mars.id, mars.owner.name);
 
-    // End of method destruction of:
-    // - earth, mars
-    // - last counted references to the Galaxy
-    // - Milky Way
+    // End of method causes destruction of: my_galaxy1, earth, mars 
+    // so there are no more Strong References (i.e. Rc<T>) to the planets
+    // After these are destroyed then Planets gets destroyed, causing the Reference-Count
+    // on Milky Way to become zero, so Milky Way gets destroyed
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
