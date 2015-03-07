@@ -53,82 +53,82 @@ extern crate test;
 #[cfg(test)]
 mod tests {
 
-      // use Declaration (glob Feature) required to bring Helper Functions 
-      // (i.e. it_adds_two() ) from the parent directory into scope
-      use super::*;
+    // use Declaration (glob Feature) required to bring Helper Functions 
+    // (i.e. it_adds_two() ) from the parent directory into scope
+    use super::*;
 
-      // Import the Test Crate containing Benchmarking and Optimisation support
-      use test::Bencher;
-      use test::black_box;
+    // Import the Test Crate containing Benchmarking and Optimisation support
+    use test::Bencher;
+    use test::black_box;
 
-      // Tests (run with 'cargo test')
-      // Note that the '#[test]' prefix indicates a Test Function
-      // Note: 'echo $?' returns non-zero status code if any tests fail
+    // Tests (run with 'cargo test')
+    // Note that the '#[test]' prefix indicates a Test Function
+    // Note: 'echo $?' returns non-zero status code if any tests fail
 
-      ///////////
-      //  
-      // UNIT TESTS
-      //
-      ///////////
+    ///////////
+    //  
+    // UNIT TESTS
+    //
+    ///////////
 
-      #[test]
-      fn it_works() {
+    #[test]
+    fn it_works() {
         assert!(true);
-      }
+    }
 
-      // Invert Test Failure with 'should_fail'
+    // Invert Test Failure with 'should_fail'
 
-      #[test]
-      #[should_fail]
-      fn it_fails() {
+    #[test]
+    #[should_fail]
+    fn it_fails() {
         assert!(false);
-      }
+    }
 
-      #[test]
-      #[should_fail(expected = "english")]
-      fn it_fails_equality_comparison() {
+    #[test]
+    #[should_fail(expected = "english")]
+    fn it_fails_equality_comparison() {
         // assert!(false);
         assert_eq!("english", "german");
         // assert_eq!("english", "english");
         // panic!("PLEASE PANIC WHEN PANIC! USED");
-      }
+    }
 
-      #[test]
-      fn it_adds_two() {
-          assert_eq!(4, add_two(2));
-      }
+    #[test]
+    fn it_adds_two() {
+        assert_eq!(4, add_two(2));
+    }
 
-      ///////////
-      //  
-      // BENCHMARK TESTS
-      //
-      ///////////
+    ///////////
+    //  
+    // BENCHMARK TESTS
+    //
+    ///////////
 
-      // bench Attribute and associated Benchmark Tests take an
-      // argument '&mut Bencher' into their functions. 'Bencher'
-      // provides the 'iter' method and a closure containing
-      // code to be benchmarked
+    // bench Attribute and associated Benchmark Tests take an
+    // argument '&mut Bencher' into their functions. 'Bencher'
+    // provides the 'iter' method and a closure containing
+    // code to be benchmarked
 
-      #[bench]
-      fn bench_add_two(b: &mut Bencher) {
-          b.iter(|| add_two(2));
-      }
+    #[bench]
+    fn bench_add_two(b: &mut Bencher) {
+        b.iter(|| add_two(2));
+    }
 
-      // Benchmarks may be unexpectantly changed when compiled with
-      // Optimisations activated causing the compiler to remove calculations that
-      // it thinks have no external effects.
-      // Overcome by prefixing with 'return' in the the iter() block
-      // or by using the generic test::black_box function (an opaque
-      // black box to the optimising that forces it to consider any arg
-      // as used)
+    // Benchmarks may be unexpectantly changed when compiled with
+    // Optimisations activated causing the compiler to remove calculations that
+    // it thinks have no external effects.
+    // Overcome by prefixing with 'return' in the the iter() block
+    // or by using the generic test::black_box function (an opaque
+    // black box to the optimising that forces it to consider any arg
+    // as used)
 
-      #[bench]
-      fn bench_xor_1000_ints(b: &mut Bencher) {
-          b.iter(|| {
-              let n = black_box(1000); // test::black_box
-              (0..n).fold(0, |old, new| old ^ new);
-          });
-      }
+    #[bench]
+    fn bench_xor_1000_ints(b: &mut Bencher) {
+        b.iter(|| {
+            let n = black_box(1000); // test::black_box
+            (0..n).fold(0, |old, new| old ^ new);
+        });
+    }
 
 }
 
@@ -143,21 +143,21 @@ mod tests {
 // compiled .rlib in 'target' directory
 //  ls target
 mod english {
-      // Sub-Modules Declared
-      // english::us_english
-      mod greetings {
-            // Sub-Module Contents
-            fn hello() -> String {
-              "Hello.".to_string()
-            }
-      }
+    // Sub-Modules Declared
+    // english::us_english
+    mod greetings {
+        // Sub-Module Contents
+        fn hello() -> String {
+            "Hello.".to_string()
+        }
+    }
 
-      // Export a Public Interface (Private is Default)
-      mod farewells {
-            fn goodbye() -> String {
-              "Goodbye.".to_string()
-            }
-      }
+    // Export a Public Interface (Private is Default)
+    mod farewells {
+        fn goodbye() -> String {
+            "Goodbye.".to_string()
+        }
+    }
 }
 
 // Module Declaration for Multiple Files
