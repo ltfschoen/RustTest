@@ -30,6 +30,7 @@ use std::rand;
 
 use std::str;
 
+// Import Reference-Counting
 use std::rc::Rc;
 
 // Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
@@ -46,9 +47,9 @@ use hello_world::german::{greetings, farewells}; // Shortcut syntax to import nu
 // may be Ordering:Less, Ordering::Greater, or Ordering::Equal
 // Variants of the Enum (Ordering) are Namespaced under the Enum itself.
 fn cmp(a: u64, b: u64) -> Ordering {
-  if a < b      { Ordering::Less }
-  else if a > b { Ordering::Greater }
-  else          { Ordering::Equal }
+    if a < b      { Ordering::Less }
+    else if a > b { Ordering::Greater }
+    else          { Ordering::Equal }
 }
 
 /*
@@ -107,9 +108,9 @@ fn main() {
 
         // If statement based on Branch concept
         if a == 5 {
-          println!("x is five");
+            println!("x is five");
         } else {
-          println!("x is not five");
+            println!("x is not five");
         }
 
         let (x, y, z) = (1, 2, 3);  // assign immutable bindings x, y, z to 1, 2, 3
@@ -187,30 +188,30 @@ fn main() {
         // stringLiteral is a &'static str
         // String Slices are a pointer and a length (similar to Vector Slices) so they offer a 
         // view into an already-allocated string (stringLiteral or String)
-        let mut stringLiteral: &str = "String Slice / String Literal"; // Should not be able to declare as 'let mut'
+        let mut string_literal: &str = "String Slice / String Literal"; // Should not be able to declare as 'let mut'
 
         // String Slices when used as function arguments are written without an explicit lifetime
         // and so their lifetime is inferred
         fn take_slice(slice: &str) {
-          println!("Got: {}", slice);
+            println!("Got: {}", slice);
         }
 
-        take_slice(stringLiteral);
+        take_slice(string_literal);
 
         // In-Memory Strings (formerly StrBuf) allocate memory (heap-allocated) and control their data. They cannot be converted into 
         // the equivalent of a &'static str (Static String) like a &str, as In-Memory Strings are not pre-configured 
         // to live for the entire lifetime of the compiled program like &str. They can infact be converted from String 
         // into a slice &'a str by using the as_slice() method (retaining its original String lifetime)
         // Strings are growable and UTF-8. Strings may be created from a String Slice with the to_string() method
-        let mut stringInMemory: String = "In-Memory String".to_string();
-        stringInMemory.push_str(" Modified");
+        let mut string_in_memory: String = "In-Memory String".to_string();
+        string_in_memory.push_str(" Modified");
 
         // Functions that pass a reference (i.e. prefixed &) are automatically coerced to a String Slice
-        stringLiteral = try_strings(stringLiteral, stringInMemory, &stringLiteral);
+        string_literal = try_strings(string_literal, string_in_memory, &string_literal);
 
-        println!("stringLiteral trim() is {}", stringLiteral.trim() );
+        println!("stringLiteral trim() is {}", string_literal.trim() );
 
-        println!("stringLiteral is {}", stringLiteral);
+        println!("stringLiteral is {}", string_literal);
 
         try_arrays();
 
@@ -218,21 +219,25 @@ fn main() {
 
         try_random_numbers();
 
-        let stringToBorrow = "borrow";
-        let stringToOwn = "own".to_string();
+        let string_to_borrow = "borrow";
+        let string_to_own = "own".to_string();
 
-        try_strings_again(stringToBorrow, stringToOwn);
+        try_strings_again(string_to_borrow, string_to_own);
 
         try_indexing_strings();
 
         try_pointers_reference_and_boxes();
 
+        try_recursive_data_structures();
+
+        try_reference_counted_boxes();
+
     }
 }
 
 /*
-  Rust Structs are of Record Type form similar to Tuples.
-  Elements in Structs each have a Name (aka Field/Member) and a Type
+    Rust Structs are of Record Type form similar to Tuples.
+    Elements in Structs each have a Name (aka Field/Member) and a Type
 */
 
 // Declare a Struct with a name (camel case). Values Immutable by Default
@@ -242,36 +247,36 @@ struct PointInSpace {
 }
 
 fn try_structs() {
-  // Create Instance (Mutable) of Struct using Let and set each Field (any order)
-  let mut origin = PointInSpace { x: 0, y: 0 }; // origin: PointInSpace
+    // Create Instance (Mutable) of Struct using Let and set each Field (any order)
+    let mut origin = PointInSpace { x: 0, y: 0 }; // origin: PointInSpace
 
-  origin.x = 20;
+    origin.x = 20;
 
-  println!("Origin is at ({}, {})", origin.x, origin.y); // Dot Notation to access Fields
+    println!("Origin is at ({}, {})", origin.x, origin.y); // Dot Notation to access Fields
 }
 
 /*
-  Rust Tuple Structs are a hybrid data type similar to Tuple and Struct.
-  Elements in Tuple Structs DO NOT have a Name, they only have a Type.
-  Structs are preferred over Tuple Structs since they have actual Names for Elements.
-  Note: Tuple Structs must use round brackets and colon
+    Rust Tuple Structs are a hybrid data type similar to Tuple and Struct.
+    Elements in Tuple Structs DO NOT have a Name, they only have a Type.
+    Structs are preferred over Tuple Structs since they have actual Names for Elements.
+    Note: Tuple Structs must use round brackets and colon
 */
 
 struct Color (
-  i32,
-  i32,
-  i32
+    i32,
+    i32,
+    i32
 );
 
 struct PointInWater (
-  i32, 
-  i32, 
-  i32
+    i32, 
+    i32, 
+    i32
 );
 
 fn try_tuple_structs() {
-  let black = Color(0, 0, 0);
-  let origin = PointInWater(0, 0, 0);
+    let black = Color(0, 0, 0);
+    let origin = PointInWater(0, 0, 0);
 }
 
 // Declare a Newtype.
@@ -280,121 +285,121 @@ struct Inches (i32);
 // Newtypes are Tuple Structs with only One Element. Beneficial for creating 
 // New Types similar to others (Cloning)
 fn try_newtype() {
-  let length = Inches(10);
-  // Extract inner Integer Type by Desctructing the Let
-  let Inches(integer_length) = length; // Assigns length to integer_length
-  println!("Newtype length is {} inches", integer_length);
+    let length = Inches(10);
+    // Extract inner Integer Type by Desctructing the Let
+    let Inches(integer_length) = length; // Assigns length to integer_length
+    println!("Newtype length is {} inches", integer_length);
 }
 
 // Enums variants are a "Sum Type" that ties a set of alternatives to a specific name
 fn try_enums() {
-  // Define a Character to be either a Digit or Other. The alternative names may be 
-  // used via their fully scoped names i.e. Character::Other
-  // Sub-datastructure types allowable in an Enum include Structs, Tuple Structs
-  // Enums do not have access to operators: ==, !=, *, +, <, >=
+    // Define a Character to be either a Digit or Other. The alternative names may be 
+    // used via their fully scoped names i.e. Character::Other
+    // Sub-datastructure types allowable in an Enum include Structs, Tuple Structs
+    // Enums do not have access to operators: ==, !=, *, +, <, >=
 
-  enum Character {
-    Digit(i32), // Character::Digit is a name tied to an i32
-    Missing, // Missing is just a name (not tied to a specific Type)
-  }
+    enum Character {
+        Digit(i32), // Character::Digit is a name tied to an i32
+        Missing, // Missing is just a name (not tied to a specific Type)
+    }
 
-  // Assignment
-  let a  = Character::Digit(10);
-  let b = Character::Missing;
+    // Assignment
+    let a  = Character::Digit(10);
+    let b = Character::Missing;
 
-  // Retrieve values contained in Enums, Error Handling where function output does not 
-  // match the expected Type
-  match a {
-    Character::Digit(n) => print!("\na is {} ", n),
-    Character::Missing => print!("\na is missing"),
-  }
+    // Retrieve values contained in Enums, Error Handling where function output does not 
+    // match the expected Type
+    match a {
+        Character::Digit(n) => print!("\na is {} ", n),
+        Character::Missing => print!("\na is missing"),
+    }
 
-  match b {
-    Character::Digit(n) => print!("\nb is {}", n),
-    Character::Missing => print!("\nb is missing"),
-  }
+    match b {
+        Character::Digit(n) => print!("\nb is {}", n),
+        Character::Missing => print!("\nb is missing"),
+    }
 
-  let x = 5;
-  let y = 10;
+    let x = 5;
+    let y = 10;
 
-  // // 'ordering' variable is of Ordering type (ordering: Ordering)
-  // // so it contains one of the three values defined in the 'cmp' Function
-  // // and we discover which one by using Conditional Operators to check
-  // let ordering = cmp(x, y);
+    // // 'ordering' variable is of Ordering type (ordering: Ordering)
+    // // so it contains one of the three values defined in the 'cmp' Function
+    // // and we discover which one by using Conditional Operators to check
+    // let ordering = cmp(x, y);
 
-  // if ordering == Ordering::Less { println!("Less"); }
-  // else if ordering == Ordering::Greater { println!("Greater"); } 
-  // else if ordering == Ordering::Equal { println!("Equal"); }
+    // if ordering == Ordering::Less { println!("Less"); }
+    // else if ordering == Ordering::Greater { println!("Greater"); } 
+    // else if ordering == Ordering::Equal { println!("Equal"); }
 
-  // Replace the above 'if/else' with 'match' Pattern Matching expression instead
-  // with less noise and which supports Exhaustiveness Checking across all
-  // possible Variants of the Ordering Enum
-  println!("{}", match cmp(x, y) {
-    Ordering::Less => "\nless",
-    Ordering::Greater => "\ngreater",
-    Ordering::Equal => "\nequal",
-  });
+    // Replace the above 'if/else' with 'match' Pattern Matching expression instead
+    // with less noise and which supports Exhaustiveness Checking across all
+    // possible Variants of the Ordering Enum
+    println!("{}", match cmp(x, y) {
+        Ordering::Less => "\nless",
+        Ordering::Greater => "\ngreater",
+        Ordering::Equal => "\nequal",
+    });
 
-  // Equivalent to the above
-  match cmp(x, y) {
-    Ordering::Less => println!("\nless"),
-    Ordering::Greater => println!("\ngreater"),
-    Ordering::Equal => println!("\nequal"),
-  };
+    // Equivalent to the above
+    match cmp(x, y) {
+        Ordering::Less => println!("\nless"),
+        Ordering::Greater => println!("\ngreater"),
+        Ordering::Equal => println!("\nequal"),
+    };
 }
 
 // Pattern Matching is implemented by 'match' and allows elegantly deconstructing Enums
 // (known as the Sum Type in Type Theory) whilst using the 'match' keyword 
 // instead of avoiding 'if/else' (for multiple or a complex set of option cases)
 fn try_pattern_matching() {
-  let x = 5;
+    let x = 5;
 
-  // 'match' takes Expression and branches into Arms depending on its Value.
-  // Evaluation is performed only on the matching Arm.
-  match x {
-    // Arms are of the form 'val => expression'
-    1 => println!("one"),
-    2 => println!("two"),
-    3 => println!("three"),
-    4 => println!("four"),
-    5 => println!("five"),
-    // Exhaustiveness Checking ensures all possible patterns of Values are covered 
-    // with the '_' Catch-all- Arm so if any Expression used that were not included 
-    // (not all bases covered) it prevents a compile error (as '_' will match)
-    _ => println!("something else"),
-  }
+    // 'match' takes Expression and branches into Arms depending on its Value.
+    // Evaluation is performed only on the matching Arm.
+    match x {
+        // Arms are of the form 'val => expression'
+        1 => println!("one"),
+        2 => println!("two"),
+        3 => println!("three"),
+        4 => println!("four"),
+        5 => println!("five"),
+        // Exhaustiveness Checking ensures all possible patterns of Values are covered 
+        // with the '_' Catch-all- Arm so if any Expression used that were not included 
+        // (not all bases covered) it prevents a compile error (as '_' will match)
+        _ => println!("something else"),
+    }
 }
 
 fn try_loops(n: i32) -> (i32) {
-  let mut o = 0;
-  // For Loop with variable m over Iterator Expression 0..n (with start and end positions)
-  // that produces a series of elements where each element is a loop itertion fetched from 
-  // the Iterator and bound to the variable m during each cycle through the loop body.
-  // The Iterator is upper bound exclusive and so prints 0 through to n-1
+    let mut o = 0;
+    // For Loop with variable m over Iterator Expression 0..n (with start and end positions)
+    // that produces a series of elements where each element is a loop itertion fetched from 
+    // the Iterator and bound to the variable m during each cycle through the loop body.
+    // The Iterator is upper bound exclusive and so prints 0 through to n-1
 
-  for m in 0..n {
-    if m % 2 == 0 { continue; } // Approval condition only processes even iterations.
-    println!("for loop with: {}", m);
-    o += m;
-  }
+    for m in 0..n {
+        if m % 2 == 0 { continue; } // Approval condition only processes even iterations.
+        println!("for loop with: {}", m);
+        o += m;
+    }
 
-  let mut done: bool = false;
+    let mut done: bool = false;
 
-  println!("{}", o);
+    println!("{}", o);
 
-  while !done {
-    o += o - 2;
-    println!("while loop with: {}", o);
-    if o % 3 == 0 { done = true; }
-  }
+    while !done {
+        o += o - 2;
+        println!("while loop with: {}", o);
+        if o % 3 == 0 { done = true; }
+    }
 
-  // Infinite Loop intentionally
-  loop { // Use this instead of while true {}
-    o -= 1;
-    if o % 7 == 0 { break; } // End iteration early
-  }
+    // Infinite Loop intentionally
+    loop { // Use this instead of while true {}
+        o -= 1;
+        if o % 7 == 0 { break; } // End iteration early
+    }
 
-  return o;
+    return o;
 }
 
 // Strings are a re-sizable Data Structure. 
@@ -403,88 +408,87 @@ fn try_loops(n: i32) -> (i32) {
 
 fn try_strings(s_l: &str, s_m: String, s_m_ref: &str) -> &'static str {
 
-  let mut _s_m: String = s_m; // Declare s_m as a mutable local variable _s_m
+    let mut _s_m: String = s_m; // Declare s_m as a mutable local variable _s_m
 
-  let mut _s: String = s_l.to_string();
-  _s.push_str(", is a growable string and is guaranteed to be UTF-8");
-  println!("{}", _s);
+    let mut _s: String = s_l.to_string();
+    _s.push_str(", is a growable string and is guaranteed to be UTF-8");
+    println!("{}", _s);
 
-  // s_m_ref is a reference to a String that has been automatically coerced into String Slice
-  let mut _s_m_ref: String = s_m_ref.to_string();
+    // s_m_ref is a reference to a String that has been automatically coerced into String Slice
+    let mut _s_m_ref: String = s_m_ref.to_string();
 
-  // Function to Convert Type &str into Type String (cheap solution that allocates it to memory)
-  fn convert_to_string_in_memory_taking_string_in_memory(memory_string: String) {
-    let memory_string_slice: &str = memory_string.as_slice();
-    println!("Converted Type &str (String Slice / Literal) into Type String (In-Memory String): {}", memory_string_slice);
-  }
+    // Function to Convert Type &str into Type String (cheap solution that allocates it to memory)
+    fn convert_to_string_in_memory_taking_string_in_memory(memory_string: String) {
+        let memory_string_slice: &str = memory_string.as_slice();
+        println!("Converted Type &str (String Slice / Literal) into Type String (In-Memory String): {}", memory_string_slice);
+    }
 
-  // Coerce Type &str into Type String
-  convert_to_string_in_memory_taking_string_in_memory(_s_m);
+    // Coerce Type &str into Type String
+    convert_to_string_in_memory_taking_string_in_memory(_s_m);
 
-  // Function to Convert Type String into Type &str
-  fn convert_to_string_literal_taking_string_slice(slice: &str) {
-    println!("Converted Type String (In-Memory String) into Type &str (String Slice / Literal): {}", slice);
-  }
+    // Function to Convert Type String into Type &str
+    fn convert_to_string_literal_taking_string_slice(slice: &str) {
+        println!("Converted Type String (In-Memory String) into Type &str (String Slice / Literal): {}", slice);
+    }
 
-  // Coerce Type String into Type &str by prefixing with an & symbol
-  convert_to_string_literal_taking_string_slice(&_s);
+    // Coerce Type String into Type &str by prefixing with an & symbol
+    convert_to_string_literal_taking_string_slice(&_s);
 
-  // The following attempt to perform the same conversion with the parameter passed into the function gives error:
-  //   - error: use of moved value: `s_m`
-  //   - note: `s_m` moved here because it has type `collections::string::String`, which is moved by default
-  //   - use `ref` to override
+    // The following attempt to perform the same conversion with the parameter passed into the function gives error:
+    //   - error: use of moved value: `s_m`
+    //   - note: `s_m` moved here because it has type `collections::string::String`, which is moved by default
+    //   - use `ref` to override
 
-  // let mut _s_m2: String = s_m.to_string(); // Declare s_m as a mutable local variable _s_m
+    // let mut _s_m2: String = s_m.to_string(); // Declare s_m as a mutable local variable _s_m
 
-  // convert_to_string_literal_taking_string_slice(&_s_m2);
+    // convert_to_string_literal_taking_string_slice(&_s_m2);
 
-  // Return a the Static String Slice below by explicitly defining the return type as &'static str (rather than just &str)
-  // so that the function definition knows what parameter to associate the lifetime of the return value with when
-  // there is a second reference parameter. This overcomes Lifetime Inference.
-  // See http://users.rust-lang.org/t/signatures-of-functions-with-borrowed-return-type-value-lifetimes-and-mutability-of-string-literals/519
-  return "Test String to override the non-mutable value of the String Slice / Literal\n\n\n";
+    // Return a the Static String Slice below by explicitly defining the return type as &'static str (rather than just &str)
+    // so that the function definition knows what parameter to associate the lifetime of the return value with when
+    // there is a second reference parameter. This overcomes Lifetime Inference.
+    // See http://users.rust-lang.org/t/signatures-of-functions-with-borrowed-return-type-value-lifetimes-and-mutability-of-string-literals/519
+    return "Test String to override the non-mutable value of the String Slice / Literal\n\n\n";
 }
 
 // Strings (sequence of Unicode Scalar values encoded as stream of UTF-8 bytes)
 // Strings are not null terminated and may contain null bytes
 // Use Borrowing (&str) unless Ownership (String) required to avoid complex Lifetimes
-fn try_strings_again(stringToBorrow: &str, stringToOwn: String) {
+fn try_strings_again(string_to_borrow: &str, string_to_own: String) {
 
-      // Convert Stack-Allocated Array of Bytes into a &str (String Slice)
-      let z: &[u8] = &[b'a', b'b'];
-      let stack_str: &str = str::from_utf8(z).unwrap();
-      println!("stack_str is: {}", stack_str.to_string());
+    // Convert Stack-Allocated Array of Bytes into a &str (String Slice)
+    let z: &[u8] = &[b'a', b'b'];
+    let stack_str: &str = str::from_utf8(z).unwrap();
+    println!("stack_str is: {}", stack_str.to_string());
 
-      // Generic Function over different types
-      fn getStringLength(param: &str) -> usize {
+    // Generic Function over different types
+    fn get_string_length(param: &str) -> usize {
         param.len()
-      }
+    }
 
-      println!("stringToBorrow length is {}", getStringLength(stringToBorrow) );
-      println!("stringToOwn length is {}", getStringLength(&stringToOwn) );
+    println!("string_to_borrow length is {}", get_string_length(string_to_borrow) );
+    println!("string_to_own length is {}", get_string_length(&string_to_own) );
 }
 
 // Arrays (sequence of elements of same "List" Type and of fixed length)
 // Arrays are immutable by default
 // Arrays "List" Type has T notation [T; N]
 fn try_arrays() {
-  let arr_imm = [1, 2, 3, 4]; 
+    let arr_imm = [1, 2, 3, 4]; 
 
-  println!("arr_imm element 2 is: {}", arr_imm[2]);
+    println!("arr_imm element 2 is: {}", arr_imm[2]);
 
-  // Declare and initialise each element with value of 0
-  let mut arr_mut = [0; 3];
+    // Declare and initialise each element with value of 0
+    let mut arr_mut = [0; 3];
 
-  // Slices of Type &[T] are created from an existing variable
-  let arr_mut_slice = &arr_mut[1..3]; // Slice with only elements at index 1 and 2
+    // Slices of Type &[T] are created from an existing variable
+    let arr_mut_slice = &arr_mut[1..3]; // Slice with only elements at index 1 and 2
 
-  println!("arr_mut has {} elements", arr_mut.len());
-  println!("arr_mut_slice has {} elements", arr_mut_slice.len());
+    println!("arr_mut has {} elements", arr_mut.len());
+    println!("arr_mut_slice has {} elements", arr_mut_slice.len());
 
-  for e in arr_mut.iter() {
-    println!("arr_mut element e: {}", e);
-  }
-
+    for e in arr_mut.iter() {
+        println!("arr_mut element e: {}", e);
+    }
 }
 
 // Vectors are Arrays of "dynamic" length implemented as standard library Type Vec<T>
@@ -492,67 +496,66 @@ fn try_arrays() {
 // Vectors are to Slices what String is to &str
 // Vectors are created using the vec! macro
 fn try_vectors() {
-  let mut v_mut = vec![1, 2, 3];
+    let mut v_mut = vec![1, 2, 3];
 
-  let v_mut_length_before = v_mut.len();
+    let v_mut_length_before = v_mut.len();
 
-  v_mut.push(4);
+    v_mut.push(4);
 
-  println!("v_mut length change from {} to {}", v_mut_length_before, v_mut.len() );
-
+    println!("v_mut length change from {} to {}", v_mut_length_before, v_mut.len() );
 }
 
 fn try_random_numbers() {
-  // Modulo returns remainder of division. Use 100 it to limit random 
-  // values to b/w 0 and 99 (+1 for b/w 1 and 100)
-  // Explicit type hinting used so Rust knows range within which to generate
-  let secret_number: u64 = (rand::random::<u64>() % 100) + 1; // i32 secret
+    // Modulo returns remainder of division. Use 100 it to limit random 
+    // values to b/w 0 and 99 (+1 for b/w 1 and 100)
+    // Explicit type hinting used so Rust knows range within which to generate
+    let secret_number: u64 = (rand::random::<u64>() % 100) + 1; // i32 secret
 
-  println!("Secret number is: {}", secret_number);
+    println!("Secret number is: {}", secret_number);
 
-  let guess: u64 = (rand::random::<u64>() % 100) + 1;
+    let guess: u64 = (rand::random::<u64>() % 100) + 1;
 
-  println!("Guess is: {}", guess);
+    println!("Guess is: {}", guess);
 
-  match cmp(guess, secret_number) {
-      Ordering::Less => println!("Too small"),
-      Ordering::Greater => println!("Too big!"),
-      Ordering::Equal => {
-        println!("You win");
-        return; // Exit when win
-      },
-  }
+    match cmp(guess, secret_number) {
+        Ordering::Less => println!("Too small"),
+        Ordering::Greater => println!("Too big!"),
+        Ordering::Equal => {
+            println!("You win");
+            return; // Exit when win
+        },
+    }
 }
 
 fn try_indexing_strings() {
 
-  // Access a character of a UTF-8 string by iterating, which is an O(n) operation
-  // by using three levels of Unicode (and associated Encodings)
-  // Do not use direct indexing as each character may be a variable no. of bytes
+    // Access a character of a UTF-8 string by iterating, which is an O(n) operation
+    // by using three levels of Unicode (and associated Encodings)
+    // Do not use direct indexing as each character may be a variable no. of bytes
 
-  let stringOfChars = "u͔n͈̰̎i̙̮͚̦c͚̉o̼̩̰͗d͔̆̓ͥé";
+    let string_of_chars = "u͔n͈̰̎i̙̮͚̦c͚̉o̼̩̰͗d͔̆̓ͥé";
 
-  // 1. Rust iterator to iterate over each Byte of the Underlying Data Type (Code Units for storage)
-  //    Note: Individual Byte representation of each Code Point
-  //    i.e. 117 248 155 ...
-  for letter in stringOfChars.bytes() {
-      println!("{}", letter);
-  }
+    // 1. Rust iterator to iterate over each Byte of the Underlying Data Type (Code Units for storage)
+    //    Note: Individual Byte representation of each Code Point
+    //    i.e. 117 248 155 ...
+    for letter in string_of_chars.bytes() {
+        println!("{}", letter);
+    }
 
-  // 2. Rust iterator to iterate over each Character (Code Points / Unicode Scalar Values)
-  //    Note: Individual Code Points of each Grapheme are printed (some Combine Characters)
-  //    i.e. u ͔ n ̎ ͈ ̰ i
-  for letter in stringOfChars.chars() {
-      println!("{}", letter);
-  }
+    // 2. Rust iterator to iterate over each Character (Code Points / Unicode Scalar Values)
+    //    Note: Individual Code Points of each Grapheme are printed (some Combine Characters)
+    //    i.e. u ͔ n ̎ ͈ ̰ i
+    for letter in string_of_chars.chars() {
+        println!("{}", letter);
+    }
 
-  // 3. Rust iterator to iterate over each Visible Character (Graphemes)
-  //    Note: 'letter' has type &str 
-  //    (single Grapheme may consist of multiple Code Points)
-  //    i.e. u͔n͈̰̎i̙̮͚̦
-  for letter in stringOfChars.graphemes(true) {
-      println!("{}", letter);
-  }
+    // 3. Rust iterator to iterate over each Visible Character (Graphemes)
+    //    Note: 'letter' has type &str 
+    //    (single Grapheme may consist of multiple Code Points)
+    //    i.e. u͔n͈̰̎i̙̮͚̦
+    for letter in string_of_chars.graphemes(true) {
+        println!("{}", letter);
+    }
 
 }
 
@@ -567,86 +570,121 @@ fn try_indexing_strings() {
 //
 fn try_pointers_reference_and_boxes() {
 
-  // New Variable Binding gives a Name to this Value to be stored on the Stack
-  // i.e. Value 5 stored at Memory Stack address 0xd3e030
-  let var_binding1: i32 = 5; // Val 5 stored at 0x000001 (Memory Stack address)
-  let var_binding2: i32  = 10; // Val 10 stored at 0x000002 (Memory Stack address)
+    // New Variable Binding gives a Name to this Value to be stored on the Stack
+    // i.e. Value 5 stored at Memory Stack address 0xd3e030
+    let var_binding1: i32 = 5; // Val 5 stored at 0x000001 (Memory Stack address)
+    let var_binding2: i32  = 10; // Val 10 stored at 0x000002 (Memory Stack address)
 
-  // 1. Rust's "Reference" Pointer Type (Borrow Ownership)
-  //    - Immutable by default
-  //    - Zero overhead (safety checks by compiler at compile time,
-  //      which is Region Points aka Lifetimes Theory, where Named Value stored on
-  //      the Stack is valid from where Declared to when it goes Out of Scope
-  //    where LHS is a "reference" to the RHS
-  //    - Stack allocation preferred over Heap allocation
-  //    - Reference Pointers (Default Type) preferred for allocation
-  // 2. Rust's "Box" Pointer Type (Box<T>) (Simple Heap Allocation)
-  //    - std::rc::Rc
-  //    - Heap allocated and automatically Deallocated when go 
-  //      (from memory) Out of Scope
-  //    - Boxes do not use Garbage Collection (GC) or Reference Counting (RC)
-  //    - Boxes are an "Affine Type > Region Kind" (at Compile Time the Rust Compiler
-  //      determines when the Box enters/leaves the Scope and inserts 
-  //      appropriate calls automatically) 
-  //      * Similar to C's malloc/free)
-  //      * Rust allocates correct memory based on types
-  //      * Rust automatically frees the memory at end of scope when not used anymore
-  //      * Rust prevents any other writable pointers from aliasing to this
-  //        Heap allocation, which prevents writing to invalid pointers
-  //
-  let mut var_reference_pointer1: &i32 = &var_binding1; // Val 0x000001 stored at 0x000003 (Memory Stack address)
+    // 1. Rust's "Reference" Pointer Type (Borrow Ownership)
+    //    - Immutable by default
+    //    - Zero overhead (safety checks by compiler at compile time,
+    //      which is Region Points aka Lifetimes Theory, where Named Value stored on
+    //      the Stack is valid from where Declared to when it goes Out of Scope
+    //    where LHS is a "reference" to the RHS
+    //    - Stack allocation preferred over Heap allocation
+    //    - Reference Pointers (Default Type) preferred for allocation
+    // 2. Rust's "Box" Pointer Type (Box<T>) (Simple Heap Allocation)
+    //    - std::rc::Rc
+    //    - Heap allocated and automatically Deallocated when go 
+    //      (from memory) Out of Scope
+    //    - Boxes do not use Garbage Collection (GC) or Reference Counting (RC)
+    //    - Boxes are an "Affine Type > Region Kind" (at Compile Time the Rust Compiler
+    //      determines when the Box enters/leaves the Scope and inserts 
+    //      appropriate calls automatically) 
+    //      * Similar to C's malloc/free)
+    //      * Rust allocates correct memory based on types
+    //      * Rust automatically frees the memory at end of scope when not used anymore
+    //      * Rust prevents any other writable pointers from aliasing to this
+    //        Heap allocation, which prevents writing to invalid pointers
+    //
+    let mut var_reference_pointer1: &i32 = &var_binding1; // Val 0x000001 stored at 0x000003 (Memory Stack address)
 
-  // Not permitted to assign to an immutable borrowed reference pointer
-  // *var_reference_pointer1 = 20;
+    // Not permitted to assign to an immutable borrowed reference pointer
+    // *var_reference_pointer1 = 20;
 
-  // Print the Memory Stack address where var_reference_pointer1 is stored
-  // using the pointer format string
-  println!("{:p}", var_reference_pointer1); // i.e. 0x000003
+    // Print the Memory Stack address where var_reference_pointer1 is stored
+    // using the pointer format string
+    println!("{:p}", var_reference_pointer1); // i.e. 0x000003
 
-  let mut var_reference_pointer1 = &30;
+    let mut var_reference_pointer1 = &30;
 
-  if var_reference_pointer1 == &30 {
-    let var_reference_pointer2 = &mut &var_reference_pointer1;
-    let var_reference_pointer3 = &mut &var_reference_pointer1;
-  }
+    if var_reference_pointer1 == &30 {
+        let var_reference_pointer2 = &mut &var_reference_pointer1;
+        let var_reference_pointer3 = &mut &var_reference_pointer1;
+    }
 
-  // Mutable borrowed reference pointers are not allowed to alias 
-  // more than once until borrow ends
-  let mut var_reference_pointer4 = 40;
-  let alias_1 = &mut var_reference_pointer4;
-  // let alias_2 = &mut var_reference_pointer4;
+    // Mutable borrowed reference pointers are not allowed to alias 
+    // more than once until borrow ends
+    let mut var_reference_pointer4 = 40;
+    let alias_1 = &mut var_reference_pointer4;
+    // let alias_2 = &mut var_reference_pointer4;
 
-  println!("{:p}", var_reference_pointer1);
+    println!("{:p}", var_reference_pointer1);
 
-  // Dereference the Pointer using the * Dereferencing Operator to 
-  // access the Value at the Memory Stack address that it points to
-  println!("{}", *var_reference_pointer1 + var_binding2);
+    // Dereference the Pointer using the * Dereferencing Operator to 
+    // access the Value at the Memory Stack address that it points to
+    println!("{}", *var_reference_pointer1 + var_binding2);
 
-  // Also prints the Value of var_reference_pointer1 since
-  // println! performs Automatic Dereferencing of it
-  println!("{}", var_reference_pointer1 + var_binding2);
+    // Also prints the Value of var_reference_pointer1 since
+    // println! performs Automatic Dereferencing of it
+    println!("{}", var_reference_pointer1 + var_binding2);
 
-  // Note that the following code works without the reference operators
-  // However, Mutable Borrows where add_one() requests a mutable reference
-  // is not allowed (i.e. (p: &mut i32) )
-  fn add_one(p: &i32) -> i32 {
-    *p + 1
-  }
+    // Note that the following code works without the reference operators
+    // However, Mutable Borrows where add_one() requests a mutable reference
+    // is not allowed (i.e. (p: &mut i32) )
+    fn add_one(p: &i32) -> i32 {
+        *p + 1
+    }
 
-  println!("{}", add_one(&var_reference_pointer1) );
+    println!("{}", add_one(&var_reference_pointer1) );
 
-  let var_box1 = Box::new(20);
-  let var_rc1 = Rc::new(30);
+    let var_box1 = Box::new(20);
+    let var_rc1 = Rc::new(30);
 
-  // * - Dereference the Pointer
-  // & - takes reference to contents
-  // Rust knows that var_box1 is being Borrowed by the
-  // add_one() function and allows reading the value
-  // (when using Boxes and Reference Pointers together)
-  println!("{}", add_one(&*var_box1) );
-  // Borrowing multiple times is allowable when not simultaneous
-  println!("{}", add_one(&*var_box1) );
-  println!("{}", add_one(&*var_rc1) );
+    // * - Dereference the Pointer
+    // & - takes reference to contents
+    // Rust knows that var_box1 is being Borrowed by the
+    // add_one() function and allows reading the value
+    // (when using Boxes and Reference Pointers together)
+    println!("{}", add_one(&*var_box1) );
+    // Borrowing multiple times is allowable when not simultaneous
+    println!("{}", add_one(&*var_box1) );
+    println!("{}", add_one(&*var_rc1) );
+
+}
+
+fn try_recursive_data_structures() {
+
+    // Cons List (Recursive Data Structure)
+
+    #[derive(Debug)]
+    enum List<T> {
+
+        // Reference to List inside Cons enum variant is Box
+        // as not know length of variant, so List must be Heap allocated
+        Cons(T, Box<List<T>>),
+        Nil,
+    }
+
+    let list: List<i32> = List::Cons(1, Box::new(List::Cons(2, Box::new(List::Cons(3, Box::new(List::Nil))))));
+    println!("{:?}", list);
+}
+
+// Reference-Counted Boxes (Rc<T> type)
+// - std::rc::Rc;
+// - Shared Owner of multiple Immutable Values
+// - Owner remains allocated whilst at least one Pointer pointing to it
+// - Destruction when last Owner is gone
+// - Non-Sendable since it avoids the overhead of Automatic Reference Counting (ARC)
+// - Thread-Local
+// - Weak<T> Pointer (Non-Owning) to a Box achieved using 'downgrade' method
+// - Rc<T> Pointer may be upgraded from a Weak<T> Pointer achieved. Returns 'None' if value already dropped
+
+
+// http://doc.rust-lang.org/std/rc/index.html
+fn try_reference_counted_boxes() {
+
+
 
 }
 
@@ -656,10 +694,10 @@ fn next_two(x: i32) -> (i32, i32) { (x + 1, x + 2) }
 // All control paths must Return a Value
 fn incr(m: i32, n: i32) -> i32 {
     if n < m { 
-      return n; // Early Return
+        return n; // Early Return
     } else {
-      println!("incrementing n from: {}", n);
-      return n + 10;
+        println!("incrementing n from: {}", n);
+        return n + 10;
     }
 }
 
@@ -669,8 +707,8 @@ fn incr(m: i32, n: i32) -> i32 {
 */ 
 fn print_sum(m: i32, n: i32) -> () { // Return the Unit Type () (aka nil)
     if m < n {
-      println!("sum with m < n is: {}", m + n);
+        println!("sum with m < n is: {}", m + n);
     } else {
-      println!("sum with m >= n is: {}", m + n);
+        println!("sum with m >= n is: {}", m + n);
     }
 }
