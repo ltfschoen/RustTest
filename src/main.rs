@@ -254,6 +254,8 @@ fn main() {
 
         try_method_syntax();
 
+        try_builder_pattern();
+
     }
 }
 
@@ -1003,7 +1005,6 @@ fn try_method_syntax() {
         }
     }
 
-
     let my_circle = Circle { x: 0.0, y: 0.0, radius: 2.0 };
     println!("Circle area is: {}", my_circle.area());
 
@@ -1036,6 +1037,63 @@ fn try_method_syntax() {
     // are called with the ref.method() syntax
     let my_rectangle = Rectangle::new(3.0, 5.0);
     println!("Rectangle area is: {}", my_rectangle.area());
+
+}
+
+// Rust uses the Builder Pattern (as Method Overloading, Named Arguments, 
+// and Variable Arguments are not supported)
+// The Builder Pattern allows users to create objects by only allow the setting of 
+// properties that concern them
+// Rust's Type System is used to enforce concerns by using methods on
+// TriangleBuilder to contrain making Triangles in custom ways
+fn try_builder_pattern() {
+
+    struct Triangle {
+        base: f64,
+        height: f64,
+    }
+
+    // Define Area method on Triangle
+    impl Triangle {
+        fn area(&self) -> f64 {
+            0.5 * (self.base * self.height)
+        }
+    }
+
+    struct TriangleBuilder {
+        base: f64,
+        height: f64,
+    }
+
+    // Define Builder methods on the TriangleBuilder struct
+    impl TriangleBuilder {
+        fn new() -> TriangleBuilder {
+            TriangleBuilder { base: 100.0, height: 50.0, }
+        }
+
+        fn base(&mut self, base: f64) -> &mut TriangleBuilder {
+            self.base = base;
+            self
+        }
+
+        fn height(&mut self, height: f64) -> &mut TriangleBuilder {
+            self.height = height;
+            self
+        }
+
+        // TriangleBuilder::finalize()
+        // Define Finalize method to create the final Triangle from the Builder
+        fn finalize(&self) -> Triangle {
+            Triangle { base: self.base, height: self.height }
+        }
+    }
+
+    let my_triangle = TriangleBuilder::new()
+                .base(300.0)
+                .height(200.0)
+                .finalize();
+
+    println!("Triangle area: {}", my_triangle.area());
 
 }
 
