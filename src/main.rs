@@ -1,3 +1,5 @@
+#![feature(box_syntax)]
+
 // main.rs is Crate Root of a Binary Crate
 
 // Import the Ordering Enum from the Rust Standard Library
@@ -40,6 +42,10 @@ use std::rc::Weak;
 // (for Heap allocated T with many readers) by wrapping objects to be
 // mutated to achieve mutability through a Shared Reference
 use std::cell::RefCell;
+
+// Import the num Module (dependency added to Cargo.toml)
+extern crate num;
+use num::bigint::{ToBigInt, RandBigInt};
 
 // Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
 extern crate hello_world;
@@ -312,7 +318,7 @@ fn try_enums() {
     }
 
     // Assignment
-    let a  = Character::Digit(10);
+    let a = Character::Digit(10);
     let b = Character::Missing;
 
     // Retrieve values contained in Enums, Error Handling where function output does not 
@@ -688,38 +694,74 @@ fn try_recursive_data_structures() {
 // - Weak<T> Pointer (Non-Owning) to a Box achieved using 'downgrade' method
 // - Rc<T> Pointer may be upgraded from a Weak<T> Pointer achieved. Returns 'None' if value already dropped
 
+// Reference-Counting Data Structures
+
+struct BigUniverse {
+  one: i32,
+  two: i32,
+  age: u64,
+  age_bigint: num::bigint::BigInt,
+  // ...
+  billion: i32,
+}
+
+struct Galaxy {
+    name: String,
+    // RefCell used to store the Galaxy's vector of Planets so we may
+    // mutate it through a Shared Reference.
+    // Weak<T> Reference Pointers are used, as they do not contribute to the total
+    // Reference-Count and because doing so avoids memory leaks (where objects
+    // remain allocated to memory) that may otherwise result
+    // from just using Strong Rc<T> Reference Pointers between Galaxy and planets
+    // (which may result in cycles between objects where two objects point at each other
+    // and prevent Reference-Counts reaching zero because at least one of them must be mutable).
+    // This problem arises because Rc<T> enforces memory safety by only giving Shared Reference
+    // to the object it wraps, which do not allow direct mutation.
+    // To overcome this, we have imported std::cell::RefCell for Reference-Counting to provide
+    // Interior Mutability and the wrapping of objects to be mutated to achieve mutability through
+    // a Shared Reference. RefCell enforces Rust borrowing rules at runtime.
+    planets: RefCell<Vec<Weak<Planet>>>,
+}
+
+struct Planet {
+    id: i32,
+    owner: Rc<Galaxy>,
+}
+
+struct Star {
+    id: i32,
+    owner: Rc<Galaxy>,
+}
 
 // http://doc.rust-lang.org/std/rc/index.html
 fn try_reference_counted_boxes() {
 
-    // Data Structures
-    struct Galaxy {
-        name: String,
-        // RefCell used to store the Galaxy's vector of Planets so we may
-        // mutate it through a Shared Reference.
-        // Weak<T> Reference Pointers are used, as they do not contribute to the total
-        // Reference-Count and because doing so avoids memory leaks (where objects 
-        // remain allocated to memory) that may otherwise result 
-        // from just using Strong Rc<T> Reference Pointers between Galaxy and planets
-        // (which may result in cycles between objects where two objects point at each other
-        // and prevent Reference-Counts reaching zero because at least one of them must be mutable).
-        // This problem arises because Rc<T> enforces memory safety by only giving Shared Reference
-        // to the object it wraps, which do not allow direct mutation.
-        // To overcome this, we have imported std::cell::RefCell for Reference-Counting to provide 
-        // Interior Mutability and the wrapping of objects to be mutated to achieve mutability through 
-        // a Shared Reference. RefCell enforces Rust borrowing rules at runtime.
-        planets: RefCell<Vec<Weak<Planet>>>
+    // Return a Pointer from a function to avoid copying a large data structure,
+    // since by passing around a Box, we are only copying a Pointer rather than a billion
+    // int's that comprise BigUniverse
+    fn process_big_data_structure(my_universe1: Box<BigUniverse>) -> BigUniverse {
+        *my_universe1
     }
 
-    struct Planet {
-        id: i32,
-        owner: Rc<Galaxy>
-    }
+    let my_universe1 = Box::new(BigUniverse {
+        one: 1,
+        two: 2,
+        // http://doc.rust-lang.org/0.11.0/num/bigint/struct.BigInt.html
+        // https://github.com/rust-lang/num/blob/master/src/bigint.rs
+        age: 13800000000,
+        age_bigint: 13800000000.to_bigint().unwrap(), // returns 915098112 since i32
+        billion: 1000000000,
+    });
 
-    struct Star {
-        id: i32,
-        owner: Rc<Galaxy>
-    }
+    // Use the previously included 'box_syntax' feature gate syntax (flexibility without losing performance)
+    // The value returned from the process_big_data_structure() function is boxed.
+    // No copying is performed, instead the try_reference_counted_boxes() function block allocates enough 
+    // memory for the box, passes a pointer to that memory into the process_big_data_structure() function
+    // as as my_universe1, and then process_big_data_structure() writes the value straight into the Box<T>.
+    let generated_big_universe: Box<BigUniverse> = box process_big_data_structure(my_universe1);
+
+    println!("My Big Universe is {} years old", generated_big_universe.age);
+    println!("My Big Universe is {} years old", generated_big_universe.age_bigint);
 
     // Create a Reference-Counted Galaxy (Owner)
     let my_galaxy1 : Rc<Galaxy> = Rc::new(

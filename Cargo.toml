@@ -9,3 +9,6 @@ authors = [ "Luke Schoen <ltfschoen@gmail.com>" ]
 [[bin]] # Informs Cargo we want a binary executable build outcome
 
 name = "hello_world"
+
+[dependencies]
+num = "*"
