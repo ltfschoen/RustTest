@@ -906,15 +906,17 @@ fn try_patterns() {
 
     // WORKING - Match Range of Values (Bound to a Name)
     match my_input {
+        // Parsed as (1 ... 5)
         e @ 1 ... 5 => println!("range element detected: {}", e),
         _ => println!("anything"),
     }
 
-    // NOT WORKING - Match Multiple Values (Bound to a Name)
-    // match my_input {
-    //     f @ 1000 | 2000 => println!("century detected: {}", f),
-    //     _ => println!("anything"),
-    // }
+    // WORKING - Match Multiple Values (Bound to a Name)
+    match my_input {
+        // Note that | symbol takes two entirely independent patterns
+        f @ 1000 | f @ 2000 => println!("century detected: {}", f),
+        _ => println!("anything"),
+    }
 
     // Matching on an Enum
     enum OptionalInt {
