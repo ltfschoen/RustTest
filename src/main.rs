@@ -79,7 +79,7 @@ fn main() {
         println!("Hello in German: {}", greetings::guten_tag() );
 
         // Standard Input
-        println!("Enter your name...");
+        println!("Enter a number...");
 
         // Note that the read_line() method may be called on result of stdin() and may return a line of input
         // (i.e. when using terminal, but perhaps not for a cron job)
@@ -249,6 +249,8 @@ fn main() {
         try_reference_counted_boxes();
 
         try_lifetimes();
+
+        try_patterns();
 
     }
 }
@@ -866,6 +868,106 @@ fn try_lifetimes() {
     fn add_ten<'a>(num: &'a mut i32) -> &'a i32 {
         *num += 10;
         num // Control path must return a value as an Output Lifetime is explicitly declared
+    }
+
+}
+
+// Patterns
+// - Let Bindings
+// - Match Statements
+fn try_patterns() {
+
+    // Match Literals
+    let my_input = 1;
+
+    match my_input {
+        1 => println!("one"),
+        2 => println!("two"),
+        3 => println!("three"),
+        _ => println!("anything"),
+    }
+
+    // WORKING - Match Multiple Patterns
+    match my_input {
+        1 | 2 => println!("one or two"),
+        3 => println!("three"),
+        _ => println!("anything"),
+    }
+
+    // WORKING - Match Range of Values
+    match my_input {
+        1 ... 5 => println!("one through five"),
+        _ => println!("anything"),
+    }
+
+    // WORKING - Match Range of Values (Bound to a Name)
+    match my_input {
+        e @ 1 ... 5 => println!("range element detected: {}", e),
+        _ => println!("anything"),
+    }
+
+    // NOT WORKING - Match Multiple Values (Bound to a Name)
+    // match my_input {
+    //     f @ 1000 | 2000 => println!("century detected: {}", f),
+    //     _ => println!("anything"),
+    // }
+
+    // Matching on an Enum
+    enum OptionalInt {
+        Value(i32),
+        Missing,
+    }
+
+    let my_input_for_matching = OptionalInt::Value(5);
+
+    // Match Guards (with If)
+    match my_input_for_matching {
+        OptionalInt::Value(i) if i <= 5 => println!("Int < 5 detected"),
+        // Ignore the Value and type in the Variant by using (..)
+        OptionalInt::Value(..) => println!("Invalid Int detected"),
+        OptionalInt::Missing => println!("Nothing detected"),
+    }
+
+    // Matching on a Pointer
+    let my_input_pointer_for_matching: &i32 = &5;
+
+    // Matching on a Mutable Pointer
+    let mut my_mutable_input_pointer_for_matching: &i32 = &10;
+
+    // Match and retrieve a Reference with 'ref'
+    match my_input_pointer_for_matching {
+        // ref Keyword creates a Reference for use in the pattern
+        ref get_reference => println!("Reference detected to: {}", get_reference),
+    }
+
+    // Match and retrieve a Mutable Reference with 'ref'
+    match my_mutable_input_pointer_for_matching {
+        ref mut get_mut_reference => println!("Mutable Reference detected to: {}", get_mut_reference),
+    }
+
+    match my_input_pointer_for_matching {
+        // &val destructures the value of my_input_pointer_for_matching
+        &val => println!("Value detected: {}", val),
+    }
+
+    // Destructure a Struct inside of a Pattern
+
+    // Create another Instance (Mutable) of Struct
+    let mut another_origin = PointInSpace { x: 0, y: 0 }; // another_origin: PointInSpace
+
+    another_origin.x = 50;
+
+    match another_origin {
+        // Use .. when we do not care about certain values
+        PointInSpace { x: x, .. } => println!("Another Origin x value is at: {}", x),
+    }
+
+    // Match against a Slice or an Array
+    let my_vector = vec!["match_this", "1"];
+
+    match &my_vector[..] {
+        ["match_this", second] => println!("The second element is {}", second),
+        _ => {},
     }
 
 }
