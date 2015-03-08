@@ -699,7 +699,8 @@ fn try_recursive_data_structures() {
 struct BigUniverse {
   one: i32,
   two: i32,
-  age: num::bigint::BigInt,
+  age: u64,
+  age_bigint: num::bigint::BigInt,
   // ...
   billion: i32,
 }
@@ -709,15 +710,15 @@ struct Galaxy {
     // RefCell used to store the Galaxy's vector of Planets so we may
     // mutate it through a Shared Reference.
     // Weak<T> Reference Pointers are used, as they do not contribute to the total
-    // Reference-Count and because doing so avoids memory leaks (where objects 
-    // remain allocated to memory) that may otherwise result 
+    // Reference-Count and because doing so avoids memory leaks (where objects
+    // remain allocated to memory) that may otherwise result
     // from just using Strong Rc<T> Reference Pointers between Galaxy and planets
     // (which may result in cycles between objects where two objects point at each other
     // and prevent Reference-Counts reaching zero because at least one of them must be mutable).
     // This problem arises because Rc<T> enforces memory safety by only giving Shared Reference
     // to the object it wraps, which do not allow direct mutation.
-    // To overcome this, we have imported std::cell::RefCell for Reference-Counting to provide 
-    // Interior Mutability and the wrapping of objects to be mutated to achieve mutability through 
+    // To overcome this, we have imported std::cell::RefCell for Reference-Counting to provide
+    // Interior Mutability and the wrapping of objects to be mutated to achieve mutability through
     // a Shared Reference. RefCell enforces Rust borrowing rules at runtime.
     planets: RefCell<Vec<Weak<Planet>>>,
 }
@@ -745,7 +746,10 @@ fn try_reference_counted_boxes() {
     let my_universe1 = Box::new(BigUniverse {
         one: 1,
         two: 2,
-        age: 13800000000.to_bigint().unwrap(),
+        // http://doc.rust-lang.org/0.11.0/num/bigint/struct.BigInt.html
+        // https://github.com/rust-lang/num/blob/master/src/bigint.rs
+        age: 13800000000,
+        age_bigint: 13800000000.to_bigint().unwrap(), // returns 915098112 since i32
         billion: 1000000000,
     });
 
@@ -757,6 +761,7 @@ fn try_reference_counted_boxes() {
     let generated_big_universe: Box<BigUniverse> = box process_big_data_structure(my_universe1);
 
     println!("My Big Universe is {} years old", generated_big_universe.age);
+    println!("My Big Universe is {} years old", generated_big_universe.age_bigint);
 
     // Create a Reference-Counted Galaxy (Owner)
     let my_galaxy1 : Rc<Galaxy> = Rc::new(
