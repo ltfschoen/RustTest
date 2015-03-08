@@ -43,6 +43,8 @@ use std::rc::Weak;
 // mutated to achieve mutability through a Shared Reference
 use std::cell::RefCell;
 
+use std::clone::Clone;
+
 // Import the num Module (dependency added to Cargo.toml)
 extern crate num;
 use num::bigint::{ToBigInt, RandBigInt};
@@ -760,7 +762,12 @@ fn try_reference_counted_boxes() {
     // as as my_universe1, and then process_big_data_structure() writes the value straight into the Box<T>.
     let generated_big_universe: Box<BigUniverse> = box process_big_data_structure(my_universe1);
 
-    println!("My Big Universe is {} years old", generated_big_universe.age);
+    fn print_big_data_structure(pointer_param: &u64) {
+        println!("My Big Universe is {} years old", *pointer_param)
+    }
+
+    print_big_data_structure(&generated_big_universe.age);
+
     println!("My Big Universe is {} years old", generated_big_universe.age_bigint);
 
     // Create a Reference-Counted Galaxy (Owner)
