@@ -22,7 +22,7 @@ Key Terminology of the Rust language and ecosystem:
 Progress
 -------
 
-Up to 3. II: Intermediate Rust - 3.7 Method Syntax
+Up to 3. II: Intermediate Rust - 3.9 Iterators
 
 TODO
 -------
