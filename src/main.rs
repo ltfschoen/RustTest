@@ -43,7 +43,7 @@ use std::rc::Weak;
 // mutated to achieve mutability through a Shared Reference
 use std::cell::RefCell;
 
-use std::clone::Clone;
+// use std::clone::Clone;
 
 // Import the num Module (dependency added to Cargo.toml)
 extern crate num;
@@ -706,6 +706,7 @@ fn try_recursive_data_structures() {
 struct BigUniverse {
   one: i32,
   two: i32,
+  name: String,
   age: u64,
   age_bigint: num::bigint::BigInt,
   // ...
@@ -735,11 +736,6 @@ struct Planet {
     owner: Rc<Galaxy>,
 }
 
-struct Star {
-    id: i32,
-    owner: Rc<Galaxy>,
-}
-
 // http://doc.rust-lang.org/std/rc/index.html
 fn try_reference_counted_boxes() {
 
@@ -755,6 +751,7 @@ fn try_reference_counted_boxes() {
         two: 2,
         // http://doc.rust-lang.org/0.11.0/num/bigint/struct.BigInt.html
         // https://github.com/rust-lang/num/blob/master/src/bigint.rs
+        name: "Vortex".to_string(),
         age: 13800000000,
         age_bigint: 13800000000.to_bigint().unwrap(), // returns 915098112 since i32
         billion: 1000000000,
@@ -775,43 +772,48 @@ fn try_reference_counted_boxes() {
 
     println!("My Big Universe is {} years old", generated_big_universe.age_bigint);
 
+    let my_galaxy1 = Galaxy { 
+        name: "Milky Way".to_string(), // String::from_str("Milky Way")
+        planets: RefCell::new(Vec::new()),
+    };
+
     // Create a Reference-Counted Galaxy (Owner)
-    let my_galaxy1 : Rc<Galaxy> = Rc::new(
-        Galaxy { 
-            name: "Milky Way".to_string(), // String::from_str("Milky Way")
-            planets: RefCell::new(Vec::new())
-        }
-    );
+    // with Rc<T> so it may be pointed to by multiple Planets
+    // (not using the default Box<T> as this type only caters for a single owner)
+    let my_galaxy1_owner : Rc<Galaxy> = Rc::new(my_galaxy1);
 
     // Create Planets and Stars belonging to the Galaxy (Owner)
     // Increment the Reference-Count by cloning the Rc<T> object
-    let earth = Planet { id: 1, owner: my_galaxy1.clone() };
-    let mars = Planet { id: 2, owner: my_galaxy1.clone() };
+    let earth = Planet { id: 1, owner: my_galaxy1_owner.clone() };
+    let mars = Planet { id: 2, owner: my_galaxy1_owner.clone() };
+
+    let earth_owner : Rc<Planet> = Rc::new(earth);
+    let mars_owner : Rc<Planet> = Rc::new(mars);
 
     // Add different planets (i.e. Earth, Mars) to the Galaxy by
     // mutably borrowing from RefCell, since Galaxy's "planets"
     // property holds its planets
-    // my_galaxy1.planets.borrow_mut().push(earth.clone().downgrade());
-    // my_galaxy1.planets.borrow_mut().push(mars.clone().downgrade());
+    my_galaxy1_owner.planets.borrow_mut().push(earth_owner.clone().downgrade());
+    my_galaxy1_owner.planets.borrow_mut().push(mars_owner.clone().downgrade());
 
     // Iterate over the planets in a galaxy and print to stdout
     // Since planet_opt is a Weak Reference (i.e. Weak<Planet>) it cannot 
     // guarantee its objects are still allocated, so we must turn them into 
     // Strong References by calling upgrade() on them, which in turn returns
     // Option, containing a reference to our object if it still exists
-    for planet_opt in my_galaxy1.planets.borrow().iter() {
+    for planet_opt in my_galaxy1_owner.planets.borrow().iter() {
         let planet = planet_opt.upgrade().unwrap();
         println!("Planet {} owned by {}", planet.id, planet.owner.name);
     }
 
-    // Drops only the my_galaxy1 (owner) Reference-Count object (not the Galaxy it wraps)
+    // Drops only the my_galaxy1_owner (owner) Reference-Count object (not the Galaxy it wraps)
     // Galaxy it wraps remains allocated whilst other Rc<T> objects still point to the Rc<T> wrapper
-    drop(my_galaxy1);
+    drop(my_galaxy1_owner);
 
-    println!("Earth {} owned by {}", earth.id, earth.owner.name);
-    println!("Mars {} owned by {}", mars.id, mars.owner.name);
+    println!("Earth {} owned by {}", earth_owner.id, earth_owner.owner.name);
+    println!("Mars {} owned by {}", mars_owner.id, mars_owner.owner.name);
 
-    // End of method causes destruction of: my_galaxy1, earth, mars 
+    // End of method causes destruction of: my_galaxy1_owner, earth, mars 
     // so there are no more Strong References (i.e. Rc<T>) to the planets
     // After these are destroyed then Planets gets destroyed, causing the Reference-Count
     // on Milky Way to become zero, so Milky Way gets destroyed
