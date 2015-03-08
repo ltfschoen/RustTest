@@ -252,6 +252,8 @@ fn main() {
 
         try_patterns();
 
+        try_method_syntax();
+
     }
 }
 
@@ -969,6 +971,71 @@ fn try_patterns() {
         ["match_this", second] => println!("The second element is {}", second),
         _ => {},
     }
+
+}
+
+fn try_method_syntax() {
+    // Method Call Syntax via the 'impl' keyword to sequentially call multiple functions on input data
+    // to allow the following syntax: x.foo().bar().baz();
+    // Traditionally allowable syntax is: baz(bar(foo(x)));
+
+    // Struct represents a Circle
+    struct Circle {
+        x: f64,
+        y: f64,
+        radius: f64,
+    }
+
+    impl Circle {
+        // Methods take a special first parameter variants, where the
+        // first parameter represents the x in x.foo(). It depends on what x is, either:
+        // - self (where x is just a Value on the Stack)
+        // - &self (where x is a Reference)
+        // - &mut self (where x is a Mutable Reference)
+        fn area(&self) -> f64 {
+            // Import PI
+            std::f64::consts::PI * (self.radius * self.radius)
+        }
+
+        // Return Type is Circle to grow a new circle with an area 100 times bigger
+        fn grow(&self) -> Circle {
+            Circle { x: self.x, y: self.y, radius: (self.radius * 10.0) }
+        }
+    }
+
+
+    let my_circle = Circle { x: 0.0, y: 0.0, radius: 2.0 };
+    println!("Circle area is: {}", my_circle.area());
+
+    // Method Chaining (i.e. my_circle.grow().area() ) is achieved by
+    // returning self from the grow() method
+    let my_big_circle = my_circle.grow().area();
+    println!("Big Circle area is: {}", my_big_circle);
+
+    // Struct represents a Rectangle
+    struct Rectangle {
+        x: f64,
+        y: f64,
+    }
+
+    impl Rectangle {
+        // Static Methods used to build a new Rectangle
+        fn new(x: f64, y: f64) -> Rectangle {
+            Rectangle {
+                x: x,
+                y: y,
+            }
+        }
+
+        fn area(&self) -> f64 {
+            self.x * self.y
+        }
+    }
+
+    // Static Method called using the Struct::method() syntax, whereas Normal Methods
+    // are called with the ref.method() syntax
+    let my_rectangle = Rectangle::new(3.0, 5.0);
+    println!("Rectangle area is: {}", my_rectangle.area());
 
 }
 
