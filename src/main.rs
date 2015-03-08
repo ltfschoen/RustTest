@@ -256,6 +256,8 @@ fn main() {
 
         try_builder_pattern();
 
+        try_closures();
+
     }
 }
 
@@ -815,7 +817,9 @@ fn try_reference_counted_boxes() {
 
     // Drops only the my_galaxy1_owner (owner) Reference-Count object (not the Galaxy it wraps)
     // Galaxy it wraps remains allocated whilst other Rc<T> objects still point to the Rc<T> wrapper
-    drop(my_galaxy1_owner);
+    // Note: Destructor of my_galaxy1_owner will ensure memory is cleaned up at the end of the
+    // function, so explicit 'drop' is not required
+    // drop(my_galaxy1_owner);
 
     println!("Earth {} owned by {}", earth_owner.id, earth_owner.owner.name);
     println!("Mars {} owned by {}", mars_owner.id, mars_owner.owner.name);
@@ -1096,6 +1100,79 @@ fn try_builder_pattern() {
                 .finalize();
 
     println!("Triangle area: {}", my_triangle.area());
+
+}
+
+// Rust's Anonymous Functions are called Closures (particularly useful when 
+// combined with functions that take closures as arguments)
+fn try_closures() {
+
+    // Closure created using |...| { ... } syntax
+    // Closures "close over their environments"
+    // Closures infer their argument and return types so declaration is not required
+    // which differs from Named Functions that default to returning Unit (()).
+    // 'addition' binding is created so that the Closure may be reused
+    let addition = |x: i32, y: i32| { x + y };
+
+
+    // Anonymous Closure syntax || means this is an Anonymous Closure that takes no arguments
+    // Anonymous Closure has access to variables in the scope where it is defined
+    // Anonymous Closures Borrow any variables that they use
+    let printer = || { println!("Sum of {} plus {} is: {:?}", 6, 7, addition(6, 7)); };
+
+    printer(); // prints "addition is: 5"
+
+
+    // Moving Closures using the move || x * x keyword (differs from Ordinary Closures).
+    // Moving Closures are most useful with Rust's Concurrency features (see Threads)
+    // Moving Closures always takes Ownership of all variables that it uses, whereas
+    // Ordinary Closures just create a Reference into the enclosing Stack Frame.
+
+
+    // Closures as Arguments accepted by another Function drives efficiency with all information 
+    // available at compile-time.
+    // 'twice' takes two arguments (dim and f) and returns an i32, where dim is of type i32, whilst
+    // f is a Function that takes an i32 argument and returns an i32 as 
+    // indicated in the type parameter F.
+    // F now represents any function that takes an i32 and returns an i32.
+    fn twice<F: Fn(i32) -> i32>(dim: i32, f: F) -> i32 {
+        // Call the Closure f, passing the dim argument each time
+        f(dim) + f(dim)
+    }
+
+    // Closure that takes an integer and returns its square
+    let square = |dim: i32| { dim * dim };
+
+    // Named Function (Alternative)
+    // http://users.rust-lang.org/t/precedence-of-variable-bound-closures-over-named-functions-during-naming-conflicts/580/1
+    fn square(dim: i32) -> i32 { dim * dim };
+
+    // Call the 'twice' Function passing it two variable bindings that include 
+    // an integer (of type i32) and the 'square' Closure (of type Function)
+    println!("Double the input is: {}", twice(5, square) ); // evaluates to (5 * 5) + (5 * 5) == 50
+
+    // Define Inline
+    println!("Triple the input is: {}", twice(5, |dim: i32| { dim * dim * dim }) );
+
+    // Function that accepts two Closures.
+    // F and G are: Type Parameters.
+    // f and g both have the same Type Signature: Fn(i32) -> i32.
+    // Two different Type Parameters F and G are used since the Unique Type of each Closure parameter 
+    // prevents them being represented by the same Type Parameter as the other Closure.
+    // Each Closure has its own Unique Type since the behaviour of a Closure is part of its Type, such that:
+    // - Different Closures with Different Signatures have Different Types
+    // - Different Closures with the Same Signature have Different Types
+    fn compose<F, G>(x: i32, f: F, g: G) -> i32
+        // 'where' clause allows Type Parameters to be described in a flexible manner
+        where F: Fn(i32) -> i32, 
+              G: Fn(i32) -> i32 {
+        g(f(x))
+    }
+
+    println!("Composition of two Closure inputs is: {}", compose(5,
+                                                        |n: i32| { n + 42 },
+                                                        |n: i32| { n * 2 })
+    ); // evaluates to 94
 
 }
 
