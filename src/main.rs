@@ -45,6 +45,9 @@ use std::cell::RefCell;
 
 // use std::clone::Clone;
 
+// Import Pointers (for creation of Null)
+use std::ptr;
+
 // Import the num Module (dependency added to Cargo.toml)
 extern crate num;
 use num::bigint::{ToBigInt, RandBigInt};
@@ -257,6 +260,8 @@ fn main() {
         try_builder_pattern();
 
         try_closures();
+
+        try_iterators();
 
     }
 }
@@ -1173,6 +1178,64 @@ fn try_closures() {
                                                         |n: i32| { n + 42 },
                                                         |n: i32| { n * 2 })
     ); // evaluates to 94
+
+}
+
+// Iterators return a sequence after next() method is called repeatedly
+// - Iterators - gives a sequence of values.
+// - Iterator Adapters - operate on an Iterator, producing New Iterator with different output sequence
+// - Consumers - operator on an Iterator, producing final set of values
+fn try_iterators() {
+
+    // Raw Null Pointer
+    let my_null: *const i32 = ptr::null();
+
+    // Mutable binding to 'range' for use as an Iterator
+    let mut range = 0..2;
+
+    // Loop (loop / match / break construct) with inner Match
+    loop {
+        // Match used on result of range.next() giving reference to next value of Iterator
+        match range.next() {
+            // next() returns Option<i32>, which is either Some(i32) when a value exists
+            // or None when we run out of values
+            Some(iteration) => {
+                println!("{}", iteration); // outputs 0, 1
+            },
+            // Break out of the loop
+            None => { break }
+        }
+    }
+
+    // Iterate over contents of a Vector
+    ////////////////////////////////////
+
+    // WRONG
+    // - Iterates through indexes then indexing the Vector
+    // - Less Efficient due to extra bounds checking through using indexing (i.e. nums[i])
+    let nums = vec![1, 2, 3];
+
+    for i in 0..nums.len() {
+        println!("{}", nums[i]);
+    }
+
+    // RIGHT
+    // - Iterates over Vectors directly
+    // - Iterates through entire Vector
+    // - Yields a Reference (&) to each element of Vector with Iterator. 
+    // - No bounds checking required to be safe
+    // - More Efficient
+    // - Directly expresses what we mean
+    let nums = vec![1, 2, 3];
+
+    // num is of Type &i32 (a Reference to an i32) as we explicitly requested a Reference with &
+    // so we are just Borrowing a Reference to the Data (just Pass-By-Reference without a Move)
+    // rather than dealing with the Data itself, being its Owner, andhaving to make a Copy of it.
+    // println! handles Dereferencing automatically so prefixing with * is optional
+    for num in &nums {
+        // println!("{}", num); OK too
+        println!("{}", *num);
+    }
 
 }
 
