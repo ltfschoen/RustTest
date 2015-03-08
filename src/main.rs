@@ -793,6 +793,7 @@ fn try_reference_counted_boxes() {
     // Add different planets (i.e. Earth, Mars) to the Galaxy by
     // mutably borrowing from RefCell, since Galaxy's "planets"
     // property holds its planets
+    // Clone method is used to create new references
     my_galaxy1_owner.planets.borrow_mut().push(earth_owner.clone().downgrade());
     my_galaxy1_owner.planets.borrow_mut().push(mars_owner.clone().downgrade());
 
@@ -860,8 +861,11 @@ fn try_lifetimes() {
     // can be provided with a more descriptive name instead if desired
     // add_ten Function declares that it has one Lifetime 'a (multiple would be expressed as <'a, 'b>)
     // add_ten takes a mutable reference to an i32 with a lifetime of 'a
-    fn add_ten<'a>(num: &'a mut i32) {
+    // Input Lifetime is: (num: &'a mut i32)
+    // Output Lifetime is: -> &'a i32
+    fn add_ten<'a>(num: &'a mut i32) -> &'a i32 {
         *num += 10;
+        num // Control path must return a value as an Output Lifetime is explicitly declared
     }
 
 }
