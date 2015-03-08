@@ -248,6 +248,8 @@ fn main() {
 
         try_reference_counted_boxes();
 
+        try_lifetimes();
+
     }
 }
 
@@ -652,7 +654,10 @@ fn try_pointers_reference_and_boxes() {
         *p + 1
     }
 
+    // Call to add_one causes p to Borrow Ownership (the value does not "move") of the value of the 
+    // var_reference_pointer1 handle. add_one finishes Borrowing when it returns a value
     println!("{}", add_one(&var_reference_pointer1) );
+
 
     let var_box1 = Box::new(20);
     let var_rc1 = Rc::new(30);
@@ -810,6 +815,53 @@ fn try_reference_counted_boxes() {
     // so there are no more Strong References (i.e. Rc<T>) to the planets
     // After these are destroyed then Planets gets destroyed, causing the Reference-Count
     // on Milky Way to become zero, so Milky Way gets destroyed
+}
+
+// Ownership (of Resources such as Memory) in Rust involves
+// Owning Handle (Pointers) that are received for interaction when memory allocation is requested
+// Rust performs the deallocation of handles when they go out of scope
+// Memory Leakage Concept (function allocates bytes of memory each time it is called 
+// but does not deallocate it each time, so eventually we run out of memory)
+// Memory that is allocated should also be deallocated only once (the counts must match)
+// Refer to Borrowing
+//
+// Lifetimes Concept of Rust's Ownership System prevents Dangling Pointers (i.e. where a reference
+// to an acquired handle that points to a Resource is lent to a function that deallocates such that
+// after returning from the function when the Resource is used an error occurs)
+fn try_lifetimes() {
+
+    // Static Lifetimes have a lifetime of the entire program
+    // String Literals have the Type &'static str as the reference is always alive in data segment of final binary
+    let my_static_string: &'static str = "Hello, world.";
+
+    // Global that adds i32 to data segment of binary with my_static_integer referencing it
+    static MY_GLOBAL: i32 = 20;
+    let my_static_integer: &'static i32 = &MY_GLOBAL;
+
+    println!("My Static Integer is: {}", my_static_integer);
+
+    // Struct with a Lifetime declared as 'a to ensure any reference to MyBody cannot
+    // outlive the reference to an i32 it contains.
+    // Named Lifetimes are a way of giving the Scope of a bindings a name for understanding lifetimes
+    struct MyBody<'a> {
+        with_lifespan: &'a i32,
+    }
+
+     // same as `let _my_lifespan = 5; let my_lifespan = &_my_lifespan;`
+    let my_lifespan = &100;
+    let my_body = MyBody { with_lifespan: my_lifespan };
+
+    println!("My Lifespan is: {}", my_body.with_lifespan);
+
+    // Lifetime Elision (i.e. the option of omitting lifetime annotations) feature of Rust.
+    // 'a is called a Lifetime (below the lifetime annotation is included, not elided) where the letter 'a' 
+    // can be provided with a more descriptive name instead if desired
+    // add_ten Function declares that it has one Lifetime 'a (multiple would be expressed as <'a, 'b>)
+    // add_ten takes a mutable reference to an i32 with a lifetime of 'a
+    fn add_ten<'a>(num: &'a mut i32) {
+        *num += 10;
+    }
+
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)

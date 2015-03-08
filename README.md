@@ -103,7 +103,7 @@ Other Links
 * [Pointers, Ownership & Lifetimes](http://paulkoerbitz.de/posts/Understanding-Pointers-Ownership-and-Lifetimes-in-Rust.html)
 * [Pointers Cheatsheet](http://doc.rust-lang.org/book/pointers.html#cheat-sheet)
   - [Stack vs Heap](http://stackoverflow.com/questions/79923/what-and-where-are-the-stack-and-heap)
-
+* [Mozilla Research Projects including Servo](https://www.mozilla.org/en-US/research/projects/)
 
 Help
 -------
