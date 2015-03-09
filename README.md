@@ -22,7 +22,7 @@ Key Terminology of the Rust language and ecosystem:
 Progress
 -------
 
-Up to 3. II: Intermediate Rust - 3.9 Iterators
+Up to 3. II: Intermediate Rust - 3.10 Generics
 
 TODO
 -------
@@ -31,6 +31,7 @@ TODO
 * Change to 4-space indentation
 * Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
 * Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
+* Try different [Iterators in std::iter Module](http://doc.rust-lang.org/std/iter/)
 
 Requirements
 -------

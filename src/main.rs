@@ -1185,7 +1185,9 @@ fn try_closures() {
 }
 
 // Iterators return a sequence after next() method is called repeatedly
+// - List of Iterators available in Rust http://doc.rust-lang.org/std/iter/
 // - Iterators - gives a sequence of values.
+// - Iterators - provide safe, efficient way to manipulate different lists
 // - Iterator Adapters - operate on an Iterator, producing New Iterator with different output sequence
 // - Consumers - operator on an Iterator, producing final set of values
 fn try_iterators() {
@@ -1336,6 +1338,49 @@ fn try_iterators() {
         println!("assert_eq! with iteration: {} and bigs[i]: {}, is: {:?}", iteration, bigs[i], assert_eq!(iteration, bigs[i]) );
         i += 1;
     }
+
+    // Iterator Adapters
+    ////////////////////
+    //
+    // Iterator Adapters - take an Iterator and modify it to produce a New Iterator
+    // Iterator Adapters are Lazy and do nothing unless Consumed. 
+
+    // map() - is an Iterator Adapter
+    // map() is called on another Iterator (i.e. a Range Iterator) and produces a
+    // New Iterator where the Closure given as an argument to map() is 
+    // called on each Element Reference. Since Iterator Adapters are Lazy the 
+    // Closure below would never execute. Using println!("{}", x) instead of x + 1 will
+    // not print any numbers. Instead use a 'for'
+    (1..100).map(|x| x + 1);
+
+    // 'for' is used to execute a Closure on an Iterator for its Side-Effects
+    // take(n) - returns an Iterator over next 'n' elements of the given Original Iterator
+    //           but has No Side-Effect on the given Original Iterator
+    //           (i.e. use it to constrain to only 5 iterations)
+
+    // using the Infinite Iterator imported from std::iter::count
+    for i in std::iter::count(2, 7).take(5) {
+        println!("{}", i);
+    }
+
+    // filter() - is an Iterator Adaptor
+    // filter() - takes a Closure as an argument that returns 'true' or 'false'. The New 
+    // Iterator filter() below produces only elements that the Closure returns 'true' for
+
+    // (prints all even numbers b/w 1 and 100)
+    // filter() does Not Consume elements it Iterates over, it is passed a reference to 
+    // each element through the filter() predicate (using &x patter to extract the 
+    // integer value itself)
+    for i in (1..30).filter(|&x| x % 7 == 0) {
+        println!("Modulus of 7 between 1 and 30 is: {}", i);
+    }
+
+    // Iterator Chaining
+    (1..1000)                       // Iterator (Range)
+        .filter(|&x| x % 2 == 0)    // Iterator Adapter (adapts the Iterator)
+        .filter(|&x| x % 3 == 0)    // As above
+        .take(5)
+        .collect::<Vec<i32>>();     // Consume (the result)
 
 
 }
