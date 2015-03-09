@@ -52,6 +52,9 @@ use std::ptr;
 extern crate num;
 use num::bigint::{ToBigInt, RandBigInt};
 
+// Import Infinite Iterator count()
+use std::iter::count;
+
 // Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
 extern crate hello_world;
 
@@ -1243,16 +1246,97 @@ fn try_iterators() {
     // - collect() on Iterator takes value/values returning 
     //   a Collection of results
 
+    // collect() - is a Consumer
+    ////////////
+
     // ::<> syntax is for Type Hints (we want Vector of Integers)
+    // The Consumer (i.e. collect::) uses the Range Iterator to
+    // generate a sequence
     let one_to_three = (1..3).collect::<Vec<i32>>();
-     // outputs [1, 2]
+    // outputs [1, 2]
     println!("one_to_three from: {:?}", one_to_three);
 
     // ::<_> syntax is for Partial Type (Placeholder) Hints
     // (for collecting into Vec<T> an inferring the type T)
     let one_to_three_using_inferred = (1..3).collect::<Vec<_>>();
-     // outputs [1, 2]
+    // outputs [1, 2]
     println!("one_to_three_using_inferred from: {:?}", one_to_three_using_inferred);
+
+    // find() - is a Consumer
+    /////////
+
+    // find() takes a Closure and uses Reference to each element of 
+    // an Iterator. Closure returns 'true' if match found else 'false'.
+    // find() returns an Option since it may not find a matching element.
+    let greater_than_ninety_five = (0..100)
+                                .find(|x| *x > 95);
+
+    match greater_than_ninety_five {
+        Some(_) => println!("Detected numbers over 95"),
+        None => println!("No numbers over 95 detected"),
+    }
+
+    // fold() - is a Consumer (use when given List and want Single result)
+    /////////
+
+    // http://doc.rust-lang.org/book/iterators.html
+
+    // fold() takes the form:
+    // fold(base, |accumulator, element| ...)
+    //
+    // fold() takes two arguments:
+    // - 1st arg  - base - 
+    // - 2nd arg (Closure taking two arguments)
+    //            - accumulator - 
+    //            - element - 
+
+    // 1st Iteration -  Base is Accumulator's Value. 
+    //                  Result stored in Accumulator on next Iteration
+    // 2nd+ Iteration - Result of 1st Iteration is Accumulator's Value
+    //
+    // Note: Closure called each Iteration with result stored in Accumulator
+    // on next Iteration
+    //
+    // Note: Iterators are 'lazy' as they do not need to generate all values upfront
+    // since the Range simply creates a Value that Represents the sequence (instead
+    // of actually generating a range of numbers i.e. (1..4) )
+    let sum = (1..4)
+            .fold(
+                0,               // Base
+                |sum, x| sum + x // Closure
+            );
+    println!("fold() Consumer returns single result given a list: {}", sum);
+
+    // iter() - is a basic Iterator (similar to the Range Iterator)
+    /////////
+    // iter() may convert a Vector into an Iterator returning each element
+    let nums = [1, 2];
+
+    for num in nums.iter() {
+        println!("iter() Iterator prints numbers in turn: {}", num);
+    }
+
+    // count() - is an Infinite Iterator
+    // std::iter::count
+    //////////
+
+    // count() counts up from the value of the 1st argument until the maximum 
+    // number represented by i32, adding the value of the 2nd argument each time
+    // to the previous total count
+
+    // Creates an Iterator that maps each element to an iterator, and 
+    // yields the elements of the produced iterators
+    let smalls = [2u, 3];
+    let bigs = [0u, 1, 0, 1, 2, 3];
+    let mut my_iterator = smalls.iter().flat_map(|&small| count(0u, 1).take(small));
+    // Check that 'my_iterator' has the same elements as 'bigs'
+    let mut i = 0;
+    for iteration in my_iterator {
+        // assert_eq!(iteration, bigs[i]);
+        println!("assert_eq! with iteration: {} and bigs[i]: {}, is: {:?}", iteration, bigs[i], assert_eq!(iteration, bigs[i]) );
+        i += 1;
+    }
+
 
 }
 
