@@ -277,6 +277,8 @@ fn main() {
 
         try_traits();
 
+        try_traits_with_where_clause();
+
     }
 }
 
@@ -1509,6 +1511,57 @@ fn try_traits() {
     shapes::print_area(my_square); // outputs 1
 
     shapes::print_area(5); // outputs 5
+
+}
+
+// Traits have a 'where' clause that overcomes complex amount of Trait Bounds
+// (which appear between the Function on the far left and its Parameter List on the far right)
+fn try_traits_with_where_clause() {
+    use std::fmt::Debug;
+
+    // Traits (WITHOUT 'where' clause)
+    fn my_trait_without_where_clause<T: Clone, K: Clone + Debug>(x: T, y: K) {
+        x.clone();
+        y.clone();
+        println!("{:?}", y);
+    }
+
+    // Traits (WITH 'where' clause)
+    fn my_trait_with_where_clause<T, K>(x: T, y: K) 
+        where T: Clone, 
+              K: Clone + Debug {
+        x.clone();
+        y.clone();
+        println!("{:?}", y);
+    }
+
+    my_trait_without_where_clause("Hello", "world");
+    my_trait_with_where_clause("Hello", "workd");
+
+    // Traits WITH 'where' clauses are more powerful than simpler syntax since
+    // they allow Trait Bounds where the left-hand side is an arbitrary type (i.e. i32)
+    // rather than just a plain type parameter like T
+    trait ConvertTo<Output> {
+        fn convert(&self) -> Output;
+    }
+
+    impl ConvertTo<i64> for i32 {
+        fn convert(&self) -> i64 { *self as i64 }
+    }
+
+    // Called with T == i32
+    fn normal<T: ConvertTo<i64>>(x: &T) -> i64 {
+        x.convert()
+    }
+
+    // Called with T == i64
+    fn inverse<T>() -> T
+        // this is using ConvertTo as if it were "ConvertFrom<i32>"
+        where i32: ConvertTo<T> {
+        1i32.convert()
+    }
+
+    println!("inverse() is: {:?}", inverse() );
 
 }
 
