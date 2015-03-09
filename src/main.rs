@@ -1237,6 +1237,23 @@ fn try_iterators() {
         println!("{}", *num);
     }
 
+    // Consumers
+    ////////////
+    // - Consumers operate on an Iterator returning value/values
+    // - collect() on Iterator takes value/values returning 
+    //   a Collection of results
+
+    // ::<> syntax is for Type Hints (we want Vector of Integers)
+    let one_to_three = (1..3).collect::<Vec<i32>>();
+     // outputs [1, 2]
+    println!("one_to_three from: {:?}", one_to_three);
+
+    // ::<_> syntax is for Partial Type (Placeholder) Hints
+    // (for collecting into Vec<T> an inferring the type T)
+    let one_to_three_using_inferred = (1..3).collect::<Vec<_>>();
+     // outputs [1, 2]
+    println!("one_to_three_using_inferred from: {:?}", one_to_three_using_inferred);
+
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
