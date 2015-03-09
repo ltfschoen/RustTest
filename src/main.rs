@@ -55,6 +55,9 @@ use num::bigint::{ToBigInt, RandBigInt};
 // Import Infinite Iterator count()
 use std::iter::count;
 
+// Import Float that supports f32 and f64
+use std::num::Float;
+
 // Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
 extern crate hello_world;
 
@@ -265,6 +268,8 @@ fn main() {
         try_closures();
 
         try_iterators();
+
+        try_generics();
 
     }
 }
@@ -1343,12 +1348,12 @@ fn try_iterators() {
     ////////////////////
     //
     // Iterator Adapters - take an Iterator and modify it to produce a New Iterator
-    // Iterator Adapters are Lazy and do nothing unless Consumed. 
+    // Iterator Adapters are Lazy and do nothing unless Consumed.
 
     // map() - is an Iterator Adapter
     // map() is called on another Iterator (i.e. a Range Iterator) and produces a
-    // New Iterator where the Closure given as an argument to map() is 
-    // called on each Element Reference. Since Iterator Adapters are Lazy the 
+    // New Iterator where the Closure given as an argument to map() is
+    // called on each Element Reference. Since Iterator Adapters are Lazy the
     // Closure below would never execute. Using println!("{}", x) instead of x + 1 will
     // not print any numbers. Instead use a 'for'
     (1..100).map(|x| x + 1);
@@ -1364,12 +1369,12 @@ fn try_iterators() {
     }
 
     // filter() - is an Iterator Adaptor
-    // filter() - takes a Closure as an argument that returns 'true' or 'false'. The New 
+    // filter() - takes a Closure as an argument that returns 'true' or 'false'. The New
     // Iterator filter() below produces only elements that the Closure returns 'true' for
 
     // (prints all even numbers b/w 1 and 100)
-    // filter() does Not Consume elements it Iterates over, it is passed a reference to 
-    // each element through the filter() predicate (using &x patter to extract the 
+    // filter() does Not Consume elements it Iterates over, it is passed a reference to
+    // each element through the filter() predicate (using &x patter to extract the
     // integer value itself)
     for i in (1..30).filter(|&x| x % 7 == 0) {
         println!("Modulus of 7 between 1 and 30 is: {}", i);
@@ -1382,6 +1387,90 @@ fn try_iterators() {
         .take(5)
         .collect::<Vec<i32>>();     // Consume (the result)
 
+
+}
+
+// Generics are called Parametric Polymorphism in Type Theory.
+// Generics are Types or Functions having Multiple (Poly) Forms (Morphs)
+// over a given Parameter (Parametric).
+// Generics empower developers to configure a Function or
+// Data Type to work for Multiple Types of Arguments (i.e. both i32 and f64).
+fn try_generics() {
+
+    // Generic Form of OptionalInt declaration in Rust
+    // where <T> means it is a Generic Data Type.
+    // Within the 'enum' we substitute the a given type for T
+    // enum Option<T> {
+    //     Some(T),
+    //     None,
+    // }
+
+    // Option<T> with additional Type Annotations.
+    // The Variable Binding uses a Single Generic Definition for Multiple uses across Types.
+    // Left-Side of Binding - Option<i32> in Type Declaration, T is value i32.
+    // Right-Side of Binding - make Some(T) where T is the value 5 (which is i32)
+    // Both sides must match to prevent a mismatched types error
+    let my_var_binding_with_generics1: Option<i32> = Some(5);
+    let my_var_binding_with_generics2: Option<f64> = Some(5.0f64);
+
+    // Generic Form of Rust's built-in Result<T, E> type is generic over 
+    // Multiple Types T and E, and is used to return the result of a computation or error.
+    // enum Result<T, E> {
+    //     Ok(T),
+    //     Err(E),
+    // }
+
+    // Success returns f64. Failure returns String.
+    let my_var_binding_with_generics3: Result<f64, String> = Ok(2.3f64);
+    let my_var_binding_with_generics4: Result<f64, String> = Err("Error occured.".to_string());
+
+    // Function that uses Rust's built-in Result<T, E> type
+    fn inverse_64(input_param: f64) -> Result<f64, String> {
+        // Check that input parameter is non-zero to prevent taking its inverse
+        if input_param == 0.0f64 { return Err("input_param cannot be zero!".to_string()); }
+
+        // With result wrapped in an Ok, we must perform the Match before using the result
+        Ok(1.0f64 / input_param)
+    }
+
+    // Problem with the inverse64 Function is that it only works for 64bit Floating Point values
+    // Without leveraging a Generic Function, we would have to write an additional 'inverse_32' Function
+    // fn inverse_32(input_param: f32) -> Result<f32, String> {
+    //     if input_param == 0.0f32 { return Err("input_param cannot be zero!".to_string()); }
+
+    //     Ok(1.0f32 / input_param)
+    // }
+
+    // Exhaustive Match's using the 'inverse' Function
+    let my_var_binding = inverse_64(25.0f64);
+
+    // Match enforces that we handle the Err case
+    match my_var_binding {
+        Ok(my_var_binding) => println!("Inverse of 25 is {}", my_var_binding),
+        Err(msg) => println!("Error: {}", msg),
+    }
+
+    // Generic Function combined with Traits is required to Combine the 
+    // 'inverse_64' and 'inverse_32' Functions.
+    // Traits must also be used since T is too generic and can be any type, and so 
+    // may not implement ==.
+    // Traints must be used to add a Trait Constraint to the Generic T to ensure that it
+    // implements ==, since Traits define Function Type Signatures we can be sure any Type that 
+    // implements HasEquals will have ==.
+    // Trait Bounds may be used, specifically Float, and replacing the generic 0.0 and 1.0 with
+    // methods from Float Trait. Both f32 and f64 implement Float (std::num::Float)
+    fn inverse_64_and_32_generic<T: Float>(input_param: T) -> Result<T, String> {
+        if input_param == Float::zero() { return Err("input_param cannot be zero!".to_string()); }
+
+        let one: T = Float::one();
+        Ok(one / input_param)
+    }
+
+    println!("Inverse of {} is {:?}", 2.0f32, inverse_64_and_32_generic(2.0f32));
+    println!("Inverse of {} is {:?}", 2.0f64, inverse_64_and_32_generic(2.0f64));
+
+    println!("Inverse of {} is {:?}", 0.0f32, inverse_64_and_32_generic(0.0f32));
+    println!("Inverse of {} is {:?}", 0.0f64, inverse_64_and_32_generic(0.0f64));
 
 }
 
