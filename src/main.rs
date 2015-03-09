@@ -58,6 +58,10 @@ use std::iter::count;
 // Import Float that supports f32 and f64
 use std::num::Float;
 
+// Import Crate Module with shapes
+use hello_world::shapes;
+// use hello_world::shapes::HasArea;
+
 // Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
 extern crate hello_world;
 
@@ -270,6 +274,8 @@ fn main() {
         try_iterators();
 
         try_generics();
+
+        try_traits();
 
     }
 }
@@ -1454,11 +1460,13 @@ fn try_generics() {
     // 'inverse_64' and 'inverse_32' Functions.
     // Traits must also be used since T is too generic and can be any type, and so 
     // may not implement ==.
-    // Traints must be used to add a Trait Constraint to the Generic T to ensure that it
+    // Traits must be used to add a Trait Constraint to the Generic T to ensure that it
     // implements ==, since Traits define Function Type Signatures we can be sure any Type that 
     // implements HasEquals will have ==.
     // Trait Bounds may be used, specifically Float, and replacing the generic 0.0 and 1.0 with
     // methods from Float Trait. Both f32 and f64 implement Float (std::num::Float)
+    // Trait Bounds use Monomorphization (mono: one, morph: form) and so
+    // they are Statically Dispatched
     fn inverse_64_and_32_generic<T: Float>(input_param: T) -> Result<T, String> {
         if input_param == Float::zero() { return Err("input_param cannot be zero!".to_string()); }
 
@@ -1471,6 +1479,36 @@ fn try_generics() {
 
     println!("Inverse of {} is {:?}", 0.0f32, inverse_64_and_32_generic(0.0f32));
     println!("Inverse of {} is {:?}", 0.0f64, inverse_64_and_32_generic(0.0f64));
+
+}
+
+// Traits are defined similar to the 'impl' keyword that is used to call a function
+// with method syntax (implementing a 'struct')
+// 'trait' blocks are similar to the 'impl' block (however only a Type Signature is
+// defined Without a Body) and 'impl Trait for Item' is used rather than 'impl Item'
+// Rule: Traits must be used in any scope where the Trait method is used.
+// Rule: Trait or the type the 'impl' of the trait is being written for must be inside the crate
+fn try_traits() {
+
+    // uses code in /src/shapes/shapes.rs
+
+    let my_circle = shapes::Circle {
+        x: 0.0f64,
+        y: 0.0f64,
+        radius: 1.0f64,
+    };
+
+    let my_square = shapes::Square {
+        x: 0.0f64,
+        y: 0.0f64,
+        side: 1.0f64,
+    };
+
+    // print_area is now Generic and ensures only correct Types are passed in
+    shapes::print_area(my_circle); // outputs 3.141593
+    shapes::print_area(my_square); // outputs 1
+
+    shapes::print_area(5); // outputs 5
 
 }
 
