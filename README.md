@@ -97,6 +97,7 @@ Other Links
 * [Rust Community Forums](http://users.rust-lang.org/)
 * [Rust Standard Library](http://doc.rust-lang.org/std/)
 * [Rust on Reddit (Official Discussion Forums)](http://www.reddit.com/r/rust/)
+* [Rust Weekly Community Blog](http://this-week-in-rust.org/)
 * [Play Rust](https://play.rust-lang.org/)
   - Click "Evaluate" to run code
 * [Crates.io (Rust Community Crate Host)](https://crates.io/).
