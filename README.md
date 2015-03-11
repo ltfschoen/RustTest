@@ -22,7 +22,7 @@ Key Terminology of the Rust language and ecosystem:
 Progress
 -------
 
-Up to 3. II: Intermediate Rust - 3.12 Static and Dynamic Dispatch
+Up to 3. II: Intermediate Rust - 3.13 Macros
 
 TODO
 -------
