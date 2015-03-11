@@ -27,11 +27,13 @@ Up to 3. II: Intermediate Rust - 3.13 Macros
 TODO
 -------
 
-* Convert Function and Variable names to snake case instead of camel case
-* Change to 4-space indentation
-* Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
-* Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
-* Try different [Iterators in std::iter Module](http://doc.rust-lang.org/std/iter/)
+* [x] Convert Function and Variable names to snake case instead of camel case
+* [x] Change to 4-space indentation
+* [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
+* [ ] Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
+* [ ] Try different [Iterators in std::iter Module](http://doc.rust-lang.org/std/iter/)
+* [ ] Read [Macro's Reference Docs](http://doc.rust-lang.org/reference.html#macros)
+* [ ] Read [Advanced Macros](http://doc.rust-lang.org/book/advanced-macros.html)
 
 Requirements
 -------
