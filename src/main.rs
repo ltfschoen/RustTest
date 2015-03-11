@@ -1645,6 +1645,46 @@ fn try_static_dispatch() {
 
 fn try_dynamic_dispatch() {
 
+    // Runtime Representation
+    // - Trait Objects have a Runtime Represetation of Trait Objects
+    //   that is defined in std::raw Module as Structs with layouts
+    //   similar to complicated built-in Types
+    //
+    // Runtime Representation Example:
+    // - Trait Objects contain:
+    //   - "data" Pointer - points to data (of unknown type T) stored 
+    //     by Trait Object
+    //   - "vtable" Pointer - points to Virtual Method Table of 
+    //     associated Implementation of the Trait Object for T
+    //     "vtable" is Struct of Function Pointers pointing to
+    //     machine code for each Implementation Method to allow
+    //     retrieval of correct pointers from "vtable" and subsequent
+    //     dynamic calls with it.
+    //   - "destructor" fields in each "vtable" points to Function that
+    //     cleans up any resources (i.e. memory allocation, internal type) 
+    //     of the "vtable" type for owning Trait Objects like Box<Foo>
+    //     for when they go out of scope
+    //   - "size" field stores the size of the erased type
+    //   - "align" field stores the alignment requirements (not currently used)
+    //
+    // pub struct TraitObject {
+    //     pub data: *mut (),
+    //     pub vtable: *mut (),
+    // }
+    //
+    // Note: For details see http://doc.rust-lang.org/book/static-and-dynamic-dispatch.html
+    //
+    // Benefits:
+    //   - Pointers used for storing values when Types may be arbitrarily large
+    //     and allows dependent crates to implement the Trait Object
+    //   - Pointers with values behind them means only the size of the pointer
+    //     is relevant, but the size of the value is not relevant to the Trait 
+    //     Object being used
+    //   - "Fat Pointer" implies a Trait Object is always a Pointer
+    //   - Pointers overcome not knowing the size of the value at
+    //     compile-time, which is important for passing as Function 
+    //     argument, storing and manipulating it on the Stack and
+    //     allocating and deallocating memory on the Heap for it.
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
