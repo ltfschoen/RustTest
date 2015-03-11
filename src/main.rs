@@ -283,6 +283,8 @@ fn main() {
 
         try_dynamic_dispatch();
 
+        try_macros();
+
     }
 }
 
@@ -1646,7 +1648,7 @@ fn try_static_dispatch() {
 fn try_dynamic_dispatch() {
 
     // Runtime Representation
-    // - Trait Objects have a Runtime Represetation of Trait Objects
+    // - Trait Objects have a Runtime Representation of Trait Objects
     //   that is defined in std::raw Module as Structs with layouts
     //   similar to complicated built-in Types
     //
@@ -1685,6 +1687,74 @@ fn try_dynamic_dispatch() {
     //     compile-time, which is important for passing as Function 
     //     argument, storing and manipulating it on the Stack and
     //     allocating and deallocating memory on the Heap for it.
+}
+
+// Summary of Rust Tools and Semantic Structure for Abstraction and Reuse, and the role of Macros
+// - Functions have a Type Signature
+// - Type Parameters have Trait Bounds
+// - Overloaded Functions must belong to a Trait
+// - Powerful Compile-Time correctness checking
+// - Macro invocations allow Syntactic Level abstractions (expanded syntactic forms) that
+//   occur early in compile-time before static checking and may therefore capture
+//   patterns of code reuse that Rust's core abstractions cannot, which overcomes any 
+//   inflexibility as it allows ease of expressing a visually identified
+//   pattern in repeated code without reliance solely on Generic Functions or Traits
+// - Macros offer truly concise and well-abstracted code
+// - Macros should be designed to be well-behaved without having to understand their implementation
+// - Macros should be designed to explicitly inform developers of compile-time errors since 
+//   associated errors are difficult to interpret otherwise as they describe problems in expanded code
+//   rather than source-level form (used by developers)
+
+fn try_macros() {
+
+    // vec! Macro (initialises a Vector with any number of elements)
+    // Macro Name written informally as vec!
+    // let x: Vec<u32> = vec![1, 2, 3];
+
+    // Imagined in Syntactic Shorthand of vec! Macro
+    let x: Vec<u32> = {
+        let mut temp_vec = Vec::new();
+        temp_vec.push(1);
+        temp_vec.push(2);
+        temp_vec.push(3);
+        println!("temp_vec before is: {:?}", temp_vec);
+        temp_vec
+    };
+
+    println!("x before is: {:?}", x);
+
+    // Imagined implementation of Syntactic Shorthand of vec! Macro
+
+    // Macro Name is "vec" using invocation syntax to distinguish a Macro from an ordinary function
+    macro_rules! vec {
+        // Macro Rules defined (Pattern Matching cases similar to 'match' expression)
+        // however the matching occurs on Rust syntax trees compile-time.
+        // Format: (  <matcher>:<identifier> ) => {
+            // Special Matcher Syntax - given below (i.e. $x:expr) matches any Rust expression binding that syntax tree 
+            // to Metavariable $x
+            // Metavariable - $x
+            // Identifier (Fragment Specifier) - "expr"
+            // RegEx Wrapper - $( ).* matches zero or more expressions separated by commas
+        ( $( $x:expr ),* ) => {
+            {
+                let mut temp_vec = Vec::new();
+                $(
+                    temp_vec.push($x);
+                )*
+                temp_vec
+            }
+        }; // semi-colon is optional
+    }
+
+    macro_rules! vec2 {
+        // Special Matcher Syntax takes Rust Tokens that must match exactly
+        (x => $e:expr) => (println!("mode X: {}", $e));
+        (y => $e:expr) => (println!("mode Y: {}", $e));
+    }
+
+    vec2!(y => 3); // outputs "mode Y: 3"
+
+
 }
 
 // Returned Tuple is a Single Value (containing Multiple Values)
