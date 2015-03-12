@@ -58,6 +58,9 @@ use std::iter::count;
 // Import Float that supports f32 and f64
 use std::num::Float;
 
+// Used with Recursive Macros
+use std::fmt::Write;
+
 // Import Crate Module with shapes
 use hello_world::shapes;
 // use hello_world::shapes::HasArea;
@@ -1822,6 +1825,43 @@ fn try_macros() {
 
     get_age!(age);
     println!("{}", age);
+
+    // Recursive Macros
+    // - Process Tree-Structured input
+    // - Embedded Macro Invocations within a Macro Expansion
+    //   (of same Macro being expanded)
+
+    // Example Shorthand HTML
+    macro_rules! write_html {
+        ($w:expr, ) => (());
+
+        ($w:expr, $e:tt) => (write!($w, "{}", $e));
+
+        ($w:expr, $tag:ident [ $($inner:tt)* ] $($rest:tt)*) => {{
+            write!($w, "<{}>", stringify!($tag));
+            write_html!($w, $($inner)*);
+            write!($w, "</{}>", stringify!($tag));
+            write_html!($w, $($rest)*);
+        }};
+    }
+
+    let mut out = String::new();
+
+    write_html!(&mut out,
+        html[
+            head[title["Macros guide"]]
+            body[h1["Macros are the best!"]]
+        ]);
+
+    assert_eq!(out,
+        //     $tag:ident  |  $inner:tt  |  $tag:ident
+        //--------------------------------------------
+        //                 $rest:tt
+        "<html><head><title>Macros guide</title></head>\
+         <body><h1>Macros are the best!</h1></body></html>");
+
+    println!("HTML output is: {}", out);
+
 
 }
 
