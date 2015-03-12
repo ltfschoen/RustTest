@@ -1733,9 +1733,13 @@ fn try_macros() {
         // (  <matcher>:<identifier> ) => { <expanded_syntax_block_w_multiple_statements>
             // Special Matcher Syntax - given below (i.e. $x:expr) matches any Rust expression binding that syntax tree 
             // to Metavariable $x
-            // Metavariable - $x
+            // Metavariable - $x 
+            // (each Metavariable must be under at least as many $(...)* as it was matched against)
             // Identifier (Fragment Specifier) - "expr"
-            // RegEx Wrapper - $( ).* matches zero or more expressions separated by commas
+            // RegEx Wrapper for Macro Expansion - $( ).* matches "zero or more" expressions separated by commas
+            // representing one "Layer" of repetitions to walk through in "lockstep" for all 
+            // metavariables (i.e. $x) it contains.
+            // $( )+ performs "one or more" match
         // Combine the Two Pairs of braces (cleaner code).
         // Macro's may be declared to achieve Macro Expansion for different Context 
         // (i.e. Shorthand for Data Type valid for say either Expression or Pattern)
@@ -1762,6 +1766,62 @@ fn try_macros() {
 
     vec2!(y => 3); // outputs "mode Y: 3"
 
+    // Macro example with duplication of variables from outer
+    // Repetition levels (with matcher syntax)
+    macro_rules! o_O {
+        (
+            $(
+                $x:expr; [ $( $y:expr ),* ]
+            );*
+        ) => {
+            &[ $($( $x + $y ),*),* ]
+        }
+    }
+
+    let a: &[i32]
+        = o_O!( 10; [1, 2, 3];
+                20; [4, 5, 6]);
+
+    assert_eq!(a, [11, 12, 13, 24, 25, 26]);
+
+    // Macro Hygiene
+    // - Metavariable $x is parsed as Single Expression Node
+    //   maintaining its position in syntax Tree even after substitution
+    // - Rust avoids errors due to text substitution resulting in removal of brackets
+    macro_rules! five_times {
+        ($x:expr) => (5 * $x);
+    }
+
+    assert_eq!(25, five_times!(2 + 3));
+
+    // Macro Systems Variable Capture (i.e. injection and expansion)
+    // - Rust uses its Hygienic Macro System where:
+    //   - Each Macro Expansion occurs in distinct Syntax Context
+    //   - Each Variable is tagged with the Syntax Context where introduced
+    // - Rust avoids errors due to variable shadowing
+    // - Rust ensures that the 'state' variable in 'let state' does not conflict
+    //   with the 'let state' defined within the Macro statement
+    // - Variable bindings names outside the Macro must be passed into the
+    //   Macro invocation to tag it with the correct Syntax Context
+    macro_rules! log {
+        ($msg:expr) => {{
+            let state: i32 = 1; //get_log_state();
+            if state > 0 {
+                println!("log({}): {}", state, $msg);
+            }
+        }};
+    }
+
+    let state: &str = "reticulating splines";
+    log!(state);
+
+    // Macro (Basic 'let' binding)
+    macro_rules! get_age {
+        ($age:ident) => (let $age = 33);
+    }
+
+    get_age!(age);
+    println!("{}", age);
 
 }
 

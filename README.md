@@ -34,6 +34,8 @@ TODO
 * [ ] Try different [Iterators in std::iter Module](http://doc.rust-lang.org/std/iter/)
 * [ ] Read [Macro's Reference Docs](http://doc.rust-lang.org/reference.html#macros)
 * [ ] Read [Advanced Macros](http://doc.rust-lang.org/book/advanced-macros.html)
+* [ ] Read [Macros Repetition - Macro-by-Example](http://www.cs.indiana.edu/ftp/techreports/TR206.pdf)
+* [ ] Read [Hygienic Macro System](http://en.wikipedia.org/wiki/Hygienic_macro)
 
 Requirements
 -------
