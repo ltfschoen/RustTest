@@ -71,6 +71,9 @@ use std::thread;
 use std::old_io::timer;
 use std::time::Duration;
 
+// Import Thread Channels for syncronisation rather than wait specific time 
+use std::sync::mpsc;
+
 // Import Crate Module with shapes
 use hello_world::shapes;
 // use hello_world::shapes::HasArea;
@@ -1974,6 +1977,65 @@ fn try_concurrency() {
     timer::sleep(Duration::milliseconds(50));
 
     println!("Data 50ms after thread mutation: {:?}", data);
+
+    // Thread Channels for syncronisation rather than wait
+    // specific time using std::sync::mpsc
+    // Construct New Channel using mpsc::channel() Method
+    // to send a Generic Signal
+    let data = Arc::new(Mutex::new(0u32));
+
+    let (tx, rx) = mpsc::channel();
+
+    for _ in 0..5 {
+        let (data, tx) = (data.clone(), tx.clone());
+
+        thread::spawn(move || {
+            let mut data = data.lock().unwrap();
+            *data += 1;
+
+            // () is sent (Generic Signal) down the Channel of 
+            // the spawned Thread
+            tx.send(());
+        });
+    }
+
+    // Wait for receipt of 10
+    for _ in 0..5 {
+        rx.recv();
+        // outputs Mutex { <locked> } until 5th signal received, then
+        // outputs Mutex { data: 10 }
+        println!("Received Data from Channel 1: {:?}", data);
+    }
+
+    // Construct New Channel using mpsc::channel() Method
+    // to send any data that is of "Send" Trait over the channel
+    let (tx, rx) = mpsc::channel();
+
+    for _ in 0..3 {
+        let tx = tx.clone();
+
+        // New Thread is spawned
+        thread::spawn(move || {
+            // u32 is of "Send" Trait since we can make a Copy
+            let answer = 42u32;
+
+            // send() to send over the Channel using the New Thread
+            tx.send(answer);
+            println!("Sent Answer from Channel 2: {:?}", answer);
+        });
+    }
+
+    rx.recv().ok().expect("Error: Unable to receive answer");
+
+    // Panic! using Threads to isolate and to crash the
+    // currently executing Thread
+    let result = thread::spawn(move || {
+        panic!("Crashed the New Thread!");
+    }).join();
+
+    // Result returned from the New Thread is used to check if panic!
+    // has occurred or not
+    assert!(result.is_err());
 
 }
 
