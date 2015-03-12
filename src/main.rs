@@ -61,6 +61,9 @@ use std::num::Float;
 // Used with Recursive Macros
 use std::fmt::Write;
 
+// Import Types including Atomic Reference Counted Pointer and Mutex
+use std::sync::{Arc, Mutex};
+
 // Import Threads from Rust Standard Library to allow running code in parallel
 use std::thread;
 
@@ -1902,9 +1905,10 @@ fn try_concurrency() {
     //   Join Guard goes out of scope
     // - Thread::spawn() method avoids blocking execution until New Thread out of scope
     // - Scoped() has a Type Signature as follows, where:
-    //   - F is Closure passed to execute in New Thread that has restrictions
+    //   - F is a Closure passed to execute a New Thread that has restrictions
     //     - F must be FnOnce from () to T to allow Closure to take Ownership of data mentioned from Parent Thread
-    //     - F must be "Send" Trait (unable to Transfer Ownership unless fine with Type)
+    //     - F must be "Send" Trait (unable to Transfer Ownership unless Type compatible)
+    //     - Note: Rust's Type System prevents errors and data races at compile-time during shared mutable state
     //
     //     fn scoped<'a, T, F>(self, f: F) -> JoinGuard<'a, T>
     //       where T: Send + 'a,
@@ -1923,6 +1927,53 @@ fn try_concurrency() {
 
     // Sleep() method required since all running Threads are killed at end of function
     timer::sleep(Duration::milliseconds(3000));
+
+    // Safely Sharing Mutable State between Threads
+    // - Rust's Type System is leveraged
+    // - Rusts Ownership System prevents Data Races in Concurrency
+    // - Rust checks for safety and generates errors when a thread attempts to takes
+    //   ownership of multiple references to the same data (prevents multiple owners).
+    //   Arc<T> Type (Atomic Reference Counted) Pointer ("Atomic" means it is Safe 
+    //   to Share across Multiple Threads using a Property to check its contents are
+    //   of the "Sync" Trait).
+    //   Mutex<T> Type ensures only one person may mutate the value of its contents and
+    //   has a "lock" Method with the following Signature. "Guard" cannot be transferred
+    //   across Thread boundaries without "Send" Trait being implemented for MutexGuard<T>
+    //   so Arc<T> must be used instead (import std::sync::{Arc, Mutex}, std::thread, 
+    //   std::old_io::timer, std::time::Duration)
+    //     fn lock(&self) -> LockResult<MutexGuard<T>>
+    let data = Arc::new(Mutex::new(vec![1u32, 2, 3]));
+
+    // Note: Each println! adds delay (uncommenting this println!
+    // causes the data immediately after the For Loop to no longer be
+    // <locked> by the time it gets there)
+    println!("Data before thread mutation: {:?}", data);
+
+    for i in 0..2 {
+        // clone() is called on Arc to increase internal count
+        let data = data.clone();
+        // "data" variable binding handle is moved into the New Thread
+        thread::spawn(move || {
+            // The body block of the New Thread calls lock() to acquire the Mutex lock
+            // and returns a Result<T, E> (since it may fail) that we then call unwrap() on 
+            // to retrieve a Reference to the Data that we may then freely mutate 
+            // (since we have the Mutex lock)
+            let mut data = data.lock().unwrap();
+            data[i] += 1;
+        });
+    }
+
+    println!("Data immediately after thread mutation: {:?}", data);
+
+    // Waiting time defined (reasonable amount) may possibly be too high (computation completed
+    // earlier) or too low (incomplete computation)
+    timer::sleep(Duration::milliseconds(5));
+
+    println!("Data 5ms after thread mutation: {:?}", data);
+
+    timer::sleep(Duration::milliseconds(50));
+
+    println!("Data 50ms after thread mutation: {:?}", data);
 
 }
 
