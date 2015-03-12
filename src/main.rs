@@ -61,6 +61,13 @@ use std::num::Float;
 // Used with Recursive Macros
 use std::fmt::Write;
 
+// Import Threads from Rust Standard Library to allow running code in parallel
+use std::thread;
+
+// Sleep method
+use std::old_io::timer;
+use std::time::Duration;
+
 // Import Crate Module with shapes
 use hello_world::shapes;
 // use hello_world::shapes::HasArea;
@@ -287,6 +294,8 @@ fn main() {
         try_dynamic_dispatch();
 
         try_macros();
+
+        try_concurrency();
 
     }
 }
@@ -1862,6 +1871,58 @@ fn try_macros() {
 
     println!("HTML output is: {}", out);
 
+}
+
+// Concurrency
+// - Concurrency and Parallelism to support utilisation of multiple cores
+// - Concurrency in Rust must be Memory Safe with No Data Races at compile-time
+//   (leverage strong static Type System to reason concurrence code 
+//   at compile-time)
+// - Concurrency in Rust is included in the Standard Library (not the Rust Language)
+//   (low-level enough) so implementation of alternatives to 
+//   Concurrency Handling (i.e. MIO) are possible
+// - Traits (2 OFF) allow use of the Type System to achieve guarantees about 
+//   properties of code when used under concurrency
+//     - "Send" - Send Trait for implementation by Type T indicates to Compiler this type
+//                can transfer ownership safely between Threads (enforces restrictions)
+//                (i.e. send data from one thread down a channel connecting to another thread).
+//                Conversely, we would not implement Sent Trait when wrapping a library with FFI
+//                that is not Thread Safe (Compiler enforces cannot leave current thread)
+//     - "Sync" - Sync Trait for implementation by Type T indicates to Compiler this type
+//                avoids memory unsafety (Threadsafe) when used with Multiple Threads Concurrently
+//                (i.e. sharing immutable data with atomic reference count).
+//                Arc<T> type implements Sync Trait so may be shared safely between threads.
+
+fn try_concurrency() {
+
+    // Multi-Threading achieved by using import from 'use std::thread'
+    // - Thread::scoped() method accepts a Closure that executes in a New Thread
+    // - Thread::scoped() method is called "scoped" since the New Thread returns a Join Guard
+    // - Thread::scoped() method blocks execution until the New Thread is finished after the 
+    //   Join Guard goes out of scope
+    // - Thread::spawn() method avoids blocking execution until New Thread out of scope
+    // - Scoped() has a Type Signature as follows, where:
+    //   - F is Closure passed to execute in New Thread that has restrictions
+    //     - F must be FnOnce from () to T to allow Closure to take Ownership of data mentioned from Parent Thread
+    //     - F must be "Send" Trait (unable to Transfer Ownership unless fine with Type)
+    //
+    //     fn scoped<'a, T, F>(self, f: F) -> JoinGuard<'a, T>
+    //       where T: Send + 'a,
+    //             F: FnOnce() -> T,
+    //             F: Send + 'a
+    let guard = thread::scoped(|| {
+        println!("Hello from a thread!");
+    });
+    // Join Guard goes out of scope here
+
+    // Uses import from 'std::old_io::timer' and 'std::time::Duration'
+
+    let guard2 = thread::spawn(|| {
+        println!("Hello again from a thread!");
+    });
+
+    // Sleep() method required since all running Threads are killed at end of function
+    timer::sleep(Duration::milliseconds(3000));
 
 }
 
