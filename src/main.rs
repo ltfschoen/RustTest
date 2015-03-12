@@ -1729,21 +1729,29 @@ fn try_macros() {
     macro_rules! vec {
         // Macro Rules defined (Pattern Matching cases similar to 'match' expression)
         // however the matching occurs on Rust syntax trees compile-time.
-        // Format: (  <matcher>:<identifier> ) => {
+        // Format: 
+        // (  <matcher>:<identifier> ) => { <expanded_syntax_block_w_multiple_statements>
             // Special Matcher Syntax - given below (i.e. $x:expr) matches any Rust expression binding that syntax tree 
             // to Metavariable $x
             // Metavariable - $x
             // Identifier (Fragment Specifier) - "expr"
             // RegEx Wrapper - $( ).* matches zero or more expressions separated by commas
-        ( $( $x:expr ),* ) => {
-            {
-                let mut temp_vec = Vec::new();
-                $(
-                    temp_vec.push($x);
-                )*
-                temp_vec
-            }
-        }; // semi-colon is optional
+        // Combine the Two Pairs of braces (cleaner code).
+        // Macro's may be declared to achieve Macro Expansion for different Context 
+        // (i.e. Shorthand for Data Type valid for say either Expression or Pattern)
+        ( $( $x:expr ),* ) => {{
+            let mut temp_vec = Vec::new();
+
+            // Expansion (spliced syntax captured by the matcher)
+            // - Each matched expression $x produces single 'push' statement
+            //   in Macro Expansion
+            // - Repetition in Macro Expansion proceeds in "lockstep" with
+            //   repetition in the matcher
+            $(
+                temp_vec.push($x);
+            )*
+            temp_vec
+        }}; // semi-colon is optional
     }
 
     macro_rules! vec2 {
