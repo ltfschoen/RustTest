@@ -77,6 +77,11 @@ use std::time::Duration;
 // Import Thread Channels for syncronisation rather than wait specific time 
 use std::sync::mpsc;
 
+// try! Macro for Error Handling
+// use std::fs::File;
+// use std::io;
+// use std::io::prelude::*;
+
 // Import Crate Module with shapes
 use hello_world::shapes;
 // use hello_world::shapes::HasArea;
@@ -117,9 +122,9 @@ fn main() {
         // (i.e. when using terminal, but perhaps not for a cron job)
         let input = old_io::stdin() // std::old_io::stdio::StdinReader
                       .read_line() // IoResult<String> is a Generic form to match any type of input
-                      .ok() // Option<String> (assumes valid result, same as Match statement)
+                      .ok() // converts IoResult into Option<String> (assumes valid result, same as Match statement)
                       // String (without valid value the program terminates. handles error message explicitely)
-                      .expect("Failed to read line"); 
+                      .expect("Failed to read line"); // same as unwrap() but passes the custom error message to underlying panic!
 
         // parse() function takes a &str and converts it to say u32
 
@@ -2127,6 +2132,35 @@ fn try_error_handling () {
             println!("Error parsing header: {:?}", e);
         }
     }
+
+    // try! Macro for Error Handling
+    // - Use when calling many functions that return Result type
+    // - try! Macro hides some boilerplate of propogating errors up the call stack
+    // - Uses:
+    //
+    //   use std::fs::File;
+    //   use std::io;
+    //   use std::io::prelude::*;
+    // struct Info {
+    //     name: String,
+    //     age: i32,
+    //     rating: i32,
+    // }
+
+    // fn write_info(info: &Info) -> io::Result<()> {
+    //     let mut file = try!(File::open("my_best_friends.txt"));
+
+    //     try!(writeln!(&mut file, "name: {}", info.name));
+    //     try!(writeln!(&mut file, "age: {}", info.age));
+    //     try!(writeln!(&mut file, "rating: {}", info.rating));
+
+    //     // wrapping expression in try! results in unwrapped
+    //     // success (Ok) when result value not Err. Err result
+    //     // uses FromError Trait to convert error to error specified in
+    //     // functions return type and returns early from enclosing function
+    //     return Ok(());
+    //
+    // }
 
 }
 
