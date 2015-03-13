@@ -58,6 +58,9 @@ use std::iter::count;
 // Import Float that supports f32 and f64
 use std::num::Float;
 
+// Import for using to_u8
+use std::num::ToPrimitive;
+
 // Used with Recursive Macros
 use std::fmt::Write;
 
@@ -302,6 +305,8 @@ fn main() {
         try_macros();
 
         try_concurrency();
+
+        try_error_handling();
 
     }
 }
@@ -560,6 +565,32 @@ fn try_arrays() {
     for e in arr_mut.iter() {
         println!("arr_mut element e: {}", e);
     }
+
+    // Loop through Array and update values based on Array's Index
+    // assuming the Type of the Array's Index is u8 (not usize)
+    //
+    // Note: uses 'use std::num::ToPrimitive'
+    let mut arr_numbers = [1u8, 2, 3, 4, 5, 6];
+    println!("Before: {:?}", arr_numbers);
+    for elem in range(0, arr_numbers.len()) {
+        let elem_u8 = elem.to_u8().unwrap();
+        arr_numbers[elem] = elem_u8 + arr_numbers[elem];
+    }
+    println!("After: {:?}", arr_numbers); // [1, 3, 5, 7, 9, 11]
+
+    // Loop through Array and update values based on Array's Index
+    // (using 'as' to Cast between Primitive Numeric Types leveraging
+    // iterators and its enumerate() method)
+    let mut array = [0u8; 20];
+
+    println!("Before (using 'as'): {:?}", array);
+    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    for (i, elem) in array.iter_mut().enumerate() {
+        *elem += i as u8
+    }
+    println!("After (using 'as'): {:?}", array);
+    // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
 }
 
 // Vectors are Arrays of "dynamic" length implemented as standard library Type Vec<T>
@@ -2037,6 +2068,65 @@ fn try_concurrency() {
     // Result returned from the New Thread is used to check if panic!
     // has occurred or not
     assert!(result.is_err());
+
+}
+
+// Error Handling
+// - Failure - recovery from error possible. expected errors
+//   i.e. type conversion errors on unsupported inputs (i.e. from_str() )
+// - Panic - recovery from error not possible. unexpected errors
+//   i.e. unreachable() non-exhaustive matchers, assert! errors
+fn try_error_handling () {
+
+    // Error Handling with Option<A> and Result for expected failures
+    //
+    // Example: from_str() with Type Signature returns Option<A>
+    //  - Some(value) - returned when Success
+    //  - None - returned when Failure
+    //  pub fn from_str<A: FromStr>(s: &str) -> Option<A>
+
+    // Error Handling with Result<T, E> to indicate Reason for failure
+    //
+    // Result<T, E> is of form:
+    //     enum Result<T, E> {
+    //       Ok(T), // represents Success
+    //       Err(E) // represents Failure
+    //     }
+    //
+    // Example:
+
+    #[derive(Debug)]
+    enum Version { Version1, Version2 }
+
+    #[derive(Debug)]
+
+    enum ParseError { InvalidHeaderLength, InvalidVersion }
+
+    fn parse_version(header: &[u8]) -> Result<Version, ParseError> {
+        if header.len() < 1 {
+            return Err(ParseError::InvalidHeaderLength);
+        }
+        match header[0] {
+            1 => Ok(Version::Version1),
+            2 => Ok(Version::Version2),
+            // Enumerate various parse errors using enum
+            _ => Err(ParseError::InvalidVersion)
+        }
+    }
+
+    let version = parse_version(&[1, 2, 3, 4]);
+
+    match version {
+        Ok(v) => {
+            println!("Working with version: {:?}", v);
+            // panic! for unrecoverable and unexpected errors
+            // that crash current Thread
+            // panic!("Sorry but this is a self-destructing version");
+        }
+        Err(e) => {
+            println!("Error parsing header: {:?}", e);
+        }
+    }
 
 }
 
