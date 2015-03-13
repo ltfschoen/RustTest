@@ -1952,7 +1952,8 @@ fn try_concurrency() {
     // <locked> by the time it gets there)
     println!("Data before thread mutation: {:?}", data);
 
-    for i in 0..2 {
+    for i in range(0, 3) {
+    // for i in 0...3 {
         // clone() is called on Arc to increase internal count
         let data = data.clone();
         // "data" variable binding handle is moved into the New Thread
