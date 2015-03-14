@@ -62,7 +62,11 @@ use std::num::Float;
 use std::num::ToPrimitive;
 
 // Used with Recursive Macros
-use std::fmt::Write;
+// Since we are importing the trait to use the methods and not actually
+// using the Write name itself we can just import it as a different name 
+// (FmtWrite instead of Write using 'as') to fix the problem of std:fmt:Write
+// conflicting with std::io::prelude::Write;
+use std::fmt::Write as FmtWrite;
 
 // Import Types including Atomic Reference Counted Pointer and Mutex
 use std::sync::{Arc, Mutex};
@@ -78,9 +82,9 @@ use std::time::Duration;
 use std::sync::mpsc;
 
 // try! Macro for Error Handling
-// use std::fs::File;
-// use std::io;
-// use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use std::io::prelude::*;
 
 // Import Crate Module with shapes
 use hello_world::shapes;
@@ -2143,26 +2147,26 @@ fn try_error_handling () {
     //   use std::fs::File;
     //   use std::io;
     //   use std::io::prelude::*;
-    // struct Info {
-    //     name: String,
-    //     age: i32,
-    //     rating: i32,
-    // }
+    struct Info {
+        name: String,
+        age: i32,
+        rating: i32,
+    }
 
-    // fn write_info(info: &Info) -> io::Result<()> {
-    //     let mut file = try!(File::open("my_best_friends.txt"));
+    fn write_info(info: &Info) -> io::Result<()> {
+        let mut file = try!(File::open("my_best_friends.txt"));
 
-    //     try!(writeln!(&mut file, "name: {}", info.name));
-    //     try!(writeln!(&mut file, "age: {}", info.age));
-    //     try!(writeln!(&mut file, "rating: {}", info.rating));
+        try!(writeln!(&mut file, "name: {}", info.name));
+        try!(writeln!(&mut file, "age: {}", info.age));
+        try!(writeln!(&mut file, "rating: {}", info.rating));
 
-    //     // wrapping expression in try! results in unwrapped
-    //     // success (Ok) when result value not Err. Err result
-    //     // uses FromError Trait to convert error to error specified in
-    //     // functions return type and returns early from enclosing function
-    //     return Ok(());
-    //
-    // }
+        // wrapping expression in try! results in unwrapped
+        // success (Ok) when result value not Err. Err result
+        // uses FromError Trait to convert error to error specified in
+        // functions return type and returns early from enclosing function
+        return Ok(());
+    
+    }
 
 }
 
