@@ -1,6 +1,6 @@
 #![feature(box_syntax)]
 
-// main.rs is Crate Root of a Binary Crate
+// main.rs 'hello' is Crate Root of a Binary Crate
 
 // Import the Ordering Enum from the Rust Standard Library
 // http://doc.rust-lang.org/std/cmp/enum.Ordering.html
@@ -312,6 +312,8 @@ fn main() {
         try_concurrency();
 
         try_error_handling();
+
+        try_documentation();
 
     }
 }
@@ -2161,6 +2163,51 @@ fn try_error_handling () {
     //     return Ok(());
     //
     // }
+
+}
+
+// 'rustdoc' is a tool in the Rust distribution that generates documentation
+// 'cargo doc' is the was Cargo uses 'rustdoc'
+// Documentation is generated from:
+// - Source Code
+//   - Annotating Source Code with Documentation Comments (using triple slash ///)
+//     to be written in Markdown
+//   - Documentation Comments apply to the subsequent code (apply to previous line
+//     rather than inline after the code to prevent errors)
+//   - Links to other documentation in Markdown with say [](../)
+//   - Documentation Comments should have a one line Summary, then Details:
+//     /// Summary Line 1 of 1
+//     ///
+//     /// Detail Paragraph Line 1 of _
+//     /// Detail Paragraph Line 2 of _
+//     ///
+//     /// # Examples
+//     ///
+//     /// Sample code
+//     ///
+//     /// ```
+//     /// let x = 1;
+//     /// ```
+//   - Special section Headings may be used (using Header symbol # ):
+//     /// # Panics (convention for documenting trivial contracts that are
+//           detected/enforced by panics for unrecoverable misuses of a function
+//           due to programming errors that kill current thread)
+//     /// # Failures (convention for documenting the conditions under which
+//           a failure returns Err(E) when function returns Result<T, E>)
+//     /// # Safety (convention for documenting invariants that the caller is
+//           responsible for upholding)
+//     /// # Examples (convention of including one or more examples of using
+//           a function within code block annotations with triple graves ```
+//           or for non-Rust code (i.e. C) add an additional annotation /// ```c
+//           or for plain text /// ```text, on first line)
+//     Note: Correct code annotation is important as 'rustdoc' can
+//           use it to test the examples so not out of date
+// - Markdown format files
+
+/// ```
+/// println!("Documentation Comments for main.rs are working if this is shown after running 'cargo doc'");
+/// ```
+fn try_documentation() {
 
 }
 

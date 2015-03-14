@@ -2,13 +2,15 @@
 
 [package] # Metadata about the package
 
+# Library name
 name = "hello_world"
 version = "0.0.1"
 authors = [ "Luke Schoen <ltfschoen@gmail.com>" ]
 
 [[bin]] # Informs Cargo we want a binary executable build outcome
 
-name = "hello_world"
+# Binary executable name (differs from Library)
+name = "hello"
 
 [dependencies]
 num = "*"

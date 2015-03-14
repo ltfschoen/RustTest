@@ -36,6 +36,8 @@ TODO
 * [ ] Read [Advanced Macros](http://doc.rust-lang.org/book/advanced-macros.html)
 * [ ] Read [Macros Repetition - Macro-by-Example](http://www.cs.indiana.edu/ftp/techreports/TR206.pdf)
 * [ ] Read [Hygienic Macro System](http://en.wikipedia.org/wiki/Hygienic_macro)
+* [ ] Fix [Rust Documentation](http://doc.rust-lang.org/book/documentation.html)
+  - Only documentation for the Library is being generated, not the Binary
 
 Requirements
 -------
@@ -92,6 +94,21 @@ Setup
 Rust Docs
 -------
 
+1. **Library Documentation**
+    ```
+    cargo doc --open
+    ```
+    OR
+    ```
+    cargo doc --package hello_world --open
+    ```
+
+2. **Binary Documentation
+  - TODO
+
+* Note: Currently only the hello_world Library is being included in Rust Documentation
+without the hello Library
+
 * Refer to separate branch [feature/rustdocs](https://github.com/ltfschoen/RustTest/compare/feature/rustdocs?expand=1) for attempt at using rustdocs (unsuccessful as no HTML file was generated in the /docs/ directory when ```rustdoc ./src/main.rs``` was run, and no tests are run when ```rustdoc --test ./src/main.rs``` is run)
 
 Other Links
@@ -118,4 +135,5 @@ Help
 ```
 rustc --help
 cargo --help -v
+cargo doc --help
 ```
