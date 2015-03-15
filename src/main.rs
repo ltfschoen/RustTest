@@ -93,8 +93,8 @@ use std::io::prelude::*;
 // Note: snappy must be installed
 //
 // http://doc.rust-lang.org/libc/libc/index.html
-extern crate libc;
-use libc::{c_int, size_t};
+// extern crate libc;
+// use libc::{c_int, size_t};
 
 // Import Crate Module with shapes
 use hello_world::shapes;
@@ -2230,77 +2230,77 @@ fn try_documentation() {
 }
 
 // FFI (Foreign Function Interface) allows writing bindings from foreign code
-// by calling into the imported C Interface of a compression/decompression Library 
+// by calling into the imported C Interface of a compression/decompression Library
 // (i.e. snappy) for calling into a C++ Library.
 fn try_ffi() {
 
-    // #[link(...)] Attribute instructs the Linker to link against the 
-    // snappy Library so symbols resolved
+    // // #[link(...)] Attribute instructs the Linker to link against the
+    // // snappy Library so symbols resolved
 
-    #[link(name = "snappy")]
+    // #[link(name = "snappy")]
 
-    // extern block is list of function signatures in a foreign library
-    // (i.e. the platform's C ABI)
-    // 'extern crate libc' and 'use libc::size_t' applied
-    extern {
-        // snappy-1.1.2.tar.gz Library must be downloaded and installed
-        // by following its INSTALLATION file steps including './configure',
-        // 'make', and 'make install'
-        fn snappy_max_compressed_length(source_length: size_t) -> size_t;
-    }
+    // // extern block is list of function signatures in a foreign library
+    // // (i.e. the platform's C ABI)
+    // // 'extern crate libc' and 'use libc::size_t' applied
+    // extern {
+    //     // snappy-1.1.2.tar.gz Library must be downloaded and installed
+    //     // by following its INSTALLATION file steps including './configure',
+    //     // 'make', and 'make install'
+    //     fn snappy_max_compressed_length(source_length: size_t) -> size_t;
+    // }
 
-    // Wrap calls to Foreign Functions within 'unsafe {}' as promise to compiler
-    // the contents is safe, since C Libraries may expose:
-    // - Non-Thread-Safe Interfaces
-    // - Dangling Pointers (function pointer arguments not valid for all possible inputs )
-    //   since raw pointers fall outside Rust's safe memory model
-    //
-    // Note that when declaring argument types to a Foreign Function
-    // the Rust Compiler cannot check if the declaration is correct, which is
-    // necessar to keep the binding correct at runtime.
-    let max_compressed_length = unsafe { snappy_max_compressed_length(100) };
-    // outputs: Max compressed length of a 100 byte buffer: 148
-    println!("Max compressed length of a 100 byte buffer: {}", max_compressed_length);
+    // // Wrap calls to Foreign Functions within 'unsafe {}' as promise to compiler
+    // // the contents is safe, since C Libraries may expose:
+    // // - Non-Thread-Safe Interfaces
+    // // - Dangling Pointers (function pointer arguments not valid for all possible inputs )
+    // //   since raw pointers fall outside Rust's safe memory model
+    // //
+    // // Note that when declaring argument types to a Foreign Function
+    // // the Rust Compiler cannot check if the declaration is correct, which is
+    // // necessar to keep the binding correct at runtime.
+    // let max_compressed_length = unsafe { snappy_max_compressed_length(100) };
+    // // outputs: Max compressed length of a 100 byte buffer: 148
+    // println!("Max compressed length of a 100 byte buffer: {}", max_compressed_length);
 
-    // extern block extended to cover the rest of the snappy API below
-    // where 'extern crate libc' and 'use libc::{c_int, size_t}' applied
-    extern {
-        fn snappy_compress(input: *const u8,
-                           input_length: size_t,
-                           compressed: *mut u8,
-                           compressed_length: *mut size_t) -> c_int;
-        fn snappy_uncompress(compressed: *const u8,
-                             compressed_length: size_t,
-                             uncompressed: *mut u8,
-                             uncompressed_length: *mut size_t) -> c_int;
-        // fn snappy_max_compressed_length(source_length: size_t) -> size_t;
-        fn snappy_uncompressed_length(compressed: *const u8,
-                                      compressed_length: size_t,
-                                      result: *mut size_t) -> c_int;
-        fn snappy_validate_compressed_buffer(compressed: *const u8,
-                                             compressed_length: size_t) -> c_int;
-    }
+    // // extern block extended to cover the rest of the snappy API below
+    // // where 'extern crate libc' and 'use libc::{c_int, size_t}' applied
+    // extern {
+    //     fn snappy_compress(input: *const u8,
+    //                        input_length: size_t,
+    //                        compressed: *mut u8,
+    //                        compressed_length: *mut size_t) -> c_int;
+    //     fn snappy_uncompress(compressed: *const u8,
+    //                          compressed_length: size_t,
+    //                          uncompressed: *mut u8,
+    //                          uncompressed_length: *mut size_t) -> c_int;
+    //     // fn snappy_max_compressed_length(source_length: size_t) -> size_t;
+    //     fn snappy_uncompressed_length(compressed: *const u8,
+    //                                   compressed_length: size_t,
+    //                                   result: *mut size_t) -> c_int;
+    //     fn snappy_validate_compressed_buffer(compressed: *const u8,
+    //                                          compressed_length: size_t) -> c_int;
+    // }
 
-    let uncompressed_length = unsafe { snappy_uncompressed_length(&500u8, 148, &mut 90) };
-    println!("Uncompressed length of a 1000 byte buffer: {}", uncompressed_length);
+    // let uncompressed_length = unsafe { snappy_uncompressed_length(&500u8, 148, &mut 90) };
+    // println!("Uncompressed length of a 1000 byte buffer: {}", uncompressed_length);
 
-    // Wrapping the raw C API also allows use of high-level concepts like
-    // Vectors (in addition to providing memory safety) that the Library
-    // may expose.
-    // The 'fn snappy_max_compressed_length' Function wrapped with 'unsafe' is expecting Buffers
-    // so the 'slice::raw' Module may be used to manipulate Rust Vectors 
-    // (guaranteed to be contiguous blocks of memory) as Pointers to memory,
-    // where:
-    //   - Length   - no. of elements currently contained (Length <= Capacity)
-    //   - Capacity - total size in elements of the allocated memory
-    // The 'fn snappy_max_compressed_length' Function may be used to allocate a Vector
-    // with maximum required Capacity to hold the compressed output. The Vector
-    // may then be passed to 'fn snappy_compress' Function as an output parameter.
-    // The output parameter is also passed to retrieve the true length after compression for
-    // setting the length.
-    //
-    // The 'fn snappy_compress' and 'fn snappy_uncompress' Functions are more complex
-    // since both an Input Buffer and an Output Buffer must be allocated.
+    // // Wrapping the raw C API also allows use of high-level concepts like
+    // // Vectors (in addition to providing memory safety) that the Library
+    // // may expose.
+    // // The 'fn snappy_max_compressed_length' Function wrapped with 'unsafe' is expecting Buffers
+    // // so the 'slice::raw' Module may be used to manipulate Rust Vectors
+    // // (guaranteed to be contiguous blocks of memory) as Pointers to memory,
+    // // where:
+    // //   - Length   - no. of elements currently contained (Length <= Capacity)
+    // //   - Capacity - total size in elements of the allocated memory
+    // // The 'fn snappy_max_compressed_length' Function may be used to allocate a Vector
+    // // with maximum required Capacity to hold the compressed output. The Vector
+    // // may then be passed to 'fn snappy_compress' Function as an output parameter.
+    // // The output parameter is also passed to retrieve the true length after compression for
+    // // setting the length.
+    // //
+    // // The 'fn snappy_compress' and 'fn snappy_uncompress' Functions are more complex
+    // // since both an Input Buffer and an Output Buffer must be allocated.
 
 }
 
