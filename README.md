@@ -1,7 +1,7 @@
 README
 ============
 
-[![Build Status](https://api.travis-ci.org/ltfschoen/RustTest.svg)](https://travis-ci.org/ltfschoen/RustTest)
+[![Build Status](https://api.travis-ci.org/ltfschoen/RustTest.svg)](https://travis-ci.org/ltfschoen/RustTest) (Note: Travis-CI builds failing due to use of FFI, however the code compiles successfully when run locally)
 
 About
 -------
@@ -22,7 +22,7 @@ Key Terminology of the Rust language and ecosystem:
 Progress
 -------
 
-Up to 3. II: Intermediate Rust - 3.14 Concurrency
+Up to 4. III: Advanced Rust - 4.1 FFI
 
 TODO
 -------
@@ -38,6 +38,8 @@ TODO
 * [ ] Read [Hygienic Macro System](http://en.wikipedia.org/wiki/Hygienic_macro)
 * [ ] Fix [Rust Documentation](http://doc.rust-lang.org/book/documentation.html)
   - Only documentation for the Library is being generated, not the Binary
+* [ ] Fix Travis-CI Build Error ```error: linking with `cc` failed: exit code: 1``` caused by using FFI (although the code compiles when run locally, Travis-CI does not like it)
+
 
 Requirements
 -------
