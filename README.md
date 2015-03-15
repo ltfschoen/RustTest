@@ -130,6 +130,7 @@ Other Links
   - [Stack vs Heap](http://stackoverflow.com/questions/79923/what-and-where-are-the-stack-and-heap)
 * [Mozilla Research Projects including Servo](https://www.mozilla.org/en-US/research/projects/)
 * [Rust By Example](http://rustbyexample.com/)
+* [Building Static C Libraries](http://www.cs.dartmouth.edu/~campbell/cs50/buildlib.html)
 
 Help
 -------
