@@ -2,6 +2,16 @@
 
 [package] # Metadata about the package
 
+# Build Script (for Native Dependencies)
+# (see http://doc.crates.io/build-script.html)
+# links manifest key declares name of the native library that is
+# being linked to such that the package links to the 'libctest'
+# native library and it has a build script for locating and building
+# the library.
+
+links = "hello"
+build = "build.rs"
+
 # Library name
 name = "hello_world"
 version = "0.0.1"
@@ -14,3 +24,10 @@ name = "hello"
 
 [dependencies]
 num = "*"
+
+[build-dependencies.gcc]
+git = "https://github.com/alexcrichton/gcc-rs"
+
+# Alternative with local gcc dependency installation requires that the directory containing gcc is in the PATH environment variable.
+#[build-dependencies]
+#gcc = "0.2"

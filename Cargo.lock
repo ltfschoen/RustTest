@@ -2,8 +2,14 @@
 name = "hello_world"
 version = "0.0.1"
 dependencies = [
+ "gcc 0.3.1 (git+https://github.com/alexcrichton/gcc-rs)",
  "num 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "gcc"
+version = "0.3.1"
+source = "git+https://github.com/alexcrichton/gcc-rs#79d163e1c461b7e530e71bbf6502b9b9d7d98652"
 
 [[package]]
 name = "libc"
