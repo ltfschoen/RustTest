@@ -39,7 +39,7 @@ TODO
 * [ ] Fix [Rust Documentation](http://doc.rust-lang.org/book/documentation.html)
   - Only documentation for the Library is being generated, not the Binary
 * [ ] Fix Travis-CI Build Error ```error: linking with `cc` failed: exit code: 1``` caused by using FFI (although the code compiles when run locally, Travis-CI does not like it)
-
+* [ ] Read [The Rust Reference](http://doc.rust-lang.org/reference.html)
 
 Requirements
 -------
@@ -105,7 +105,7 @@ Rust Docs
     cargo doc --package hello_world --open
     ```
 
-2. **Binary Documentation
+2. **Binary Documentation**
   - TODO
 
 * Note: Currently only the hello_world Library is being included in Rust Documentation
@@ -131,6 +131,7 @@ Other Links
 * [Mozilla Research Projects including Servo](https://www.mozilla.org/en-US/research/projects/)
 * [Rust By Example](http://rustbyexample.com/)
 * [Building Static C Libraries](http://www.cs.dartmouth.edu/~campbell/cs50/buildlib.html)
+* [The Rust Reference](http://doc.rust-lang.org/reference.html)
 
 Help
 -------
