@@ -29,6 +29,8 @@ TODO
 
 * [x] Convert Function and Variable names to snake case instead of camel case
 * [x] Change to 4-space indentation
+* [ ] [The Rust Programming Language Book Second Edition](https://doc.rust-lang.org/book/second-edition/)
+* [ ] [The Cargo Book](https://doc.rust-lang.org/cargo/)
 * [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
 * [ ] Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
 * [ ] Try different [Iterators in std::iter Module](http://doc.rust-lang.org/std/iter/)
@@ -49,18 +51,40 @@ Requirements
     rustc --version
   ```
 
+IntelliJ Rust Plugin
+--------------------
+
+* https://intellij-rust.github.io/docs/quick-start.html
+
 Setup
 -------
 
-1. **Update Rust** Nightly build and Cargo (Rust's Package Manager). Perform this regularly after [Rust installed](rust-lang.org))
+* [Install Rust](https://doc.rust-lang.org/book/second-edition/ch01-01-installation.html)
+
+* **Update Rust**
   ```
-  curl -sS https://static.rust-lang.org/rustup.sh | sudo bash
+  rustup update
   ```
 
-2. **Build, and Run**
+* **Create Application**
+
+  * Note: Cargo generates Cargo.toml, src/main.rs, and initialises Git repo
+
+  * Binary Executable
+    ```
+    cargo new app_name --bin
+    ```
+
+  * Library
+    ```
+    cargo new app_name
+    ```
+
+* **Build, and Run**
   * Clone or fork [RustTest repository](https://github.com/ltfschoen/RustTest.git)
+
   * Option #1 (Compile and Run)
-    - Compile (generates an executable file 'main' in current directory)
+    - Compile (generates an executable file 'main' in current directory). Since Rust is an ahead-of-time compiled language.
     ```
     rustc ./src/main.rs
     ```
@@ -68,35 +92,80 @@ Setup
     ```
     ./main
     ```
+
   * Option #2 (Separate Build and Run)
-    - Build (in accordance with the Cargo.toml configuration file's metadata and build outcome requirements, and assuming the source code is in the /src directory it generates a binary executable file 'hello_world' and dependencies in /target folder of current directory, and generates Cargo.lock to track dependencies)
+    - Build (uses Cargo.toml config file metadata and build requirements.
+    - Coordinates build of complex projects having multiple crates
+    - Assuming source code in ./src/hello_world.rs directory it generates binary executable
+    file 'hello_world' and dependencies in ./target/debug/hello_world and generates Cargo.lock to track dependencies)
     ```
     cargo build
     ```
     - Run (run the executable file 'hello_world')
     ```
-    ./target/hello_world
+    ./target/debug/hello_world
     ```
   * Option #3 (Combined Build and Run)
     - Build and Run (combined with [Cargo](http://doc.crates.io/guide.html))
     ```
     cargo run
+
+    cd ./projects/guessing_game/ && cargo run
     ```
 
-3. **Unit & Integration Tests**
+* **Check Compilation of code without running the extended Build**
+    ```
+    cargo check
+    ```
+
+* **Unit & Integration Tests**
+    - Builds test runner binary to run functions annotated with
+    the `test` attribute
     ```
     cargo test
     ```
 
-4. **Benchmark Tests**
+* **Benchmark Production Release with Tests**
     ```
     cargo bench
     ```
 
+* **Production Release with Optimisations**
+    - Build executable in ./target/release/hello_world
+    ```
+    cargo build --release
+    ```
+
+* **Updating Crates
+    - Ignores Cargo.lock
+    - Finds latest versions of dependencies in Cargo.toml
+    ```
+    cargo update
+    ```
+
+Rust Testing
+------------
+* Actions in test function body
+    * Actual data or state setup
+    * Expected data or state setup
+    * Run code to test
+    * Assert results expected
+
+* Features for testing in Rust:
+    * `test` attribute (metadata) annotation
+    * `should_panic` attribute
+    * `#[test]` to convert to test function on line before `fn`
+
 Rust Docs
 -------
 
-1. **Library Documentation**
+* **Rust Language Book Offline**
+    ```
+    rustup doc
+    ```
+
+* **Library Documentation**
+    - Build documentation provided by all local dependencies and open in browser
     ```
     cargo doc --open
     ```
@@ -105,7 +174,7 @@ Rust Docs
     cargo doc --package hello_world --open
     ```
 
-2. **Binary Documentation**
+* **Binary Documentation**
   - TODO
 
 * Note: Currently only the hello_world Library is being included in Rust Documentation

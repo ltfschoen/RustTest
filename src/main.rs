@@ -159,7 +159,9 @@ fn main() {
             }
         };
 
-        // Metaprogramming calling a macro and passing staticaly allocated string arg
+        // Metaprogramming by calling the macro `println!` (using a !, otherwise its a normal function)
+        // and passing statically allocated string arg.
+        // Macros implicitly take arguments by references even where they are passed by value
         println!("Hello, {}", unwrapped_num);
 
         /* 

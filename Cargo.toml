@@ -22,6 +22,7 @@ authors = [ "Luke Schoen <ltfschoen@gmail.com>" ]
 # Binary executable name (differs from Library)
 name = "hello"
 
+# Crates (aka packages) of Rust code to download and compile
 [dependencies]
 num = "*"
 

@@ -1,15 +1,15 @@
-[root]
+[[package]]
+name = "gcc"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "hello_world"
 version = "0.0.1"
 dependencies = [
  "gcc 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "num 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
-
-[[package]]
-name = "gcc"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "libc"
@@ -44,3 +44,10 @@ name = "rustc-serialize"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
+[metadata]
+"checksum gcc 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "b9af73f774a4786b91250a4aa20d3fa150b0c6b3e0a3b6d3f08981eca19d1ec0"
+"checksum libc 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "fe4de9d5a5561b2c1ba902d748813226f5edf16f157f1e5ca66167a5e471af5b"
+"checksum log 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)" = "f91d813fb009895c01b1b5c095fc88aea17138355bc0e4d53a277c466f62161f"
+"checksum num 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)" = "485198bddf84de7e5a5899323cf1c4f91137005a6b26a53d4733a92dfcead501"
+"checksum rand 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)" = "2d37d90a6118f2925173cb2b778aaabda804247d389cbff6f39fb558fddda113"
+"checksum rustc-serialize 0.2.15 (registry+https://github.com/rust-lang/crates.io-index)" = "8a269f9f571bc16a204260233118229ca2ff684545a78bb66c86c49e01b0fbd1"
