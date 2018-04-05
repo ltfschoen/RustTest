@@ -22,7 +22,8 @@ Key Terminology of the Rust language and ecosystem:
 Progress
 -------
 
-Up to 4. III: Advanced Rust - 4.1 FFI
+* 1st edition - Up to 4. III: Advanced Rust - 4.1 FFI
+* 2nd edition (re-learning) - Up to 5 Structs
 
 TODO
 -------
@@ -32,6 +33,7 @@ TODO
 * [ ] [The Rust Programming Language Book Second Edition](https://doc.rust-lang.org/book/second-edition/)
 * [ ] [The Cargo Book](https://doc.rust-lang.org/cargo/)
 * [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
+* [ ] Create Examples showing "immutability", "orthogonality" and "idempotence" trait importance
 * [ ] Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
 * [ ] Try different [Iterators in std::iter Module](http://doc.rust-lang.org/std/iter/)
 * [ ] Read [Macro's Reference Docs](http://doc.rust-lang.org/reference.html#macros)
@@ -72,7 +74,11 @@ Setup
 
   * Binary Executable
     ```
-    cargo new app_name --bin
+    mkdir projects && cd projects;
+    cargo new app_name --bin && cd app_name
+    cargo build
+    ./target/debug/app_name
+    cargo doc --open
     ```
 
   * Library
@@ -136,12 +142,50 @@ Setup
     cargo build --release
     ```
 
-* **Updating Crates
+* **Updating Crates**
     - Ignores Cargo.lock
     - Finds latest versions of dependencies in Cargo.toml
     ```
     cargo update
     ```
+
+Example Projects
+---------------
+
+* Guessing Game
+
+    * Execution
+        ```
+        cd projects/guessing_game;
+        cargo build;
+        ./target/debug/guessing_game;
+        cargo doc --open;
+        cargo test;
+        ```
+
+    * Tests
+        ```
+        cd projects/find_word;
+        cargo build;
+        cargo test;
+        ```
+
+* Find a Word (originally setup with `mkdir projects && cd projects && cargo new find_word --bin && cd find_word;`)
+
+    * Execution
+        ```
+        cd projects/find_word;
+        cargo build;
+        ./target/debug/find_word;
+        cargo doc --open;
+        ```
+
+    * Tests
+        ```
+        cd projects/find_word;
+        cargo build;
+        cargo test;
+        ```
 
 Rust Testing
 ------------
@@ -201,6 +245,10 @@ Other Links
 * [Rust By Example](http://rustbyexample.com/)
 * [Building Static C Libraries](http://www.cs.dartmouth.edu/~campbell/cs50/buildlib.html)
 * [The Rust Reference](http://doc.rust-lang.org/reference.html)
+* [Programming Rust Book Example Code](https://github.com/ProgrammingRust/examples)
+* [Rust Essentials Book Example Code](https://github.com/utilForever/RustEssentials)
+* [C vs Rust Slides](http://www-verimag.imag.fr/~mounier/Enseignement/Software_Security/19RustVsC.pdf)
+* [Seminar of Rust Programming Language](http://www8.cs.umu.se/kurser/5DV086/VT18/resources/seminar/rust.pdf)
 
 Help
 -------

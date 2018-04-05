@@ -1,0 +1,533 @@
+## DEPENDENCIES
+
+* Import type into scope of program if not already in the **prelude**.
+
+* External dependency `extern crate rand` is equivalent of calling `use rand`. Prefix with `rand::` to use rand library.
+
+* Statement used to import I/O **crate** for interaction from terminal
+
+* Statement used to import the `Ordering` **enum** and associated **variant** outcomes of comparison `Less`, `Greater`, `Equal`
+
+* Statement to import Rng **trait** to the **scope** since it defines random number generator methods including `thread_rng` that is local to current **thread of execution** and seeded by the operating system. `thread_rng().gen_range(<exclusive>, <inclusive>)`
+
+## VARIABLES AND CONSTANTS
+
+* Create **mutable** variable (since variables are by **default immutable**) as intent to allow other parts of the code to change it and bind to a value that is a new instance of say a string type using an **associated function (aka static method)** of the String type from the standard library.
+
+* **Constants** declared with `const` are always immutable, cannot be converted with `mut` (whereas variables declared with `let` can be), must be annotated with a type, declared with capitals, can only be set to a constant expression computed at compile time (not the result of a function call or a value computed at runtime), are valid during program execution in the scope they were declared, and are best stored in a single place for update and maintenance.
+
+* Immutable variables provide **safety** and easy of **concurrency** since the Rust compiler guarantees its value will not change, which reduces state management and makes code easier to reason about.
+
+* Trade-off between performance and code clarity. Using mutable variables may make code easier to write, but immutability may result in less bugs.
+
+* **Shadow** previously declared mutable value of `guess` for reuse then perform transformations on its value redeclaring it as a a new immutable variable with the same name using `let` and with new value but even of a different type. Shadowing saves us coming up with new variable names (i.e. myvar instead of say myvar_str, myvar_num, etc). It is different to marking a variable as `mut`.
+* Example: **Bind** `guess` to expression `guess.trim().parse()`. trim() removes whitespace and newline characters. parse() will parse a string into a number.
+
+## TYPE ANNOTATION & INFERENCE
+
+* Type annotation of variables with a colon `:` used when many types possible
+
+* Rust infers as say being a string since it has **type inference**.
+
+## TYPES
+
+* Rust is **statically typed** so must know variable types at compile time
+
+* Compiler may infer the type based on value used
+
+* Multiple number types may have value between 1 and 100, where default is `i32` (32-bit number), and others are `u32` (unsigned 32-bit number for small positive numbers) and `i64` (64-bit number).
+
+### DATA TYPES
+
+#### SCALAR
+
+* **Integer types**
+    * Unsigned 32-bit int: `u8` (0 to 2^n-1, 0 to 255), `u16`, `u32`, `u64` (length 64-bit), `usize` (length `arch` depending on whether computer is 32-bit or 64-bit)
+    * Signed 32-bit int: `i8` (-2^7 to 2^7-1, -128 to 127), `i16`, `i32`, `i64`, `isize` (used when indexing a collection)
+        * Stored using Twos Complement representation
+
+    * Note:
+        * All number literals except byte literal allow:
+            * Type suffix: i.e. `57u8` (57 of type u8)
+            * Visual separator: i.e. 98_222 (i.e. 98222)
+        * Integer types default to `i32` (fastest even on 64-bit systems)
+
+* **Floating-point types**
+    * Primitive types
+        * `f32` is single precision float
+        * `f64` is double precision float
+    * Note:
+        * `f64` is default, same speed as `f32` but more precision on new CPUs)
+    * Example:
+        ```
+        let x: 2.0;       // f64 default
+        let y: f32 = 3.0; // f32
+        ```
+* **Numeric operations** (see Appendix B of Rust Book)
+    * `+`, `-`, `*`, `/`, `%` (remainder)
+    * Example: `let remainder: 43 % 5;`
+
+* **Boolean**
+    * `bool` (`true` or `false`)
+    * Example: `let f: bool = false;`
+
+* **Characters**
+    * `char` is Unicode Scalar Value from U+0000 to U+D7FF and U+E000 to U+10FFFF (more than just ASCII)
+    * Note:
+        * `char` specified using **single quotes**, whereas strings specified with double quotes)
+    * Example: `let z_letter = 'z';`
+
+### COMPOUND
+
+* Note:
+    * Compound types group multiple values of other types into single type
+
+* **Tuples**
+    * Access individual values from a tuple:
+        * Pattern matching to destructure a tuple value
+        * Directly using a period `.` followed by index of value to access
+
+    * Usage: Use for grouping values of a variety of types into single compound element type
+    * Type annotations are optional
+    * Example:
+        ```
+        let tup: (i32, f64, u8) = (500, 6.4, 1);
+
+        let (x, y, z) = tup;      // destructuring
+        let five_hundred = tup.0; // access first index in tuple
+        println!("The value of y is: {}", y);
+        ```
+
+* **Arrays**
+    * Usage:
+        * Allocates data on the stack instead of the heap
+        * Use when only need fixed number of elements
+        * Rust panics (immediately exits program with error)
+        if access index greater than array length
+        * Vector collection type allows grow or shrink
+    * Example:
+        ```
+        let months = ["Jan", "Feb", "Mar"];
+        let feb = months[1];
+        ```
+
+    * **Array Slices**
+        * Refer to part of an array by taking a slice of type `&[i32]`
+        that stores a reference to the first element and a length.
+        ```
+        let a = [1, 2, 3, 4, 5];
+        let slice = &a[1..3];
+        ```
+
+## COMPLEX
+
+* **String Literal**
+    * **Immutable** string value that is hard-coded
+    * Pros:
+        * Fast and efficient since immutable and contents known in executable
+        at compile time
+    * Cons:
+        * Does not cater for string values that are not known at compile time
+
+* **Strings**
+    * `String` type may be used to take user input and store it on the **heap**
+    * Supports **Mutable** (growable text) by allocating memory on the **heap**
+    to hold the data that is unknown at compile time, so memory is requested from
+    operating system at runtime (i.e. when we call `String::from`).
+    **Rust uses a pattern of automatically returning memory to the operating
+    system after the variable that owns it goes out of scope** by calling the
+    `drop` function, similar to Resource Acquisition Is Initialization (RAII)
+    in C++.
+    * Pros:
+        * Allows for using string values that are not known at compile time
+        * Mutation of `String` type by appending a String Literal
+            ```
+            let mut s = String::from("hello");
+            s.push_str(", world!");
+            ```
+
+    * **String Slices**
+        * See book/second-edition/ch04-03-slices.html
+
+        * String Literals are Slices
+            * Slice pointing to specific point in binary where `&str` is immutable reference
+
+            ```
+            let s: &str = "Hello, world!";
+            println!("{}", s);
+            ```
+
+## TYPE CONVERSION
+
+* Convert String Literal to `String`
+    * Use the `from` function
+    * Example
+        ```
+        let mut s = String::from("hello");
+        ```
+
+* Convert `String` into array of bytes
+    ```
+    let bytes = s.as_bytes();
+    ```
+
+## FUNCTIONS
+
+* Functions may be defined before or after where they are called
+
+* Example
+    ```
+    fn main() {
+        another_function(5, 6);
+    }
+
+    fn another_function(x: i32, y: i32) {
+        println!("Another function with parameters x and y is: {}, {}", x, y);
+    }
+    ```
+
+### FUNCTION PARAMETERS
+
+* **Parameter type annotations** must be declared in function signature
+
+* Note that `_` is catch all of all values (say for function arguments)
+
+* Call associated function with say: `std::io::stdin()` to return instance of terminal standard input `std::io::Stdin`. Call `readline` method on standard input handle to obtain user input passing a single mutable reference argument to change the string content with the user input (allow safe and easy access to data without having to copy it to memory multiple times).
+
+### FUNCTION BODY
+
+* **Statements - instructions performing action without returning a value** (including function definitions)
+    * Example: `let y = 6;`
+
+* **Expressions** - evaluate to returning a resulting value
+    * **Do not include an ending semi-colon to an expression otherwise
+    it becomes a statement that will no longer return a value**, i.e.
+        ```
+        let x = 5;
+
+        // y is bound to value evaluated and returned from block
+        let y = {
+            let x = 3;
+            x + 1
+        };
+
+        println!("The value of y is: {}", y);
+        ```
+    * Examples:
+        * Calling a function or a macro is an expression
+        * Blocks `{}` used to create expression
+
+
+### FUNCTION RETURN VALUES
+
+* Type of return value declared after an arrow `->`
+* **Functions implicitly return the last expression in block of function body**
+* Early return from function using `return` keyword and a value
+* Do not name return values
+* Example:
+    ```
+    fn increment(x: i32) -> i32 {
+        x + 1
+    }
+
+    fn main() {
+        let x = increment(5);
+    }
+    ```
+
+## ERROR HANDLING
+
+* `read_line` returns an instance of `io::Result` submodule **enum** type (with fixed set of enum variant values: `Ok`, `Err`) that provides an `expect` method. Either write error handling to suppress errors using a `match` expression or crash it by using `expect`.
+
+* `continue` means skip to next iteration of the loop
+
+* Compare two values using `cmp` returns `Ordering` **enum** **variant**, then for a `match` expression choose a matching **arm** **pattern** to run and to decide the next action based on the variant returned.
+
+## CONTROL FLOW
+
+* **if expression** with `if`, `else if`, and `else` with arms with blocks
+* **condition must be boolean**
+* `if` is an expression so may be used on right side of a `let` statement to bind the variable to the outcome of the `if` expression
+* Example:
+    ```
+    let condition = true;
+
+    // where the type returned by each arm is different then an error occurs
+    // since variables must have a single type at compile time
+    let number = if condition {
+        5
+    } else {
+        6
+    };
+    ```
+
+## LOOPS
+
+* `break` to stop executing the loop
+* Example:
+    ```
+    loop {
+        break;
+    }
+    ```
+
+## CONDITIONAL LOOPS
+
+* `while` loop to loop over elements of a collection
+
+    * Cons: Slow since compiler adds runtime code to perform
+    conditional check on every element on every loop iteration
+    * Example:
+        ```
+        let ages = [30, 40, 50, 60];
+        let mut index = 0;
+
+        while index < 5 {
+            println!("current age value is: {}", ages[index]);
+            index = index + 1;
+        }
+        ```
+
+* `for` loop (**preferred** for looping over array)
+
+    * Pros: Increase safety of code and eliminates change of bugs
+    since avoids accessing out of bounds index or accessing insufficient indexes
+    * `rev` method reverses the range
+    * Example:
+        ```
+        let ages = [30, 40, 50, 60];
+
+        for element in ages.iter() {
+            println!("current age value is: {}", element);
+        }
+
+        for number in (1..4).rev() {
+            println!("{}!", number);
+        }
+        ```
+
+## OWNERSHIP
+
+* **Ownership**
+
+    * About
+        * Rust memory is managed through an **ownership** system with a set of rules the compiler checks at compile time
+    * Pros:
+        * Allows Rust to make memory safety guarantees without need for garbage collector
+        * No run time costs incurred for any ownership features
+        * Managing **heap** data
+            * Tracks what parts of code are using certain data on the **heap**
+            * Minimises duplicate data on the **heap**
+            * Cleaning up unused data on the **heap** to avoid running out of space
+
+    * **Rules** (of Ownership)
+        * Each value in Rust has a variable that is called its **owner**
+        * Only one **owner** may exist at a time
+        * Value is dropped when **owner** goes out of scope
+
+    * **Stack**
+        * Available at run time
+        * LIFO - Pushing data onto the stack and popping off the stack
+        * Fast access to data from top (not need search where to insert/remove data from)
+        * Faster processing since data is all close together
+        * Usage: With a **Known fixed size** for all data on the stack
+        * Example 1
+            * Calling a function, values passed to the function, **pointers** to data on the **heap**, and local variables of a function, are pushed onto the **stack**
+            * End of a function causes values to be popped off the **stack**
+        * Data Types stored on the stack including:
+            * Integers, Floating-point numbers, Boolean, Chars, Tuples, and Arrays
+        * Example 2
+            * Since its dealing with integers that are simple values with a **Known fixed size** it binds value 5 to x, makes copy of value in x and binds it to y, and then pushes the two 5 values onto **stack** entirely so copies of actual values are quick (since not storing any values on the **heap** an no pointers necesary)
+                ```
+                let x = 5;
+                let y = x;
+                ```
+        * Special annotation called `Copy` Trait may be placed on simple scalar types (i.e. integer, boolean, char, tuples with elements containing simple types) (if the type has not already implemented the `Drop` Trait) that are stored on the **stack** so an older variable is still usable after assignment. See Appendix C of Rust Second Edition
+
+    * **Heap**
+        * Usage: With a **Unknown size** data or size that may change at compile time
+        * Less organised
+        * **Allocating on the heap** (aka allocating) is where amount of space is requested to store data in empty spot on operating system that is marked in use and we are returned a **pointer** (address of the location)
+        * **Pointer** is a **known fixed size** that we can store on the **stack** but when we want to retrieve the actual data we must follow the pointer
+        * Slower access to data since must follow the **pointer** to get to data and different parts of data in different places
+        * Data Types stored on the heap include:
+            * Strings
+
+    * **Move** (aka "shallow copy" + invalidation)
+
+        * Example 1
+            * Since its dealing with a `String` type it stores the variables group of data on
+            the **stack** that is made up of a pointer (to the memory on the **heap** holding the string value with each char at different index), length (in bytes that `String` value is using), and capacity (total memory in bytes the `String` received from the operating system) (see diagram in book/second-edition/ch04-01-what-is-ownership.html).
+            * Assigning `s1` to `s2` causes `String` data on the **stack** to be copied (including the **pointer** to memory on the **heap**), but does not copy the data on the **heap**.
+            * **Double Free** error is a **memory safe bug** that could occur when Rust automatically calls the `drop` function to clean up **heap** memory for a variable when it goes out of scope (but where two variables on the **heap** have **pointer** to the same location, so they both try to free the same memory, which may lead to memory corruption and security vulnerabilities), but Rust ensures **memory safety** but **invalidating** the first variable `s1` so it does not try to free any memory when it goes out of scope. So trying to use and print `s1` in the example below will not work. Note: This is called a **"move"**, which is similar to a **"shallow copy"** but where the first variable `s1`'s pointer, length, and capacity are copied
+            without the actual data, and in addition `s1` is **invalidated** (i.e. `s1` was **moved** to `s2`).
+                ```
+                let s1 = String::from("hello");
+                let s2 = s1;
+                println!("{}, world!", s1);
+                ```
+            * Benefits:
+                * Avoids being expensive in terms of runtime performance
+                * Rust never automatically creates a **"deep"** copy of data so automatic copying is inexpensive in terms of runtime performance
+
+    * **Copy** (aka "deep copy")
+
+        * `clone` method deeply copies both the **stack** and **heap** data of the `String`
+        so it may be expensive
+
+        * Example:
+            ```
+            let s1 = String::from("hello");
+            let s2 = s1.clone();
+            println!("s1 = {}, s2 = {}", s1, s2);
+            ```
+
+    * **Variable Scope**
+        * Variables are valid from the point of declaration to the end of current **scope**
+
+    * **Functions, Ownership Transfer, and Scope**
+
+        * Example:
+            ```
+            fn main() {
+                let s = String::from("hello");  // s comes into scope.
+                takes_ownership(s);             // s's value moves into the function and is
+                                                // so Ownership is transferred and s is
+                                                // not a Copy so it is no longer valid here
+                                                // and Rust's static check
+                                                // would throw compile time error
+                                                // if we used s after the call
+            } // Here, s goes out of scope. s's value was moved, so nothing special happens.
+            ```
+
+    * **Return Values, Ownership Transfer, Scope, References, Mutable References, Dangling References**
+
+        * Example 1: Passing **ownership** to every function and then have it return ownership each time is tedious
+            ```
+            fn main() {
+                let s1 = get_string();              // function "moves" ownership in its return
+                                                    // value of a string being assigned to s1
+
+                let s2 = String::from("hello");     // s2 comes into scope
+
+                let s3 = takes_and_gives_back(s2);  // s2 is "moved" into function,
+                                                    // which also moves its return value into s3
+            } // Here, s3 goes out of scope and is "dropped" since it is a variable with a string
+              // so its data is on the heap (which is cleaned up by drop when it goes out of scope
+              // unless the data has been "moved" to be owned by another variable.
+              // s2 goes out of scope but was "moved", so nothing happens
+              // s1 goes out of scope and is "dropped".
+            ```
+
+        * Example 2: Allow a function to use a value but without having to transfer **ownership**
+        so we can still use the `String` afterward
+
+            * Use **Borrowing** by passing a **Reference** with `&` to an object as a parameter to functions
+            (creates a reference that uses a pointer to refer to a value without taking ownership of it),
+            instead of passing the ownership of the value. Since it does not own the value, the value
+            it points to will not be dropped when the reference goes out of scope.
+            Reference: second-edition/ch04-02-references-and-borrowing.html
+            * Note: **Dereferencing** operator is `*`
+
+                ```
+                fn main() {
+                    let s1 = String::from("hello");
+
+                    // Pass &s1 into the function
+                    let len = calculate_length(&s1);
+
+                    // Still able to use s1 here since did not pass ownership
+                    println!("The length of '{}' is {}.", s1, len);
+                }
+
+                // &String s is a pointer reference to String s1
+                fn calculate_length(s: &String) -> usize {
+                    s.len()
+                } // Here, s goes out of scope but since
+                  // it does not have ownership of what
+                  // it refers to, nothing happens.
+                ```
+
+            * **References** are **immutable** so we cannot modify it in the function that was called
+            unless we create a **Mutable Reference** with `&mut` and receive it with `&mut` too.
+
+                ```
+                fn main() {
+                    let mut s = String::from("hello");
+
+                    // Create a Mutable Reference
+                    change(&mut s);
+                }
+
+                // Accept a Mutable Reference
+                fn change(some_string: &mut String) {
+                    some_string.push_str(", world");
+                }
+                ```
+
+                * **No Simultaneous Mutable References** to a single value are allowed at a time
+                is a Rust restriction to prevent **data races** at compile time (where a
+                data race is similar to a race condition where behaviours occur including multiple
+                pointers accessing same data at same time with at least one pointer being used
+                to write to the data, and with no mechanism to synchronise access to the data)
+
+                * **Multiple Mutable References** are allowed as long as they are not simultaneous
+                (i.e. not in the same block)
+                    ```
+                    let mut s = String::from("hello");
+
+                    {
+                        let r1 = &mut s;
+                    } // r1 goes out of scope here, so we can make a new reference with no problems.
+
+                    let r2 = &mut s;
+                    ```
+
+* **Borrowing** (with Reference as Function Parameters)
+
+    * Definition: Calling a function with **references** as function parameters
+
+* **Dangline References**
+
+    * Definition: Dangling Pointer that references a memory location that was freed after being given
+    to somewhere else but where the pointer to that memory is still retained
+
+    * Rust compiler guarantees that **references** will never be **dangling references** since
+    given a reference to some data the compiler ensures the data does not go out of scope before
+    the reference to the data goes out of scope.
+
+        * Example 1:
+            ```
+            fn main() {
+                let reference_to_nothing = dangle();
+            }
+
+            fn dangle() -> &String {           // dangle returns a reference to a String
+                let s = String::from("hello"); // s is a new String
+
+                &s                             // Try to return a reference to the String, s
+                                               // but the reference is pointing to an invalid `String`
+            } // Here, s goes out of scope, and is "dropped". Its memory goes away. Danger!
+            ```
+
+        * Solution: Return `String` directly so **ownership** is **moved** out and nothing is "dropped"
+
+            ```
+            fn no_dangle() -> String {
+                let s = String::from("hello");
+
+                s
+            }
+            ```
+
+* **Slices**
+
+    * Definition: Data Type that does not have **ownership** and allows **referencing** a
+    sequence of elements in a collection (rather than the whole collection).
+    Reference: book/second-edition/ch04-03-slices.html
+
+    * See example implementation in ./projects/find_word/src/main.rs
+
+## COMMENTS
+
+* Comments `//`
