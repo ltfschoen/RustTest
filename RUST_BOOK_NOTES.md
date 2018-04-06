@@ -332,6 +332,133 @@
         * Compare value against series of patterns and execute code based on match
         * Compiler checks all possible cases are handled since Rust matches are **exhaustive**
 
+* **Collections**
+
+    * Definition
+        * Contain multiple values
+        * Collections point to data stored in the **heap** (differing from Arrays and Tuples)
+            * Data does not need to be known at compile time and may grow/shrink during runtime
+        * Collections each have different capabilities and **costs**
+        * See Collections in the documentation for more collection types
+
+    * **Vectors**
+        * Definition: Allows storing multiple number of values of the **same type**
+        in single data structure and **stores them next to each other in memory**.
+
+        If we know the exhaustive set of types we want at runtime to store as a list of items
+        then we can store those **different types** by defining an **enum type** and
+        then storing elements of different types within it, and then store the enum in the
+        vector.
+
+        If we **don't know the different types** prior to runtime then we'd use a **Trait Object**.
+            * Benefit: Using an Enum means we can be explicit about what types are allowed in the
+            vector, and avoids errors since when operations performed on elements of the vector
+            when using the Enum plus a `match` expression then Rust will ensure at compile time all
+            cases are handled correctly. Rust will know what types will be in
+            the vector at compile time and how much memory it needs on the heap to store each
+            element
+        * Memory:
+            * When a vector goes out of scope the vector and its elements are freed
+        * Usage: List of items like lines in a text file, or prices of items in shopping cart
+        * Examples:
+            * Creating Vectors
+                * Empty with Type Annotation
+                    * Create **empty** Vector (using a **type annotation** since no values inserted yet)
+                    to hold elements of type `i32` type, where `Vec<T>` type from standard library
+                    holds **any** type.
+                        ```
+                        let v: Vec<i32> = Vec::new();
+                        ```
+                * Pre-Populated with Inferred Type
+                    * Create a Vector with **initial values** using **vec!** macro,
+                    where Rust infers the type as being `Vec<i32>`:
+                        ```
+                        let v = vec![1, 2, 3];
+                        ```
+
+                    * Using an Enum to store different types in a vector:
+                        ```
+                        enum SpreadsheetCell {
+                            Int(i32),
+                            Float(f64),
+                            Text(String),
+                        }
+
+                        let row = vec![
+                            SpreadsheetCell::Int(3),
+                            SpreadsheetCell::Text(String::from("blue")),
+                            SpreadsheetCell::Float(10.12),
+                        ];
+                        ```
+
+            * Updating Elements of a Vector
+                ```
+                {
+                    let mut v = Vec::new();
+                    v.push(5);
+                }
+                ```
+
+            * Reading Elements of a Vector
+                * Option 1: Indexing Syntax
+                    * Usage: Accessing out of bounds causes
+                    behaviour where program to `panic!` and crash program
+                    ```
+                    let v = vec![1, 2, 3, 4, 5];
+                    let does_not_exist = &v[100];
+                    let does_not_exist = v.get(100);
+                    ```
+
+                * Option 2: `get` Method that returns `Option<&T>`
+                    * Usage: Accessing out of bounds returns `None` without
+                    panicking. Then use logic to handle either `Some(&element)`
+                    or `None` with feedback to CLI/UI so more user friendly
+                    ```
+                    let v = vec![1, 2, 3, 4, 5];
+                    let *third: Option<&i32> = v.get(100);
+
+                    match *third {
+                        Some(x) => { println!("Reachable element {}", x); () },
+                        None => { println!("Unreachable element"); }
+                    }
+                    ```
+
+            * Modifying Elements of a Vector
+                * Note we **cannot** add an element to a Vector whilst holding a
+                reference to an element as shown below.
+                    ```rust
+                    let first = &v[0];
+
+                    v.push(6);
+                    ```
+
+                * We can iterate over mutable references to each element in a mutable vector
+                    ```rust
+                    let mut v = vec![100, 32, 57];
+                    for i in &mut v {
+                        *i += 50;
+                    }
+                    ```
+                    * Note: To change the value that the mutable reference refers to,
+                    we have to use the dereference operator (`*`) to get to the value
+                    in `i` before we can use the `+=` operator .
+
+            * Iterating over Elements in a Vector
+                ```rust
+                let v = vec![100, 32, 57];
+
+                // Get immutable references to each element in vector of i32 values
+                for i in &v {
+                    println!("{}", i);
+                }
+                ```
+
+
+    * **String**
+
+    * **Hash Map**
+        * Definition: Allows association of a value with a key
+
 ## TYPE CONVERSION
 
 * Convert String Literal to `String`

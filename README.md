@@ -44,6 +44,7 @@ TODO
   - Only documentation for the Library is being generated, not the Binary
 * [ ] Fix Travis-CI Build Error ```error: linking with `cc` failed: exit code: 1``` caused by using FFI (although the code compiles when run locally, Travis-CI does not like it)
 * [ ] Read [The Rust Reference](http://doc.rust-lang.org/reference.html)
+* [ ] Read [Rustonomicon (Advanced Rust)](https://doc.rust-lang.org/stable/nomicon/README.html)
 
 Requirements
 -------
