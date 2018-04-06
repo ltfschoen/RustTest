@@ -165,7 +165,7 @@ Example Projects
 
     * Tests
         ```
-        cd projects/find_word;
+        cd projects/guessing_game;
         cargo build;
         cargo test;
         ```
@@ -183,6 +183,39 @@ Example Projects
     * Tests
         ```
         cd projects/find_word;
+        cargo build;
+        cargo test;
+        ```
+
+* Shapes (originally setup with `mkdir projects && cd projects && cargo new shapes --bin && cd shapes;`)
+
+    * Execution
+        ```
+        cd projects/shapes;
+        cargo build;
+        ./target/debug/shapes;
+        cargo doc --open;
+        ```
+
+    * Tests
+        ```
+        cd projects/shapes;
+        cargo build;
+        cargo test;
+        ```
+
+* Users (originally setup with `mkdir projects && cd projects && cargo new users --bin && cd users;`)
+
+    * Execution
+        ```
+        cd projects/users;
+        cargo run;
+        cargo doc --open;
+        ```
+
+    * Tests
+        ```
+        cd projects/users;
         cargo build;
         cargo test;
         ```
@@ -249,6 +282,14 @@ Other Links
 * [Rust Essentials Book Example Code](https://github.com/utilForever/RustEssentials)
 * [C vs Rust Slides](http://www-verimag.imag.fr/~mounier/Enseignement/Software_Security/19RustVsC.pdf)
 * [Seminar of Rust Programming Language](http://www8.cs.umu.se/kurser/5DV086/VT18/resources/seminar/rust.pdf)
+
+Debugging
+---------
+
+ * `println!` macro uses `Display` default formatter when it uses `{}` for primitive types.
+ * `Debug` Trait output formatter may be used with `{:?}` to debug Structs after opting into
+  its usage by including the derive annotation `#[derive(Debug)]` before the Struct definition.
+  Use `{:#?}` for better readability.
 
 Help
 -------

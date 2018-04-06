@@ -59,7 +59,7 @@
     * Note:
         * `f64` is default, same speed as `f32` but more precision on new CPUs)
     * Example:
-        ```
+        ```rust
         let x: 2.0;       // f64 default
         let y: f32 = 3.0; // f32
         ```
@@ -90,7 +90,7 @@
     * Usage: Use for grouping values of a variety of types into single compound element type
     * Type annotations are optional
     * Example:
-        ```
+        ```rust
         let tup: (i32, f64, u8) = (500, 6.4, 1);
 
         let (x, y, z) = tup;      // destructuring
@@ -106,7 +106,7 @@
         if access index greater than array length
         * Vector collection type allows grow or shrink
     * Example:
-        ```
+        ```rust
         let months = ["Jan", "Feb", "Mar"];
         let feb = months[1];
         ```
@@ -114,7 +114,7 @@
     * **Array Slices**
         * Refer to part of an array by taking a slice of type `&[i32]`
         that stores a reference to the first element and a length.
-        ```
+        ```rust
         let a = [1, 2, 3, 4, 5];
         let slice = &a[1..3];
         ```
@@ -141,7 +141,7 @@
     * Pros:
         * Allows for using string values that are not known at compile time
         * Mutation of `String` type by appending a String Literal
-            ```
+            ```rust
             let mut s = String::from("hello");
             s.push_str(", world!");
             ```
@@ -152,22 +152,197 @@
         * String Literals are Slices
             * Slice pointing to specific point in binary where `&str` is immutable reference
 
-            ```
+            ```rust
             let s: &str = "Hello, world!";
             println!("{}", s);
             ```
+
+* **Structs**
+
+    * Defining: `struct` used to define a grouping of **fields** (names and types of the pieces of data)
+
+    * Instantiating: State the name of the defined Struct and provide Key/Value pairs for each field
+
+    * Accessing Fields of a Struct Instance: Use dot notation
+        * Note: We cannot mark only certain fields as mutable
+        * Example:
+            ```rust
+            let mut user1 = User {
+                email: String::from("a@a.com")
+            };
+            println!("User email is: {}: ", user1.email);
+            ```
+
+    * Modifying Fields of a "mutable" Struct Instance
+        * Example 1:
+            ```rust
+            user1.email = String::from("b@b.com");
+            ```
+
+        * Example 2: Implicitly return new instance of Struct from Function body
+        taking some function arguments and translating them into fields of the Struct
+            ```rust
+            fn build_user(email: String, username: String) -> User {
+                User {
+                    email: email,
+                    username: username,
+                    active: true,
+                    sign_in_count: 1,
+                }
+            }
+            ```
+
+    * Remaining Fields Populated using `..` syntax:
+        * Example:
+            ```
+            let user2 = User {
+                email: String::from("another@example.com"),
+                username: String::from("anotherusername567"),
+                ..user1
+            };
+            ```
+
+    * **Methods**
+        * Differ from **Functions** since they are defined in the context
+        of a Struct (or Enum or Trait object), and their first parameter
+        is `self` to represent the Instance of the Struct that the Method
+        is being called on.
+        * Multiple `impl` blocks of the same Struct may be used to house the various
+        Methods and Associated Functions
+        * Pros:
+            * Organises capabilities of a Struct instance type into a `impl` block
+
+        * Example 1: Function
+            ```rust
+            #[derive(Debug)]
+            struct Rectangle {
+                width: u32,
+                height: u32
+            }
+
+            fn main() {
+                let rect1 = Rectangle { width: 30, height: 50 };
+
+                println!("rect1 is {:?}", rect1);
+
+                println!(
+                    "The area of the rectangle is {} square pixels.",
+                    area(&rect1)
+                );
+            }
+
+            fn area(rectangle: &Rectangle) -> u32 {
+                rectangle.width * rectangle.height
+            }
+            ```
+
+        * Example 2: Method (refactored to use Method instead of Function)
+            * If we are only Reading from the Struct data we use `&self`
+            * If we want to Write to the Struct instance we use `&mut self` as first parameter
+            ```rust
+            #[derive(Debug)]
+            struct Rectangle {
+                width: u32,
+                height: u32
+            }
+
+            impl Rectangle {
+                fn area(&self) -> u32 {
+                    self.width * self.height
+                }
+            }
+
+            fn main() {
+                let rect1 = Rectangle { width: 30, height: 50 };
+
+                println!("rect1 is {:?}", rect1);
+
+                println!(
+                    "The area of the rectangle is {} square pixels.",
+                    rect1.area()
+                );
+            }
+            ```
+
+    * **Associated Functions** (i.e. Static Functions of a Struct that do not require a Struct Instance)
+        * Do not require `self` since do not require an instance of the Struct, so are not methods
+        * Namespaced by the Struct so call with say `let sq = Rectangle::square(3);`
+
+        * Examples 1: `String::from`
+
+        * Example 2:
+            * See `fn square` in projects/shapes/src/main.rs
+
+    * **Tuple Structs**
+        * Structs without labels. See book/second-edition/ch05-01-defining-structs.html#tuple-structs-without-named-fields-to-create-different-types
+
+    * **Ownership of Struct Data**
+
+        * Use the "owned" `String` type rather than the `&str` String Slice type
+        if want instances of the Struct to own all of its data and for that data
+        to be valid for as long as the entire Struct is valid.
+
+        * **Store References in Structs using Lifetime Specifiers**
+            * Structs may store "references" to data that is "owned" by something else
+            through use of "lifetimes" that ensure the data "referenced" by the
+            Struct is valid as long as the Struct is
+                ```
+                struct User {
+                    username: &str,
+                    email: &str,
+                    ...
+                ```
+
+* **Enums and Pattern Matching**
+
+    * Definition:
+        * Allow define a type by enumerating its possible values
+        * Allows encoding meaning along with data
+        * `Option` enum expresses that a value can be something or nothing
+        (since Rust does not have nulls), so the compiler
+        can check that we have handled all cases we should be handling to prevent bugs.
+        It is included in the Prelude automatically. The `<T>` syntax is a generic type parameter,
+        and means the `Some` variant of the `Option`enum can hold one piece of data of any type.
+            ```
+            enum Option<T> {
+                Some(T),
+                None,
+            }
+            ```
+            * In order to have a value that can possibly be null, you must explicitly opt in
+             by making the type of that value `Option<T>`. Then, when you use that value,
+             you are required to explicitly handle the case when the value is null.
+             Whenever a value has a type that isn't an `Option<T>`, you can safely assume
+             that the value isn't null
+            * Note: Must convert `Option<T>` to a `T` before can perform `T` operations with it
+        * Pattern Matching in `match` expression allows running different code
+        for differernt enum values
+        * `if let` for handling enums conveniently is syntactic sugar (less code than using `match`)
+        * Enum values can only be one of the variants
+        * Enums may contain anonymous structs as data
+        * Enums may define embedded methods using `impl`
+        * Enums may be used to create Custom Data Types and instances of them
+
+    * See book/second-edition/ch06-01-defining-an-enum.html
+    * See projects/users/src/main.rs
+    * Reference on Options: https://medium.com/adventures-in-rust/deal-with-it-option-type-in-rust-4246e1dd9e47
+
+    * **`match` Control Flow Operator**
+
+        * Compare value against series of patterns and execute code based on match
+        * Compiler checks all possible cases are handled since Rust matches are **exhaustive**
 
 ## TYPE CONVERSION
 
 * Convert String Literal to `String`
     * Use the `from` function
     * Example
-        ```
+        ```rust
         let mut s = String::from("hello");
         ```
 
 * Convert `String` into array of bytes
-    ```
+    ```rust
     let bytes = s.as_bytes();
     ```
 
@@ -176,7 +351,7 @@
 * Functions may be defined before or after where they are called
 
 * Example
-    ```
+    ```rust
     fn main() {
         another_function(5, 6);
     }
@@ -186,11 +361,26 @@
     }
     ```
 
+### FUNCTION AUTOMATIC REFERENCING AND DEREFERENCING
+
+* Rust uses **automatic referencing and dereferencing** when calling a method.
+Rust automatically adds in `&`, `&mut`, or `*` so the `object` matches the method signature.
+Since methods have a name and a receiver of type `self`, when a call to a method is made and
+these are given, Rust determines if the method is reading `&self`, mutating `&mut self` or
+consuming `self`. Rust makes "borrowing" implicity for method receivers.
+
+* Example: Both lines are equivalent
+    ```rust
+    p1.distance(&p2);
+    (&p1).distance(&p2);
+    ```
+
 ### FUNCTION PARAMETERS
 
 * **Parameter type annotations** must be declared in function signature
 
-* Note that `_` is catch all of all values (say for function arguments)
+* Note that `_` is catch all of all values (say for function arguments ).
+    * See book/second-edition/ch06-02-match.html#the-_-placeholder
 
 * Call associated function with say: `std::io::stdin()` to return instance of terminal standard input `std::io::Stdin`. Call `readline` method on standard input handle to obtain user input passing a single mutable reference argument to change the string content with the user input (allow safe and easy access to data without having to copy it to memory multiple times).
 
@@ -202,7 +392,7 @@
 * **Expressions** - evaluate to returning a resulting value
     * **Do not include an ending semi-colon to an expression otherwise
     it becomes a statement that will no longer return a value**, i.e.
-        ```
+        ```rust
         let x = 5;
 
         // y is bound to value evaluated and returned from block
@@ -225,7 +415,7 @@
 * Early return from function using `return` keyword and a value
 * Do not name return values
 * Example:
-    ```
+    ```rust
     fn increment(x: i32) -> i32 {
         x + 1
     }
@@ -249,7 +439,7 @@
 * **condition must be boolean**
 * `if` is an expression so may be used on right side of a `let` statement to bind the variable to the outcome of the `if` expression
 * Example:
-    ```
+    ```rust
     let condition = true;
 
     // where the type returned by each arm is different then an error occurs
@@ -265,7 +455,7 @@
 
 * `break` to stop executing the loop
 * Example:
-    ```
+    ```rust
     loop {
         break;
     }
@@ -278,7 +468,7 @@
     * Cons: Slow since compiler adds runtime code to perform
     conditional check on every element on every loop iteration
     * Example:
-        ```
+        ```rust
         let ages = [30, 40, 50, 60];
         let mut index = 0;
 
@@ -294,7 +484,7 @@
     since avoids accessing out of bounds index or accessing insufficient indexes
     * `rev` method reverses the range
     * Example:
-        ```
+        ```rust
         let ages = [30, 40, 50, 60];
 
         for element in ages.iter() {
@@ -338,7 +528,7 @@
             * Integers, Floating-point numbers, Boolean, Chars, Tuples, and Arrays
         * Example 2
             * Since its dealing with integers that are simple values with a **Known fixed size** it binds value 5 to x, makes copy of value in x and binds it to y, and then pushes the two 5 values onto **stack** entirely so copies of actual values are quick (since not storing any values on the **heap** an no pointers necesary)
-                ```
+                ```rust
                 let x = 5;
                 let y = x;
                 ```
@@ -361,7 +551,7 @@
             * Assigning `s1` to `s2` causes `String` data on the **stack** to be copied (including the **pointer** to memory on the **heap**), but does not copy the data on the **heap**.
             * **Double Free** error is a **memory safe bug** that could occur when Rust automatically calls the `drop` function to clean up **heap** memory for a variable when it goes out of scope (but where two variables on the **heap** have **pointer** to the same location, so they both try to free the same memory, which may lead to memory corruption and security vulnerabilities), but Rust ensures **memory safety** but **invalidating** the first variable `s1` so it does not try to free any memory when it goes out of scope. So trying to use and print `s1` in the example below will not work. Note: This is called a **"move"**, which is similar to a **"shallow copy"** but where the first variable `s1`'s pointer, length, and capacity are copied
             without the actual data, and in addition `s1` is **invalidated** (i.e. `s1` was **moved** to `s2`).
-                ```
+                ```rust
                 let s1 = String::from("hello");
                 let s2 = s1;
                 println!("{}, world!", s1);
@@ -376,7 +566,7 @@
         so it may be expensive
 
         * Example:
-            ```
+            ```rust
             let s1 = String::from("hello");
             let s2 = s1.clone();
             println!("s1 = {}, s2 = {}", s1, s2);
@@ -388,7 +578,7 @@
     * **Functions, Ownership Transfer, and Scope**
 
         * Example:
-            ```
+            ```rust
             fn main() {
                 let s = String::from("hello");  // s comes into scope.
                 takes_ownership(s);             // s's value moves into the function and is
@@ -403,7 +593,7 @@
     * **Return Values, Ownership Transfer, Scope, References, Mutable References, Dangling References**
 
         * Example 1: Passing **ownership** to every function and then have it return ownership each time is tedious
-            ```
+            ```rust
             fn main() {
                 let s1 = get_string();              // function "moves" ownership in its return
                                                     // value of a string being assigned to s1
@@ -429,7 +619,7 @@
             Reference: second-edition/ch04-02-references-and-borrowing.html
             * Note: **Dereferencing** operator is `*`
 
-                ```
+                ```rust
                 fn main() {
                     let s1 = String::from("hello");
 
@@ -451,7 +641,7 @@
             * **References** are **immutable** so we cannot modify it in the function that was called
             unless we create a **Mutable Reference** with `&mut` and receive it with `&mut` too.
 
-                ```
+                ```rust
                 fn main() {
                     let mut s = String::from("hello");
 
@@ -473,7 +663,7 @@
 
                 * **Multiple Mutable References** are allowed as long as they are not simultaneous
                 (i.e. not in the same block)
-                    ```
+                    ```rust
                     let mut s = String::from("hello");
 
                     {
@@ -497,7 +687,7 @@
     the reference to the data goes out of scope.
 
         * Example 1:
-            ```
+            ```rust
             fn main() {
                 let reference_to_nothing = dangle();
             }
@@ -512,7 +702,7 @@
 
         * Solution: Return `String` directly so **ownership** is **moved** out and nothing is "dropped"
 
-            ```
+            ```rust
             fn no_dangle() -> String {
                 let s = String::from("hello");
 
@@ -527,6 +717,19 @@
     Reference: book/second-edition/ch04-03-slices.html
 
     * See example implementation in ./projects/find_word/src/main.rs
+
+## MODULES
+
+* Modules are **namespaces** containing definitios of functions or types
+* Module visibility may be **public** or **private**
+    * `private` by default: functions, types, constants, and modules
+* Rust module system allows splitting code into chunks for code reuse
+* Extract functions, structs, and enums into different modules
+* Declare module with `mod` followed by block of code or in another file
+* Use the `use` keyword to import modules into another scope
+
+* Example
+    * See projects/communicator
 
 ## COMMENTS
 
