@@ -30,7 +30,7 @@ TODO
 
 * [x] Convert Function and Variable names to snake case instead of camel case
 * [x] Change to 4-space indentation
-* [ ] [The Rust Programming Language Book Second Edition](https://doc.rust-lang.org/book/second-edition/)
+* [ ] [The Rust Programming Language Book 2018 Edition (Second Edition deprecated)](https://github.com/rust-lang/book/blob/master/2018-edition)
 * [ ] [The Cargo Book](https://doc.rust-lang.org/cargo/)
 * [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
 * [ ] Create Examples showing "immutability", "orthogonality" and "idempotence" trait importance
@@ -83,7 +83,7 @@ Setup
 
   * Library
     ```
-    cargo new app_name
+    cargo new app_name --lib
     ```
 
 * **Build, and Run**
@@ -219,6 +219,18 @@ Example Projects
         cargo build;
         cargo test;
         ```
+
+* Communicator Library (setup with `mkdir projects && cd projects && cargo new communicator --lib && cd communicator;`)
+
+    * Note: Since it's a library is has lib.rs and we only build it
+
+    * Execution
+        ```
+        cd projects/communicator;
+        cargo build;
+        cargo doc --open;
+        ```
+
 
 Rust Testing
 ------------

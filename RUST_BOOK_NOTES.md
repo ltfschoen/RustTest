@@ -726,7 +726,81 @@ consuming `self`. Rust makes "borrowing" implicity for method receivers.
 * Rust module system allows splitting code into chunks for code reuse
 * Extract functions, structs, and enums into different modules
 * Declare module with `mod` followed by block of code or in another file
-* Use the `use` keyword to import modules into another scope
+* Use `use` keyword to import Modules or Enums into another scope.
+Bring all names into scope with a Glob Operator like `use TrafficLight::*;`,
+but may cause name conflicts.
+    * Example:
+        ```
+        pub mod a {
+            pub mod series {
+                pub mod of {
+                    pub fn nested_modules() {}
+                }
+            }
+        }
+
+        enum TrafficLight {
+            Red,
+            Yellow,
+            Green,
+        }
+
+        use TrafficLight::{Red, Yellow};
+        // use TrafficLight::*;
+
+        use a::series:of
+
+        fn main() {
+            of::nested_modules();
+
+            let red = Red;
+            let yellow = Yellow;
+            let green = Green;
+            // let green = TrafficLight::Green;
+        }
+        ```
+*  Example Tests of a lib.rs file:
+    * We are in the `communicator` library
+    * Paths are relative to the current module `tests` inside `mod tests`
+    * With `use` the paths are relative to the crate root by default.
+    * Add to `tests` module the make the `client` module in scope by going up
+    one module in the module hierarchy in order to call `client::connect()`,
+    which is good way to start from root when deep in the module hierarchy.
+    `super::` functionality changes the path given to `use` so it is relative
+    to the parent module instead of the root module.
+    * Example: lib.rs
+        ```
+        // Communicator Library
+
+        pub mod client;
+
+        pub mod network;
+
+        #[cfg(test)]
+        mod tests {
+            //
+            use communicator;
+
+            #[test]
+            fn test_client_connect() {
+                // Option 1:
+                super::client::connect();
+                // Option 2:
+                communicator::client::connect();
+                // Option 3:
+                ::client::connect();
+        ```
+* Rust looks in main.rs or lib.rs by default, which is where we tell Rust
+where to find other files
+* If using an external crate within a submodule of a project,
+the `extern crate ___` should go in the root module (so in src/main.rs or src/lib.rs).
+The submodules then refer to items from external crates as if the items are
+top-level modules.
+
+
+* **Privacy Rules**
+    * Public - accessed through any parent module
+    * Private - accessed only by immediate parent + any child modules
 
 * Example
     * See projects/communicator

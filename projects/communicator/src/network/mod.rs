@@ -1,7 +1,5 @@
-fn connect() {
+pub fn connect() -> bool {
+    true
 }
 
-mod server {
-    fn connect() {
-    }
-}
+pub mod server;
