@@ -48,9 +48,9 @@ mod tests {
 
     #[test]
     fn test_first_word() {
-        let actual_guess: String = String::from("hello world");
+        let actual_first_word: String = String::from("hello world");
         // let expected_response: String = "hello".to_string();
         let expected_response: &str = "hello";
-        assert_eq!(first_word(&actual_guess), expected_response);
+        assert_eq!(first_word(&actual_first_word), expected_response);
     }
 }
