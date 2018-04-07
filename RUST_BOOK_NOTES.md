@@ -121,42 +121,6 @@
 
 ## COMPLEX
 
-* **String Literal**
-    * **Immutable** string value that is hard-coded
-    * Pros:
-        * Fast and efficient since immutable and contents known in executable
-        at compile time
-    * Cons:
-        * Does not cater for string values that are not known at compile time
-
-* **Strings**
-    * `String` type may be used to take user input and store it on the **heap**
-    * Supports **Mutable** (growable text) by allocating memory on the **heap**
-    to hold the data that is unknown at compile time, so memory is requested from
-    operating system at runtime (i.e. when we call `String::from`).
-    **Rust uses a pattern of automatically returning memory to the operating
-    system after the variable that owns it goes out of scope** by calling the
-    `drop` function, similar to Resource Acquisition Is Initialization (RAII)
-    in C++.
-    * Pros:
-        * Allows for using string values that are not known at compile time
-        * Mutation of `String` type by appending a String Literal
-            ```rust
-            let mut s = String::from("hello");
-            s.push_str(", world!");
-            ```
-
-    * **String Slices**
-        * See book/second-edition/ch04-03-slices.html
-
-        * String Literals are Slices
-            * Slice pointing to specific point in binary where `&str` is immutable reference
-
-            ```rust
-            let s: &str = "Hello, world!";
-            println!("{}", s);
-            ```
-
 * **Structs**
 
     * Defining: `struct` used to define a grouping of **fields** (names and types of the pieces of data)
@@ -453,11 +417,233 @@
                 }
                 ```
 
+    * **String Literal**
+        * **Immutable** string value that is hard-coded
+        * Pros:
+            * Fast and efficient since immutable and contents known in executable
+            at compile time
+        * Cons:
+            * Does not cater for string values that are not known at compile time
 
-    * **String**
+    * **Strings**
+        * `String` type ("owned") is UTF-8 encoded may be used to take user input and store it on the **heap**
+            * Supports **Mutable** (growable text) by allocating memory on the **heap**
+            to hold the data that is unknown at compile time, so memory is requested from
+            operating system at runtime (i.e. when we call `String::from`).
+            * **Rust uses a pattern of automatically returning memory to the operating system after the variable that owns it goes out of scope** by calling the
+            `drop` function, similar to Resource Acquisition Is Initialization (RAII)
+            in C++.
+            * Pros:
+                * Allows for using string values that are not known at compile time
+                
+            * Examples
+                * Create New empty String
+                    ```rust
+                    let mut s = String::new();
+                    ```
+
+                * Access Index of Characters in a String
+                    * Note: Rust strings don't support indexing, so we can't do
+                    `let s1 = String::from("hello"); s1[0];`
+
+                    * See for details of how to use here: https://github.com/rust-lang/book/blob/master/2018-edition/src/ch08-02-strings.md#indexing-into-strings
+
+                * Mutation of `String` type by appending a String Literal
+                    ```rust
+                    let s = "initial content".to_string();
+                    ```
+                * Mutation of `String` type by appending a String Slice (equivalent to above).
+                Note: `push_str` takes a String Slice since don't want "ownership" of the parameter.
+                    ```rust
+                    let mut s = String::from("hello");
+                    s.push_str(", world!");
+
+                    let mut s1 = String::from("foo");
+                    let s2 = "bar";
+                    s1.push_str(&s2);
+                    println!("s2 is {}", s2);
+                    ```
+
+                * Mutation of `String` type by appending a single character
+                    ```
+                    let mut s = String::from("lo");
+                    s.push('l');
+                    ```
+
+                * Concatenation of a `&str` to a `String` type (but it takes "ownership" **disadvantage**)
+                    * Note: We can't add two `String` types together.
+                    * Note: In the example `&s2` is `&String` type and is "coerced" into `&str` type
+                    and when we use `+` (`add`) then Rust uses "deref coercion" to turn `&s2` into `&s2[..]`
+                    and does not take "ownership" of parameter then `s2` remains a valid `String` after the
+                    operation. `s1` is moved into the `+` (`add`) call and no longer valid after it since the 
+                    call takes "ownership" of `self` (see signature of `+`(`add` in standard library)), but
+                    ultimately the statement returns "ownership" of the result
+                    ```
+                    let s1 = String::from("Hello, ");
+                    let s2 = String::from("world!");
+                    let s3 = s1 + &s2; // Note that s1 has been "moved" here and can no longer be used
+                    ```
+
+                * Concatentation of complicated `String` combinations without it taking "ownership" of params
+                so we don't lose access, by using the `format!` macro (it returns a `String` with contents
+                but does not output to the screen like `println!`)
+                    ```
+                    let s1 = String::from("tic");
+                    let s2 = String::from("tac");
+                    let s3 = String::from("toe");
+
+                    let s = format!("{}-{}-{}", s1, s2, s3);
+                    ```
+
+                * Iterate over Strings to Access Elements
+                    * Allows performing operations on individual Unicode scalar values using either the
+                    `chars()` or `bytes()` method
+                    ```rust
+                    for c in "नमस्ते".chars() {
+                        println!("{}", c);
+                    }
+                    ```
+
+                * Strings are UTF-8 encoded so we can include any properly encoded data on them 
+                    ```rust
+                    let hello = String::from("Olá");
+                    ```
+
+        * **String Slices**
+            * See book/second-edition/ch04-03-slices.html
+
+            * String Literals are Slices
+                * Slice pointing to specific point in binary where `&str` ("borrowed" variant)
+                is immutable reference
+
+                ```rust
+                let s: &str = "Hello, world!";
+                println!("{}", s);
+                ```
+            
+            * Specific indexing with a range to obtain String Slice of particular bytes
+                ```
+                let hello = "Здравствуйте";
+                let s = &hello[0..4];  
+                // `s` will be a `&str` containing first 4 bytes of the string, where each char
+                // is 2 bytes, so `s` will be `Зд`
+                ```
 
     * **Hash Map**
-        * Definition: Allows association of a value with a key
+        * Definition: Allows association that maps key with a value with type `HashMap<K, V>`
+        using a **hashing function** that determines how Keys and Values are stored in memory
+        on the **heap**.
+        HashMaps are Homogeneous so all Keys must be same type and all Values must be same type. 
+
+        * Create HashMap
+            ```rust
+            use std::collections::HashMap;
+            let mut scores = HashMap::new();
+            ```
+        
+        * Add elements to HashMap (here keys are `String` type and values are `i32`)
+            ```rust
+            scores.insert(String::from("Blue"), 10);
+            scores.insert(String::from("Yellow"), 50);
+            ```
+
+        * Access elements in HashMap
+            ```rust
+            scores.insert(String::from("Blue"), 10);
+            scores.insert(String::from("Yellow"), 50);
+
+            let team_name = String::from("Blue");
+            // `get` returns Option<&V>, so the result will be `Some(&10)` or 
+            // if no value for the key it returns `None`, which we have to handle
+            let score = scores.get(&team_name);
+            ```
+        
+        * Iterate over Keys and Values
+            ```rust
+            for (key, value) in &scores {
+                println!("{}: {}", key, value);
+            }
+            ```
+        
+        * Overwrite values
+            ```rust
+            scores.insert(String::from("Blue"), 10);
+            scores.insert(String::from("Blue"), 25);
+            println!("{:?}", scores); // {"Blue": 25}
+            ```
+
+        * Only insert value for if no value exists for a key
+            * `Entry` takes key you want to check as parameter.
+             Returned value of the entry function is an enum called 
+             `Entry` that represents a value that might or might not exist.
+            * `or_insert` method on `Entry` is defined to return a mutable 
+            reference to the value for the corresponding Entry key if that key exists, 
+            and if not, inserts the parameter as the new value for this key and 
+            returns a mutable reference to the new value
+            ```rust
+            scores.insert(String::from("Blue"), 10);
+            scores.entry(String::from("Yellow")).or_insert(50);
+            scores.entry(String::from("Blue")).or_insert(50); // no change since value exists
+            println!("{:?}", scores); // {"Yellow": 50, "Blue": 10}
+            ```
+        
+        * Update Existing Value of a Key depending on the Old Value
+            ```rust
+            use std::collections::HashMap;
+            let text = "hello world wonderful world";
+            // HashMap with Keys: words, Value: count times seen a word
+            let mut map = HashMap::new();
+            for word in text.split_whitespace() {
+                // count times each word appears in text.
+                // add value of 0 if first time seen a word.
+                // `or_insert` returns mutable reference to value for the Key `&mut V`
+                // and stores it in `count` variable, but must first dereference `count` using 
+                // an `*` before assigiing to that value.
+                // the mutable reference goes out of scope at end of the `for` loop
+                let count = map.entry(word).or_insert(0);
+                *count += 1;
+            }
+            println!("{:?}", map); // {"world": 2, "hello": 1, "wonderful": 1}.
+            ```
+
+        * Create HashMap from multiple Vectors of data using Tuples
+            * Given team names and initial scores in two separate Vectors.
+            Use `zip` method to Create a Vector of Tuples where we pair each team name with a score.
+            Lastly use the `collect` method to convert the Vector of Tuples into a HashMap.
+            Rust can infer the types that the HashMap contains based on the types of data in the Vectors. 
+
+            ```rust
+            use std::collections::HashMap;
+
+            let teams  = vec![String::from("Blue"), String::from("Yellow")];
+            let initial_scores = vec![10, 50];
+
+            let scores: HashMap<_, _> = teams.iter().zip(initial_scores.iter()).collect();
+            ```
+
+        * Creation of HashMaps and Ownership
+
+            ```rust
+            use std::collections::HashMap;
+
+            let field_name = String::from("Favorite color");
+            let field_value = String::from("Blue");
+
+            let mut map = HashMap::new();
+            // "owned" values like String type are "moved" onto HashMap so later they are "invalid"
+            // so instead we need to pass "references" to it.
+            // Whereas other types like i32 (of Copy trait) are only "copied" onto the HashMap are don't
+            // become "invalid" afterward
+            map.insert(&field_name, &field_value);
+            // field_name and field_value are invalid at this point, try using them and
+            // see what compiler error you get!
+            println!("fields are: {} {}", field_name, field_value);
+            ```
+
+        * Hashing Functions
+            * Default **hasher** (hashing algorithm) that implements the 
+            `BuildHasher` trait may be slow since it uses 
+            cryptographically secure **hashing function** for better security
 
 ## TYPE CONVERSION
 

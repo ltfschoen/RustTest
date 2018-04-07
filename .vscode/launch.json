@@ -1,0 +1,23 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "LLDB Debug - Program - Find Word",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/projects/find_word/target/debug/find_word",
+      "args": [],
+      "cwd": "${workspaceRoot}"
+    },
+    {
+      "name": "GDB Debug - Program - Find Word",
+      "type": "gdb",
+      "request": "launch",
+      "target": "${workspaceRoot}/projects/find_word/target/debug/find_word",
+      "cwd": "${workspaceRoot}"
+    }
+  ]
+}
