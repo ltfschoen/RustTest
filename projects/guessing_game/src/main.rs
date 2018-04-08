@@ -7,11 +7,11 @@ use rand::Rng;
 
 #[derive(Debug)]
 pub struct Guess {
-    value: u32,
+    value: i32,
 }
 
 impl Guess {
-    pub fn new(value: u32) -> Guess {
+    pub fn new(value: i32) -> Guess {
         if value < 1 || value > 100 {
             panic!("Guess value must be between 1 and 100, got {}.", value);
         }
@@ -19,11 +19,11 @@ impl Guess {
     }
 
     // Getter
-    pub fn value(&self) -> u32 {
+    pub fn value(&self) -> i32 {
         self.value
     }
 
-    pub fn comparison(&self, secret_number: &u32) -> i32 {
+    pub fn comparison(&self, secret_number: &i32) -> i32 {
         match self.value.cmp(secret_number) {
             Ordering::Less => {
                 println!("Too small!");
@@ -87,17 +87,17 @@ mod tests {
 
     #[test]
     fn test_guess() {
-        let actual_guess_number: u32 = 99;
+        let actual_guess_number: i32 = 99;
         let actual_guess_instance: Guess = Guess::new(actual_guess_number);
-        let expected_guess_instance_value: u32 = actual_guess_instance.value();
+        let expected_guess_instance_value: i32 = actual_guess_instance.value();
         assert_eq!(99, expected_guess_instance_value);
     }
 
     #[test]
     fn test_comparison() {
-        let actual_guess_number: u32 = 50;
+        let actual_guess_number: i32 = 50;
         let actual_guess_instance: Guess = Guess::new(actual_guess_number);
-        let actual_secret_number: u32 = 50;
+        let actual_secret_number: i32 = 50;
         let actual_comparison_result: i32 = actual_guess_instance.comparison(&actual_secret_number);
         let expected_comparison_result: i32 = 0;
         assert_eq!(actual_comparison_result, expected_comparison_result);
