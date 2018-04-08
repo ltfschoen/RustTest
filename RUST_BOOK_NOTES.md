@@ -1118,6 +1118,219 @@ top-level modules.
 * Example
     * See projects/communicator
 
+## ERRORS
+
+* Rust categories of errors: 
+    * **Recoverable**
+        * Report problem to user and retry operation (i.e. file not found)
+        * Type: Returning `Result<T, E>` 
+            * `T` generic type parameter means value returned in Success case within `Ok` variant
+            * `E` generic type parameter means type of error returned in Failure case with `Err` variant
+        * Check if calling a function returns a `Result` by looking at the 
+        Standard Library API Documentation or asking the Compiler.
+        * We don't have to specify `Result::` before `Ok` or `Err` variants since it's imported
+        in the Prelude
+        * The Type of value that File::open returns inside `Err` variant is `io::Error`, 
+        which is a struct provided by standard library that has method `kind` we can call
+        to get an `io::ErrorKind` value. `io::ErrorKind` is an enum provided by the 
+        standard library that has variants representing the different kinds of errors that 
+        might result from an io operation.
+        * `ref` is so error is only "referenced" and not "moved" into guard conditiony.
+        `ref` is used to match a value and give us a "reference" to it, whereas
+        `&` matches a reference and gives us its value   
+        * Example:
+            * Open File
+                ```rust
+                use std::fs::File;
+
+                fn main() {
+                    let f = File::open("hello.txt");
+
+                    let f = match f {
+                        Ok(file) => file,
+                        // Match guard
+                        Err(ref error) if error.kind() == ErrorKind::NotFound => {
+                            match File::create("hello.txt") {
+                                Ok(fc) => fc,
+                                Err(e) => {
+                                    panic!(
+                                        "Tried to create file but there was a problem: {:?}",
+                                        e
+                                    )
+                                },
+                            }
+                        },
+                        Err(error) => {
+                            panic!(
+                                "There was a problem opening the file: {:?}",
+                                error
+                            )
+                        },
+                    };
+                }
+                ```
+            * Find out the Type of value returned by just trialing a type 
+            as a Type Annotation and the Compiler complain and tell us what it actually 
+            returned `let f: u32 = File::open("hello.txt");`. We find that it returns 
+            enum type `Result<T, E>` with generic parameter `T` for type of success
+            value, `std::fs::File` (file handle), and `E` as error value of `std::io::Error`
+            (error info).
+            If `File::open` succeeds, the valuein the variable `f` will be instance 
+            of `Ok` that contains a file handle. If it fails, the value in `f` will
+            be an instance of `Err` that contains more information about the error
+                ```
+                  4 |     let f: u32 = File::open("hello.txt");
+                    |                  ^^^^^^^^^^^^^^^^^^^^^^^ expected u32, found enum
+                    `std::result::Result`
+                    |
+                    = note: expected type `u32`
+                                found type `std::result::Result<std::fs::File, std::io::Error>`
+                ```
+
+        * Helper Method Shortcuts of the `Result<T, E>` type for panic on error (instead of `match`, which is verbose)
+
+            * `unwrap` (similar to `match`)
+                * If the `Result` value is the `Ok` variant, `unwrap` will return the value inside the `Ok`. If the `Result` is the `Err` variant, `unwrap` will call the `panic!` macro
+
+                * Example: Panic when no file exists:
+                    ```rust
+                    use std::fs::File;
+
+                    fn main() {
+                        let f = File::open("hello.txt").unwrap();
+                    }
+                    ```
+
+            * `expect` (similar to `unwrap`)
+                * Allows us to choose the Error message 
+
+                * Example:
+                    ```rust
+                    use std::fs::File;
+
+                    fn main() {
+                        let f = File::open("hello.txt").expect("Failed to open hello.txt");
+                    }
+                    ```
+
+
+    * **Unrecoverable**
+        * Due to a bug such as accessing out of bounds in array (since may expose 
+        security vulnerabilities such as "buffer overread" from attackers)
+        * Type: Call `panic!` macro that stops execution
+            * Causes program unwinding up the stack and clean up data/memory used
+            by each function encountered.
+            Use the backtrace of functions the `panic!` call came from to find 
+            part of code causing the problem, by running with the debug 
+            environment variable enabled `RUST_BACKTRACE=1` (debug symbols are
+            also enabled when running `cargo biuld` or just `cargo run`)
+            * Immediately abort without cleaning up, so memory used by program
+            must be cleaned up by the operating system
+            * Read backtrace backtrace by starting from the top until you see files
+            you wrote, which is the spot where the problem originated. 
+            The lines above the lines mentioning your files are code that your code
+            called; the lines below are code that called your code
+        * Use `panic!` when code could enter a rare unexpected state, and the code 
+        relies on not being in that bad state when it occurs, and should alert the
+        developer so they can fix it during development. Also use it when calling 
+        external code out of your control that returns invalid state that cannot fix.
+            * Example Use Cases:    
+                * Verification finds values invalid that it must operate on, done for safety reasons since operations on invalid data may expose code to vulnerabilities (i.e. accessing wrong memory location that does not belong to current data structure)
+                * Inputs to a function not meeting certain requirements is a violation of a contract (should be explained in API docs for the function) and always a caller-side bug but don't want calling code to have to handle it. It's the calling code programmers responsibility to fix the code
+        * Do Not use `panic!` when bad state reached that is expected to happen, so
+        instead return a `Result` and propagat the bad state upward to calling code that will decide how to handle it. 
+            * Example Use Cases:
+                * Parser given bad data
+                * HTTP request returning state indicating rate limit hit
+        * Switching to `panic!` in production release makes the binary as small
+        as possible by adding to Cargo.toml:
+            ```
+            [profile.release]
+            panic = 'abort'
+            ```
+            * Reference: https://doc.rust-lang.org/book/second-edition/ch09-01-unrecoverable-errors-with-panic.html
+        * Use Panic in program:
+            ```rust
+            panic!("crash and burn");
+            ```
+
+* **Propagating Errors**
+
+    *  When function calls something that fails, then instead of handling the error in that function, we can return the error to the calling code for decision on appropriate action where there is more info/logic to handle the error
+
+        * Example:
+            ```
+            use std::fs::File;
+
+            fn read_username_from_file() -> Result<String, io::Error> {
+                let f = File::open("hello.txt");
+
+                let mut f = match f {
+                    Ok(file) => file,
+                    Err(e) => return Err(e),
+                };
+
+                let mut s = String::new();
+
+                match f.read_to_string(&mut s) {
+                    Ok(_) => Ok(s),
+                    Err(e) => Err(e),
+                }
+            }
+            ```
+
+* **Shortcut for Propagating Errors**
+
+    * Use the `?` question mark operator
+
+    * If the value of the `Result` is an `Ok`, the value inside `Ok` will get returned from this expression and the program will continue. If the value an `Err`, the value inside `Err` will be returned from the whole function as if we had used the return keyword so the error value gets **propagated** to the calling code
+
+    * `?` can only be used in functions that have a return type of `Result`
+
+        * Example 1:
+            ```rust
+            use std::io;
+            use std::io::Read;
+            use std::fs::File;
+
+            fn read_username_from_file() -> Result<String, io::Error> {
+                // `?` returns value inside an `Ok` to variable `f` if success,
+                // or if error occurs `?` will return early out of whole function
+                // and give `Err` value to "calling" code
+                let mut f = File::open("hello.txt")?;
+                let mut s = String::new();
+                // returns errors to the calling code using `?`.
+                // `?` placed after a `Result` value
+                f.read_to_string(&mut s)?;
+                Ok(s)
+            }
+            ```
+
+        * Example 2: Chaining Method Calls
+
+            ```rust
+            use std::io;
+            use std::io::Read;
+            use std::fs::File;
+
+            fn read_username_from_file() -> Result<String, io::Error> {
+                let mut s = String::new();
+
+                File::open("hello.txt")?.read_to_string(&mut s)?;
+
+                Ok(s)
+            }
+            ```
+
+* **Create Custom Type for Validation**
+
+    * Rust Type System may be used to ensure valid input value, and guide
+    the user toward a valid input with different behaviour
+        * Example:
+            * Given scenario of expecting positive number input from user, then instead of using `u32` (only positive allowed), we would use `i32` instead and add a validation check to see that hte number is in range
+
+            * See guessing game program
+
 ## COMMENTS
 
 * Comments `//`

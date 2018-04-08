@@ -10,14 +10,24 @@
       "request": "launch",
       "program": "${workspaceRoot}/projects/find_word/target/debug/find_word",
       "args": [],
-      "cwd": "${workspaceRoot}"
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
     },
     {
-      "name": "GDB Debug - Program - Find Word",
-      "type": "gdb",
+      "name": "LLDB Debug - Program - Guessing Game",
+      "type": "lldb",
       "request": "launch",
-      "target": "${workspaceRoot}/projects/find_word/target/debug/find_word",
-      "cwd": "${workspaceRoot}"
-    }
+      "program": "${workspaceRoot}/projects/guessing_game/target/debug/guessing_game",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
+    },
+    // {
+    //   "name": "GDB Debug - Program - Find Word",
+    //   "type": "gdb",
+    //   "request": "launch",
+    //   "target": "${workspaceRoot}/projects/find_word/target/debug/find_word",
+    //   "cwd": "${workspaceRoot}"
+    // }
   ]
 }

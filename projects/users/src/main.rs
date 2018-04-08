@@ -56,7 +56,14 @@ impl VoiceMail {
 fn main() {
     let red = EyeColor(Color(255, 0, 0));
 
-    let _user2_ip_address = IpAddr::V6(Ipv6Address(String::from("192.168.0.1")));
+    /* Parse hard-coded string so it's acceptable to be less robust and just `unwrap`.alloc_jemalloc
+     * `parse` returns a `Result` value so compiler makes us handle the
+     * possibility of an `Err` variant occurring
+     */
+    let _user2_ip_address = IpAddr::V6(Ipv6Address(String::from("192.168.0.1")))
+                                .parse()
+                                .unwrap();
+
     let _user2_voicemail_message = VoiceMail::Message(String::from("Hi"));
 
     let mut user1 = build_user(

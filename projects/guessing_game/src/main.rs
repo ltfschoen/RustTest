@@ -1,8 +1,45 @@
 extern crate rand;
 
 use std::io;
+use std::process;
 use std::cmp::Ordering;
 use rand::Rng;
+
+#[derive(Debug)]
+pub struct Guess {
+    value: u32,
+}
+
+impl Guess {
+    pub fn new(value: u32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {}.", value);
+        }
+        Guess { value }
+    }
+
+    // Getter
+    pub fn value(&self) -> u32 {
+        self.value
+    }
+
+    pub fn comparison(&self, secret_number: &u32) -> i32 {
+        match self.value.cmp(secret_number) {
+            Ordering::Less => {
+                println!("Too small!");
+                return -1;
+            },
+            Ordering::Greater => {
+                println!("Too big!");
+                return 1;
+            },
+            Ordering::Equal => {
+                println!("You win!");
+                return 0;
+            }
+        }
+    }
+}
 
 fn sample(guess: &str) -> String {
     return guess.to_string();
@@ -24,33 +61,45 @@ fn main() {
 
         guess = sample(&guess);
 
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
+        // Allow potentially negative numbers
+        let guess: Guess = match guess.trim().parse() {
+            Ok(num) => Guess::new(num),
             Err(_) => continue,
         };
 
-        println!("You guessed: {}", guess);
+        println!("You guessed: {:?}", guess);
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => {
-                println!("You win!");
-                break;
-            }
-        }
+        let result = guess.comparison(&secret_number);
+        if result == 0 { process::exit(1); }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    // Import names from outer (for mod tests) scope.
     use super::*;
 
     #[test]
     fn test_sample() {
-        let actual_guess: (String) = "1".to_string();
+        let actual_guess: &str = "1";
         let expected_response: String = "1".to_string();
         assert_eq!(sample(&actual_guess), expected_response);
+    }
+
+    #[test]
+    fn test_guess() {
+        let actual_guess_number: u32 = 99;
+        let actual_guess_instance: Guess = Guess::new(actual_guess_number);
+        let expected_guess_instance_value: u32 = actual_guess_instance.value();
+        assert_eq!(99, expected_guess_instance_value);
+    }
+
+    #[test]
+    fn test_comparison() {
+        let actual_guess_number: u32 = 50;
+        let actual_guess_instance: Guess = Guess::new(actual_guess_number);
+        let actual_secret_number: u32 = 50;
+        let actual_comparison_result: i32 = actual_guess_instance.comparison(&actual_secret_number);
+        let expected_comparison_result: i32 = 0;
+        assert_eq!(actual_comparison_result, expected_comparison_result);
     }
 }
