@@ -23,8 +23,8 @@ impl Guess {
         self.value
     }
 
-    pub fn comparison(&self, secret_number: &i32) -> i32 {
-        match self.value.cmp(secret_number) {
+    pub fn comparison(&self, secret_number: &u32) -> i32 {
+        match self.value.cmp(&(*secret_number as &i32)) {
             Ordering::Less => {
                 println!("Too small!");
                 return -1;
@@ -46,7 +46,7 @@ fn sample(guess: &str) -> String {
 }
 
 fn main() {
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let secret_number: u32 = rand::thread_rng().gen_range(1, 101);
 
     println!("The secret number is: {}", secret_number);
 
@@ -62,7 +62,7 @@ fn main() {
         guess = sample(&guess);
 
         // Allow potentially negative numbers
-        let guess: Guess = match guess.trim().parse() {
+        let guess: Guess = match guess.trim().parse::<i32>() {
             Ok(num) => Guess::new(num),
             Err(_) => continue,
         };
@@ -97,7 +97,7 @@ mod tests {
     fn test_comparison() {
         let actual_guess_number: i32 = 50;
         let actual_guess_instance: Guess = Guess::new(actual_guess_number);
-        let actual_secret_number: i32 = 50;
+        let actual_secret_number: u32 = 50;
         let actual_comparison_result: i32 = actual_guess_instance.comparison(&actual_secret_number);
         let expected_comparison_result: i32 = 0;
         assert_eq!(actual_comparison_result, expected_comparison_result);
