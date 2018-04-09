@@ -24,7 +24,7 @@ impl Guess {
     }
 
     pub fn comparison(&self, secret_number: &u32) -> i32 {
-        match self.value.cmp(&(*secret_number as &i32)) {
+        match self.value.cmp(&(*secret_number as i32)) {
             Ordering::Less => {
                 println!("Too small!");
                 return -1;
