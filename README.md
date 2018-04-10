@@ -233,6 +233,13 @@ Example Projects
         cargo doc --open;
         ```
 
+* Generics
+
+    * Execution
+        ```bash
+        cd projects/generics;
+        cargo run;
+        ```
 
 Rust Testing
 ------------
@@ -304,6 +311,54 @@ Debugging
  * `Debug` Trait output formatter may be used with `{:?}` to debug Structs after opting into
   its usage by including the derive annotation `#[derive(Debug)]` before the Struct definition.
   Use `{:#?}` for better readability.
+
+Debugging with Visual Studio Code
+---------
+
+* Install [VS Code](https://code.visualstudio.com/download)
+* Follow [this blog post](https://medium.com/@royalstream/rust-development-using-vs-code-on-os-x-debugging-included-bc10c9863777) to setup debugging with breakpoints using LLDB in VS Code.
+* Troubleshoot [by following these steps](https://medium.com/@ltfschoen/im-using-macos-10-12-861c8211006) 
+* Example Debug Config file **<PROJECT_NAME>/.vscode/launch.json**. Use by going to menu: Debug > Start Debugging. * Build any changes in terminal with `cargo build`
+* Further information is [here](https://gitter.im/Drops-of-Diamond/Development?at=5aca2b7227c509a774ed9908). Use CTRL+P before entering `ext install <insert-extension>`.
+```
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug - Insert Program Name",
+      "program": "${workspaceFolder}/target/debug/program_name",
+      "args": "",
+      "cwd": "${workspaceFolder}",
+      "terminal": "integrated"
+    }
+  ]
+}
+```
+
+* Example Build Task file **<PROJECT_NAME>/.vscode/tasks.json**. Use by going to menu: Tasks > Run Build Task
+```
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cargo build",
+      "type": "shell",
+      "command": "cargo build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
+```
 
 Help
 -------

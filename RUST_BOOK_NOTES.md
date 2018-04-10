@@ -1345,7 +1345,11 @@ top-level modules.
             * Use generics to create definitions for items like function signatures, structs, enums, and methods, and then use them with different concrete data types.
 
         * **Generics and their Performance Impact**
-            * TODO
+            * Rust uses **Monomorphization** (turning generic code into 
+            specific code, so it restores the duplication for runtime) 
+            of code that is using generics at
+            compile time so the speed is no slower using Generic Types
+            than with Concrete Types (just )
 
     * Examples:
         `Option<T>`, `Vec<T>`, `HashMap<K, V>`, `Result<T, E>`
@@ -1389,10 +1393,54 @@ top-level modules.
 * **Traits**
 
     * Definition: 
-        * Define behaviour in a Generic way
-    
+        * Define Generic Behaviour that may be Shared between different Types, where the 
+        **Type's Behaviour** comprises the Methods we may call on that Type
+        * Trait Definitions group the Type's Method Signatures together to define a set of the Type's Behaviours 
+        * Traits inform the Rust compiler about a specific Type's Functionality to: 
+            * Share the Type's Functionality with other Types
+        * **Trait Bounds** specify the extent of Behaviour that a Generic of any Type has
+        * Traits are similar to **"Interfaces"** in other languages
+
+        * **Default Implementations**
+            * Default behaviour for the implementations of the Trait's Method Signatures. When implement the Trait for a particular type we can use the Default or Override the Trait Method's Default Behaviour. Use with code below along with empty block for the implementation.
+
+                * WITHOUT Default Implementation
+                    ```rust
+                    pub trait Summary {
+                        fn summarize(&self) -> String;
+                    }
+
+                    impl Summary for Tweet {
+                        fn summarize(&self) -> String {
+                            format!("{}: {}", self.username, self.content)
+                        }
+                    }
+                    ```
+
+                * WITH Default Implementation
+                    ```rust
+                    pub trait Summary {
+                        fn summarize(&self) -> String {
+                            String::from("(Read more...)")
+                        }
+                    }
+
+                    impl Summary for Tweet {}
+                    ```
+
+    * Other Definitions:
+        * **Coherence / Orphan Rule**
+            * Where the Parent Type is not present there is a Restriction to ensure your code not broken by other person's code. It's a rule that prevents two crates implementing the same Trait for the same Type where Rust wouldn't know which implementation to use. See https://github.com/rust-lang/book/blob/master/2018-edition/src/ch10-02-traits.md
+
     * Setup Steps
         * Trait combined with a Generic Type to constrain it to only types with a specific behaviour
+        * When declaring a Trait with `trait`, instead of providing an implementation block after the Method Signature, we just use a semicolon, like an **"Interface"**. Each Type implementing this Trait must provide its own custom behavior for the Method Body. The compiler will enforce that any Type that has the Trait will have the exact Method Signature we defined.
+        A Trait may have multiple Methods Signatures in its body: the method signatures are listed one per line and each line ends in a semicolon.
+        * Use the Trait in other projects, assuming crate called `aggregator` with 
+        `use aggregator::Summary;`
+
+    * Example
+        * See projects/traits/src/main.rs
 
 * **Lifetimes**
 
@@ -1401,4 +1449,5 @@ top-level modules.
 
 ## COMMENTS
 
+* Reference: https://doc.rust-lang.org/reference/comments.html
 * Comments `//`

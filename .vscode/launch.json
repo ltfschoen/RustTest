@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "LLDB Debug - Program - Traits",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/projects/traits/target/debug/traits",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "preRunCommands": [],
+      "terminal": "integrated"
+    },
+    {
       "name": "LLDB Debug - Program - Generics",
       "type": "lldb",
       "request": "launch",

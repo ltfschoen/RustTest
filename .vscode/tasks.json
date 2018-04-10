@@ -2,6 +2,6 @@
   "version": "0.1.0",
   "command": "cargo",
   "isShellCommand": true,
-  "args": ["run"],
+  "args": ["build"],
   "showOutput": "always"
 }
