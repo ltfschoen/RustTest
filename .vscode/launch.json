@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "LLDB Debug - Program - Generics",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/projects/generics/target/debug/generics",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
+    },
+    {
       "name": "LLDB Debug - Program - Find Word",
       "type": "lldb",
       "request": "launch",

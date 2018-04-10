@@ -1356,15 +1356,35 @@ top-level modules.
             * Create a Generic Function (based on two functions that only differ by the Type of parameters they accept, and their names)
                 * Add Generics in the Function Signature instead of specifying the Data Types of the Parameters and Return Value to provide flexibility, extra functionality to callers, and preventing code duplication.
 
-                * See projects/generics/main.rs
+                * See projects/generics/src/examples/function_definitions.rs
 
                 * Note: If get error `binary operation > cannot be applied to type T` and that an
                 implementation of `std::cmp::PartialOrd` Trait might be missing for `T` then it 
                 means we can only use types whose values can be **Ordered**, so to fix this it would be necessary to to enable comparisons using the `std::cmp::PartialOrd` Trait by implementing it on the type `T` to specify that the generic type `T` has a particular Trait (see Derivable Traits and Trait Bounds sections)
+
         * Generic Structs
-            * TODO
+            * Multiple Generic Type Parameters to allow multiple different types as parameters
+
+            * See projects/generics/src/examples/struct_definitions.rs
+
         * Generic Enums
-            * TODO
+            * `Option<T>` Enum from Standard Library with Generic Type
+                ```rust
+                enum Option<T> {
+                    Some(T),
+                    None,
+                }
+                ```
+            
+            * Enum with Multiple Generic Types
+                ```rust
+                enum Result<T, E> {
+                    Ok(T),
+                    Err(E),
+                }
+                ```
+
+                * Usage: Whereever we have an operation that may succeed and return value of type `T` or fail with error type `E`
 
 * **Traits**
 
