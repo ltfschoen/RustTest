@@ -1331,6 +1331,54 @@ top-level modules.
 
             * See guessing game program
 
+## GENERIC TYPES, TRAITS, LIFETIMES
+
+* **Generics** 
+
+    * Definition: 
+        * Define custom Types, Functions, and Methods
+        * Use to write functions that take parameters of
+        a Generic Type (i.e. `Vec<T>`) instead of a concrete type (i.e. `i32`)
+        * In the same way that an abstracted function body can operate on an abstract list instead of specific values to prevent code duplication, generics allow code to operate on abstract types
+
+        * **Generic Data Types**
+            * Use generics to create definitions for items like function signatures, structs, enums, and methods, and then use them with different concrete data types.
+
+        * **Generics and their Performance Impact**
+            * TODO
+
+    * Examples:
+        `Option<T>`, `Vec<T>`, `HashMap<K, V>`, `Result<T, E>`
+
+    * Setup Steps
+        * **Generic Functions**
+            * Extract a function to reduce code duplication
+            * Create a Generic Function (based on two functions that only differ by the Type of parameters they accept, and their names)
+                * Add Generics in the Function Signature instead of specifying the Data Types of the Parameters and Return Value to provide flexibility, extra functionality to callers, and preventing code duplication.
+
+                * See projects/generics/main.rs
+
+                * Note: If get error `binary operation > cannot be applied to type T` and that an
+                implementation of `std::cmp::PartialOrd` Trait might be missing for `T` then it 
+                means we can only use types whose values can be **Ordered**, so to fix this it would be necessary to to enable comparisons using the `std::cmp::PartialOrd` Trait by implementing it on the type `T` to specify that the generic type `T` has a particular Trait (see Derivable Traits and Trait Bounds sections)
+        * Generic Structs
+            * TODO
+        * Generic Enums
+            * TODO
+
+* **Traits**
+
+    * Definition: 
+        * Define behaviour in a Generic way
+    
+    * Setup Steps
+        * Trait combined with a Generic Type to constrain it to only types with a specific behaviour
+
+* **Lifetimes**
+
+    * Definition: 
+        * Generic that allows us to inform the Compiler info about how "references" are related to each other, which allows us to "borrow" values in situations and still have Compiler check that "references" are still valid
+
 ## COMMENTS
 
 * Comments `//`
