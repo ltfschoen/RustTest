@@ -1,0 +1,10 @@
+[package]
+name = "sharding"
+version = "0.1.0"
+authors = ["Luke Schoen <ltfschoen@gmail.com>"]
+
+[dependencies]
+ethereum-types = "0.3.0"
+ethcore-bytes = "0.1.0"
+tiny-keccak = "1.3"
+indextree = "1.1.0"
