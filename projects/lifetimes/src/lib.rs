@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 /* Given two strings, determine the longest.
  * - Parameters are String Slice "references" so the function 
  *   does not take "ownership" of the parameters
@@ -17,10 +19,13 @@ pub fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+pub fn longest_with_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+    where T: Display
+{
+    println!("Announcement! {}", ann);
+    if x.len() > y.len() {
+        x
+    } else {
+        y
     }
 }
