@@ -1402,8 +1402,10 @@ top-level modules.
         types that implement particular Trait or Behaviour by using Traits with Generic Type Parameters.
             * Allow multiple Trait Bounds on a Generic Type using the `+` syntax (i.e. use Display formatting as well as the `summarize` method on the type `T` by specifying `T: Summary + Display` to say that `T` may be any type that implements `Summary` and `Display`)
             * Alternately use the `where` clause after the Function Signature instead of using `+` to specify Trait Bounds so the Funciton Signature remains easy to read when multiple Trait Bounds are specified
+            * **Trait Bounds to Conditionally Implement Methods**
+                * Implement methods conditionally only for types that implement the traits specified in the `impl` Function Signature, by using a Trait Bound in the `impl` block using Generic Type Parameters.
             * Example: See projects/traits/src/lib.rs implemented in projects/traits/src/main.rs
-        
+
         * Traits are similar to **"Interfaces"** in other languages
 
         * **Default Implementations**
