@@ -1455,10 +1455,78 @@ top-level modules.
 * **Lifetimes**
 
     * Definition: 
+        * All "references" in Rust have a **"lifetime"**, which is the scope where the "reference" is valid
         * Generic that allows us to inform the Compiler info about how "references" are related to each other, which allows us to "borrow" values in situations and still have Compiler check that "references" are still valid
         * Lifetimes ensure that "references" are valid as long as we need them to be, instead of ensuring that a type has the behavior we want
+        * When the **lifetime** of a "reference" could be related in different ways then we must **annotate** the lifetimes using Rust Generic Lifetime Parameters (to ensure actual "references" will be valid at runtime). (i.e. given a variable `let a;` we could annotate that with `'a` annotation to show its lifetime) in a block. https://github.com/rust-lang/book/blob/master/2018-edition/src/ch10-03-lifetime-syntax.md
+        * **"lifetime"**'s prevent **Dangling "references"** (program referencing data it did not intend to) 
+        * **"lifetime"** of a variable "lives longer" if the scope of the variable is longer
+        * Rust uses a **"borrow checker"** to determine if code is valid and a variable is not trying to "reference" memory used by another variable that has already been deallocated after going out of scope. At compile time Rust compares the size of different lifetimes to check if say lifetime `'a` refers to memory with lifetime of `'b` and rejects the program if `'b` lifetime is shorter (data of reference does not live as long as the reference)
+        * **"borrow checker"** compares scopes to determine that all borrows are valid
+        * **Lifetime Annotations** must be specified for functions or structs that use "references", since every "reference" has a "lifetime". 
+        * **Lifetime** syntax is about connecting the lifetimes of various parameters **input lifetimes** and return values of functions **output lifetimes**. Once they’re connected, Rust has enough information to allow memory-safe operations and disallow operations that would create dangling pointers or otherwise violate memory safety
+        * **Lifetime Parameters** describe the relationship of the lifetimes of multiple references to each other but do not actually affect the lifetimes at all. If a "lifetime" is used in isolation it doesn't have much meaning, as it's used for comparison between the lifetimes of different variables.
+            * Examples:
+                ```rust
+                &i32        // a reference (without a "lifetime" parameter)
+                &'a i32     // a reference (with an explicit "lifetime" parameter 'a)
+                &'a mut i32 // a mutable reference (with an explicit "lifetime" parameter 'a)
+                ```
+
+    * **Lifetime Annotations in Function Signatures**
+        * Express a constraint in the Function Signature that all "references" in the parameters passed into the function and the return value must have the same "lifetime"
+            ```rust
+            fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+                if x.len() > y.len() {
+                    x
+                } else {
+                    y
+                }
+            }
+            ```
+
+    * **Lifetime Annotations in Struct Definitions**
+        * Prevents Struct instances living longer than the "reference" it holds in its properties
+            * Example:
+                * Reference: https://github.com/rust-lang/book/blob/master/2018-edition/src/ch10-03-lifetime-syntax.md#lifetime-annotations-in-struct-definitions
+
+                ```rust
+                struct ImportantExcerpt<'a> {
+                    part: &'a str,
+                }
+
+                fn main() {
+                    let novel = String::from("Call me Ishmael. Some years ago...");
+                    let first_sentence = novel.split('.')
+                        .next()
+                        .expect("Could not find a '.'");
+                    // Create instance of `ImportantExcerpt` Struct that holds a
+                    // "reference" to `first_sentence` variable String that is "owned"
+                    // by `novel` variable.
+                    let i = ImportantExcerpt { part: first_sentence };
+                }
+                ```
+    * **Lifetime Elision Rules**
+        * Specific cases that the Rust Compiler considers, and if your code fits one of the cases then you do not need to write "lifetime" annotations explicitely, since "inference" may be in-built.
+        Due to these rules we often do not have to use lifetime annotations in method signatures often.
+        * Reference: https://github.com/rust-lang/book/blob/master/2018-edition/src/ch10-03-lifetime-syntax.md#lifetime-elision
+
+    * **Lifetime Annotations in Method Definitions**
+        * Ref: https://github.com/rust-lang/book/blob/master/2018-edition/src/ch10-03-lifetime-syntax.md#lifetime-annotations-in-method-definitions
+    
+    * **Static Lifetime**
+        * `'static` denotes the entire "lifetime" of the program, which all String Literals have.
+        * Warning: Do not use as a fallback. Fix lifetime problems and only make available as long as necessary
+            * Example:
+                ```rust
+                let s: &'static str = "I have a static lifetime.";
+                ```
+    
+    * **Generic Type Parameters, Trait Bounds, and Lifetimes Combined**
+        * 
 
 ## COMMENTS
 
 * Reference: https://doc.rust-lang.org/reference/comments.html
 * Comments `//`
+* `#` is part of the Docsets
