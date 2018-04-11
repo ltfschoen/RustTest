@@ -1398,7 +1398,12 @@ top-level modules.
         * Trait Definitions group the Type's Method Signatures together to define a set of the Type's Behaviours 
         * Traits inform the Rust compiler about a specific Type's Functionality to: 
             * Share the Type's Functionality with other Types
-        * **Trait Bounds** specify the extent of Behaviour that a Generic of any Type has
+        * **Trait Bounds** constrain Generic Types to ensure their type is limited to
+        types that implement particular Trait or Behaviour by using Traits with Generic Type Parameters.
+            * Allow multiple Trait Bounds on a Generic Type using the `+` syntax (i.e. use Display formatting as well as the `summarize` method on the type `T` by specifying `T: Summary + Display` to say that `T` may be any type that implements `Summary` and `Display`)
+            * Alternately use the `where` clause after the Function Signature instead of using `+` to specify Trait Bounds so the Funciton Signature remains easy to read when multiple Trait Bounds are specified
+            * Example: See projects/traits/src/lib.rs implemented in projects/traits/src/main.rs
+        
         * Traits are similar to **"Interfaces"** in other languages
 
         * **Default Implementations**

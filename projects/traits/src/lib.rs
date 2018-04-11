@@ -59,3 +59,11 @@ impl Summary for Tweet {
         format!("{}: {}", self.summarize_author(), self.content)
     }
 }
+
+/* Trait Bounds on type `T` declared with declaration of Generic Type Parameter
+ * may be passed any instance of `NewsArticle` or `Tweet` in the main.rs implementation
+ * since those types implement `Summary`
+ */
+pub fn notify<T: Summary>(item: T) {
+    println!("Breaking news! {}", item.summarize());
+}
