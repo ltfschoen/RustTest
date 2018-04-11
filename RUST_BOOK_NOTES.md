@@ -1406,6 +1406,9 @@ top-level modules.
                 * Implement methods conditionally only for types that implement the traits specified in the `impl` Function Signature, by using a Trait Bound in the `impl` block using Generic Type Parameters.
             * Example: See projects/traits/src/lib.rs implemented in projects/traits/src/main.rs
 
+        * **Blanket Implementations**
+            * Implementations of a Trait on any type that satisfies the Trait Bounds. See https://github.com/rust-lang/book/blob/master/2018-edition/src/ch10-02-traits.md
+
         * Traits are similar to **"Interfaces"** in other languages
 
         * **Default Implementations**
@@ -1453,6 +1456,7 @@ top-level modules.
 
     * Definition: 
         * Generic that allows us to inform the Compiler info about how "references" are related to each other, which allows us to "borrow" values in situations and still have Compiler check that "references" are still valid
+        * Lifetimes ensure that "references" are valid as long as we need them to be, instead of ensuring that a type has the behavior we want
 
 ## COMMENTS
 
