@@ -1523,7 +1523,58 @@ top-level modules.
                 ```
     
     * **Generic Type Parameters, Trait Bounds, and Lifetimes Combined**
-        * 
+
+## TESTING
+
+* Help `cargo test -- --help`
+
+* Run tests in sequence rather than parallel, or control number of threads with `cargo test -- --test-threads=1`
+
+* Show the `println!`'s when running tests with `cargo test -- --nocapture` to see printed values for passing tests as well, by disable the output capture behavior
+
+* Run only `ignored` tests with `cargo test -- --ignored` (i.e. where using `#[ignore]` in test file)
+
+* When comparing non-primitive types with `assert_eq!` and `assert_ne!` such as **Structs and Enums** then we must implement `PartialEq`, and `Debug` to print values when an assertion fails. We do this by adding `#[derive(PartialEq, Debug)]` annotation to your struct or enum definition since they are Derivable Traits.
+
+* **Custom Failure Messages** provide more meaning to failed tests to help us debug what happened instead of what we expected to happen.
+    * Example:
+        ```rust
+        #[test]
+        fn greeting_contains_name() {
+            let result = greeting("Carol");
+            assert!(
+                result.contains("Carol"),
+                "Greeting did not contain name, value was `{}`", result
+            );
+        }
+        ```
+    
+* Error Handling
+    * Use `should_panic` if want the test to pass if code inside the function panics. Ensure to accompany it with an `expected` parameter so the test harness makes sure the failure message contains the provided text.
+
+    * Example
+        ```rust
+        impl Guess {
+            pub fn new(value: i32) -> Guess {
+                if value < 1 {
+                    panic!("Guess value must be greater than or equal to 1, got {}.",
+                        value);
+                } else if value > 100 {
+                    panic!("Guess value must be less than or equal to 100, got {}.",
+                        value);
+                }
+
+                Guess { value }
+            }
+            ...
+        }
+
+        #[test]
+        #[should_panic(expected = "Guess value must be less than or equal to 100")]
+        fn test_guess_greater_than_100() {
+            Guess::new(200);
+        }
+        ```
 
 ## COMMENTS
 
