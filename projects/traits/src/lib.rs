@@ -64,6 +64,8 @@ impl Summary for Tweet {
  * may be passed any instance of `NewsArticle` or `Tweet` in the main.rs implementation
  * since those types implement `Summary`
  */
-pub fn notify<T: Summary>(item: T) {
+pub fn notify<T>(item: T) 
+    where T: Summary
+{
     println!("Breaking news! {}", item.summarize());
 }
