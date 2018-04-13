@@ -4,5 +4,6 @@
 extern crate sharding;
 
 fn main() {
-    sharding::collator_example();
+    sharding::examples::collator::collator_example();
+    sharding::examples::threads::threads_example();
 }

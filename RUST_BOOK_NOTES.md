@@ -1576,6 +1576,76 @@ top-level modules.
         }
         ```
 
+## THREADS
+
+* Order of Threads Running
+    * Concurrency provides no guarantee of order in which multiple threads will run and may pose risks such as:
+        * Race Conditions (threads accessing data in inconsistent order)
+        * Deadlocks (two threads waiting for each other to finish using
+        data they are both using)
+        * Bugs (that may be hard to reproduce)
+
+* Runtime
+    * Rust needs a "smaller runtime"
+        * Pros
+            * Maintains performance by calls to C language
+            * Smaller binary
+            * Crates may be used that implement M:N threading (M green threads per N OS threads, with larger binary overhead but with more control over which and when threads run and lowers cost of context switching)
+        * Cons
+            * Less features
+            * No built-in "green threading" M:N model since requires "larger language runtime" to manage threads
+    * Rust Standard Library provides 1:1 (one OS per one language thread) threading implementation (i.e. where language calls the OS's APIs to create threads) with a thread-related API, since "runtime support" is a priority for Rust
+
+* Sleep & Thread Order & Thread Dependence
+    * `thread::sleep` forces a thread to stop execution for a short duration, allowing a different thread to run. The order that threads get run is not guaranteed as it depends on how the OS schedules threads. If the main thread shuts down then child threads spawned from it also stop.
+
+* Join `join` Handles Wait for All Threads to Finish
+    * Fix to guarantee spawned thread runs and is completely run by assigning `thread::spawn` return value `JoinHandle` (an "owned" value) to a variable that we can call `join` method on and it will **wait** for its thread to finish before the main thread exits.
+    * Calling `join` on the handle will **block** (prevents a thread from performing work or exiting) the thread currently running until the thread represented by the handle terminates (i.e. if child thread is spawned from the main thread that is currently running and `join` is then called on the child thread then the main thread that is currently running will be **blocked** until the child thread terminates, so the main thread will only re-commence work after the child thread has finished its work, instead of both the main thread and the child thread interleaving the work they are doing in parallel at the same time)
+
+* `move` Closures with Threads
+    * `move` before the parameter list when creating a new thread to:
+        * Share data from one thread to be used in another thread
+        * Move data so the new thread takes "ownership" of values by passing a Closure
+
+* Capturing Values in Closures
+    * WITHOUT Arguments Passed to Closure of New Thread - when not using any data from main thread in code of child spawned thread
+    * WITH Arguments Passed to Closure of New Thread - captures data from main thread into the code of the child spawn thread 
+        * Example: Create Vector in Main Thread and used in Child Spawned Thread
+            * Rust Closure **by default infers and tries to "borrow" `v` since it only needs a "reference" to it** to use and capture `v` in its environment that `thread::spawn` runs so we may access `v` in the new thread 
+            * Rust Closure must use `move` to override Rust's default of borrowing and instead force the closure to take "ownership" of values it uses (i.e. `v`) rather than allowing Rust to infer it should "borrow" the values (guaranteeing to Rust that the main thread will not use `v` anymore without violating ownership rules). This would then prevent the main thread from being able to `drop` `v` from the main thread afterward.
+            * Rust does not know how long the child spawned thread will run and whether the "reference" to `v` will always be valid, or ever be valid in the case where the main thead that spawned the child thread drops `v` before the child thread is even spawned at all (i.e. if we were to run `drop(v);` on the main thread after spawning the child spawned thread that used and captured `v`)
+            ```rust
+            let v = vec![1, 2, 3];
+
+            let handle = thread::spawn(move || {
+                println!("Here's a vector: {:?}", v);
+            });
+
+            handle.join().unwrap();
+            ```
+           
+        * See projects/sharding/src/example/threads.rs
+
+## "CHANNELS" FOR MESSAGE PASSING WITH BETWEEN THREADS
+
+* **Message Passing**
+    * Safe **message-sending concurrency** using the **Channel** where threads/actors communicate by sending each other messages
+    containing data
+    * Shares memory by communicating **DO NOT communicate by sharing memory**
+
+    * **Channels** 
+        * **Transmitter**
+            * Call methods on transmitter
+            * Sending thread to generate values and send down channel
+        * **Receiver**
+            * Checks receiving end for arriving messages
+            * Receiver thread receives values and print them
+        * **Closed**
+            * When either Transmitter or Receiver have dropped
+
+* See projects/sharding/src/example/threads.rs
+
 ## COMMENTS
 
 * Reference: https://doc.rust-lang.org/reference/comments.html
