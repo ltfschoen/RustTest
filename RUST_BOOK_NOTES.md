@@ -1635,14 +1635,64 @@ top-level modules.
     * Shares memory by communicating **DO NOT communicate by sharing memory**
 
     * **Channels** 
+        * Definitions
+            * `mpsc` stands for **Multiple producer, single consumer**. 
+            Rust’s standard library implements channels with multiple sending ends 
+            that produce values but only one receiving end that consumes the values
         * **Transmitter**
             * Call methods on transmitter
             * Sending thread to generate values and send down channel
+            * Send method `send` takes value to send and returns `Result<T, E>` type
+            If receiving end already dropped the send operation will return an error.
+            * Example:
+                ```rust
+                use std::sync::mpsc;
+                let val = String::from("hi");
+                tx.send(val).unwrap();
+                ```
+
         * **Receiver**
             * Checks receiving end for arriving messages
             * Receiver thread receives values and print them
+            * Receiver methods:
+                * `recv`
+                    * Block the Main Thread of execution and waits until value sent down channel
+                    * After detecting value from sender it returns `Result<T, E>` type
+                    * When sender or receiver end closes the channel it return an error
+                    indicating no more values coming
+                * `try_recv`
+                    * Non-Blocking and returns `Result<T, E>` type immediately with
+                    `Ok` value holding a message if one available and `Err` value if 
+                    there aren't any messages.
+                    * Example Usage:
+                        * Loop that calls `try_recv` often, handles messages if available
+                        or do other work before checking for message again 
+                * Iterator instead of explicitly using `recv`
+                    ```rust
+                    let (sender, receiver) = mpsc::channel();
+                    ...
+                    // Waiting to receive messages from child spawned thread
+                    for received in receiver {
+                        println!("Received {}", received);
+                    }
+                    ```
+                    
         * **Closed**
             * When either Transmitter or Receiver have dropped
+
+        * **Ownership**
+            * After sending a value across a channel to another thread it is error prone
+            to continue using it in the original channel since other thread could modify 
+            or drop the value before we try to use it in the original channel
+                * Reference: https://github.com/rust-lang/book/blob/master/2018-edition/src/ch16-02-message-passing.md
+
+        * **Multiple Senders**
+            * Example
+                ```rust
+                let (sender, receiver) = mpsc::channel();
+                let sender1 = mpsc::Sender::clone(&sender);
+                let sender2 = mpsc::Sender::clone(&sender);
+                ```
 
 * See projects/sharding/src/example/threads.rs
 
