@@ -23,7 +23,7 @@ pub fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
          * since they are not of a known size.
          * Solve by only allowing this code to be called with types that implement the `Copy` Trait
          * by adding `Copy` to the Trait Bounds of `T` (i.e. `i32`, `char`).
-         * Note: To remove restriction so the `largest` function allows types other than those that
+         * Note: To remove the restriction so the `largest` function allows types other than those that
          * implement the `Copy` Trait, we can specify `T` has Trait Bound `Clone` instead of `Copy`
          * so we clone each value in the slice when we want the `largest` function to have "ownership"
          * and this would potentially make more heap allocations where types that own heap data are 
