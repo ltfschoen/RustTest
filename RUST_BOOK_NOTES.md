@@ -1,6 +1,7 @@
 # Rust Notes
 
 # Table of Contents
+
     * [Dependencies](#chapter-85d895)
     * [Variables & Constants](#chapter-09462f)
     * [Types](#chapter-479b03)
