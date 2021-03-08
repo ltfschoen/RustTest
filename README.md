@@ -16,7 +16,7 @@ Key Terminology of the Rust language and ecosystem:
   - **Crates.io**: Central location (similar to Node.js' [npmjs.org](npmjs.org) and Ruby's [rubygems.org](rubygems.org) that serve as one-stop-shops for Bundler dependencies) to publish, discover, and download Rust language Crates (Rust Libraries)
   - **Crates**: Libraries (aka Packages) that may either just produce an executable or a shared library. They are included as dependencies in Rust projects' Cargo.toml file. Crates may interoperate with other crates, so a Cargo manifest file declares the dependencies of each Crate. [Read more here](http://blog.rust-lang.org/2014/11/20/Cargo.html)
   - **Crate Root Module & Sub-Modules**: Code contents of a Crate may be Partitioned by defining a tree layout with a Root Module and Sub-Modules. Crates are defined in files with .rs file extension and build with Cargo to compiled crates with .rlib file extension. [Read more here](http://doc.rust-lang.org/book/crates-and-modules.html)
-  - **Modules**: Rust's Module System is used to partition code (Modules) within a Crate. It facilitates the software engineering practice of splitting projects into smaller more manageable parts and with an interface whereby functionality may be public or private. Modules is defined with ```mod my_module``` (where ```my_module``` is the associated name identifer). Sub-modules (and Functions inside them) are defined and referred to by using the ```::``` notation (i.e. ```my_module::my_sub_module::my_function()```). Import External Crates (link separate files containing a Crate and its associated Modules) with ```extern create my_module;```. Private Interfaces are the default in Rust. Modules and Functions may be exported as Public Interfaces instead by prefixing with the ```pub``` keyword (i.e. ```pub mod my_module``` or ```pub fn my_function```) [Read more here](http://smallcultfollowing.com/rust-int-variations/imem-umem/guide-crates.html)
+  - **Modules**: Rust's Module System is used to partition code (Modules) within a Crate. It facilitates the software engineering practice of splitting projects into smaller more manageable parts and with an interface whereby functionality may be public or private. Modules is defined with ```mod my_module``` (where ```my_module``` is the associated name identifer). Sub-modules (and Functions inside them) are defined and referred to by using the ```::``` notation (i.e. ```my_module::my_sub_module::my_function()```). Import External Crates (link separate files containing a Crate and its associated Modules) with ```extern crate my_module;```. Private Interfaces are the default in Rust. Modules and Functions may be exported as Public Interfaces instead by prefixing with the ```pub``` keyword (i.e. ```pub mod my_module``` or ```pub fn my_function```) [Read more here](http://smallcultfollowing.com/rust-int-variations/imem-umem/guide-crates.html)
   - **Rust [Releases Channel System](http://blog.rust-lang.org/2014/09/15/Rust-1.0.html)**: Nightly (latest updates including unstable features and libraries that may change), Beta (excludes unstable updates), Stable
 
 Progress
@@ -50,9 +50,9 @@ TODO
 Requirements
 -------
 
-* [Rust Compiler Version 1.0.0-nightly](http://doc.rust-lang.org/book/installing-rust.html)
+* [Rust Compiler Version rustc 1.49.0-nightly](http://doc.rust-lang.org/book/installing-rust.html)
   ```
-    rustc --version
+  rustc --version
   ```
 
 IntelliJ Rust Plugin
@@ -150,104 +150,6 @@ Setup
     ```
     cargo update
     ```
-
-Example Projects
----------------
-
-* Guessing Game
-
-    * Execution
-        ```
-        cd projects/guessing_game;
-        cargo build;
-        ./target/debug/guessing_game;
-        cargo doc --open;
-        cargo test;
-        ```
-
-    * Tests
-        ```
-        cd projects/guessing_game;
-        cargo build;
-        cargo test;
-        ```
-
-* Find a Word (originally setup with `mkdir projects && cd projects && cargo new find_word --bin && cd find_word;`)
-
-    * Execution
-        ```
-        cd projects/find_word;
-        cargo build;
-        ./target/debug/find_word;
-        cargo doc --open;
-        ```
-
-    * Tests
-        ```
-        cd projects/find_word;
-        cargo build;
-        cargo test;
-        ```
-
-* Shapes (originally setup with `mkdir projects && cd projects && cargo new shapes --bin && cd shapes;`)
-
-    * Execution
-        ```
-        cd projects/shapes;
-        cargo build;
-        ./target/debug/shapes;
-        cargo doc --open;
-        ```
-
-    * Tests
-        ```
-        cd projects/shapes;
-        cargo build;
-        cargo test;
-        ```
-
-* Users (originally setup with `mkdir projects && cd projects && cargo new users --bin && cd users;`)
-
-    * Execution
-        ```
-        cd projects/users;
-        cargo run;
-        cargo doc --open;
-        ```
-
-    * Tests
-        ```
-        cd projects/users;
-        cargo build;
-        cargo test;
-        ```
-
-* Communicator Library (setup with `mkdir projects && cd projects && cargo new communicator --lib && cd communicator;`)
-
-    * Note: Since it's a library is has lib.rs and we only build it
-
-    * Execution
-        ```
-        cd projects/communicator;
-        cargo build;
-        cargo doc --open;
-        ```
-
-* Generics
-
-    * Execution
-        ```bash
-        cd projects/generics;
-        cargo run;
-        ```
-
-* Ethereum Sharding Collation
-
-    * Execution
-        ```bash
-        cd projects/sharding;
-        cargo run;
-        ```
 
 Rust Testing
 ------------
