@@ -1,0 +1,10 @@
+# Cargo configuration file
+
+[package] # Metadata about the package
+# Library name
+name = "languages"
+version = "0.0.1"
+authors = [ "Luke Schoen <ltfschoen@gmail.com>" ]
+
+# Crates (aka packages) of Rust code to download and compile
+[dependencies]

@@ -6,5 +6,4 @@ pub use self::greetings::*; // Wildcard alternative instead of specific '::guten
 pub use self::farewells::*;
 
 pub mod greetings; // greetings.rs
-
 pub mod farewells; // farewells.rs

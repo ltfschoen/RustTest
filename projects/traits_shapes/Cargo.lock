@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "traits"
+name = "traits_shapes"
 version = "0.1.0"

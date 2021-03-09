@@ -32,6 +32,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [x] 2nd edition (re-learning) - After 5 Structs
 * [x] Convert Function and Variable names to snake case instead of camel case
 * [x] Change to 4-space indentation
+* [ ] Fix ./projects/clang
 * [ ] [The Rust Programming Language Book 2018 Edition (Second Edition deprecated)](https://github.com/rust-lang/book/blob/master/2018-edition)
 * [ ] [The Cargo Book](https://doc.rust-lang.org/cargo/)
 * [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
@@ -89,30 +90,36 @@ Key Terminology of the Rust language and ecosystem:
 
   * Library
     ```
+    mkdir projects && cd projects;
     cargo new app_name --lib
+    cargo build
+    ./target/debug/app_name
+    cargo doc --open
     ```
 
 * **Build, and Run**
   * Clone or fork [RustTest repository](https://github.com/ltfschoen/RustTest.git)
 
+  * Quick Cargo Check Script
+    ```
+    ./check_all
+    ```
+
   * Option #1 (Compile and Run)
-    - Compile (generates an executable file 'main' in current directory). Since Rust is an ahead-of-time compiled language.
+    - Compile (generates an executable file 'main' in current directory). Since Rust is an ahead-of-time compiled language. Run (run the executable file 'main')
     ```
     rustc ./src/main.rs
-    ```
-    - Run (run the executable file 'main')
-    ```
     ./main
     ```
 
   * Option #2 (Separate Build and Run)
     - Build (uses Cargo.toml config file metadata and build requirements.
     - Coordinates build of complex projects having multiple crates
-    - Assuming source code in ./src/hello_world.rs directory it generates binary executable
-    file 'hello_world' and dependencies in ./target/debug/hello_world and generates Cargo.lock to track dependencies)
+    - Assuming source code in ./src/hello_world.rs directory it generates binary executable file 'hello_world' and dependencies in ./target/debug/hello_world and generates Cargo.lock to track dependencies)
     ```
     cargo build
     ```
+    - Note: To quickly check it compiles without building run `cargo check`
     - Run (run the executable file 'hello_world')
     ```
     ./target/debug/hello_world

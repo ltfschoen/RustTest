@@ -4,12 +4,12 @@
 // Note: When 'cargo run' is performed, _0 is generated as the name of the
 //       documentation module tests. They auto-increment as more tests added.
 
-//! The `hello_world` crate provides functions that add numbers to other numbers.
+//! The `greetings` crate provides functions that add numbers to other numbers.
 //!
 //! # Examples
 //!
 //! ```
-//! assert_eq!(4, hello_world::add_two(2));
+//! assert_eq!(4, greetings::add_two(2));
 //! ```
 
 ///////////
@@ -25,7 +25,7 @@
 /// # Examples
 ///
 /// ```
-/// use hello_world::add_two;
+/// use greetings::add_two;
 ///
 /// assert_eq!(4, add_two(2));
 /// ```
@@ -45,7 +45,7 @@ pub fn add_two(a: i32) -> i32 {
 //
 ///////////
 
-extern crate test;
+// extern crate test;
 
 // cfg Attribute allows grouping of Unit Tests separate from rest of Crate
 // cfg Attribute only compiles containing code when running tests saving compile time
@@ -142,19 +142,19 @@ mod tests {
 // Build with 'cargo build' to produce 
 // compiled .rlib in 'target' directory
 //  ls target
-mod english {
+pub mod english {
     // Sub-Modules Declared
     // english::us_english
-    mod greetings {
+    pub mod greetings {
         // Sub-Module Contents
-        fn hello() -> String {
+        pub fn hello() -> String {
             "Hello.".to_string()
         }
     }
 
     // Export a Public Interface (Private is Default)
-    mod farewells {
-        fn goodbye() -> String {
+    pub mod farewells {
+        pub fn goodbye() -> String {
             "Goodbye.".to_string()
         }
     }
@@ -164,67 +164,3 @@ mod english {
 // Rust expects a 'german.rs' or
 // 'german/mod.rs' file with Module contents
 pub mod german;
-
-pub mod shapes {
-
-    use std::f64::consts;
-
-    // Traits implemented on Structs
-    ////////////////////////////////
-
-    // Traits are defined with just the Method Signature
-    // Traits are then Implemented for a given Struct
-    pub trait HasArea {
-        fn area(&self) -> f64;
-    }
-
-    pub struct Circle {
-        // Field sides must be public for access from main.rs
-        pub x: f64,
-        pub y: f64,
-        pub radius: f64,
-    }
-
-    // Trait block that implements HasArea for Circle type
-    impl HasArea for Circle {
-        fn area(&self) -> f64 {
-            consts::PI * (self.radius * self.radius)
-        }
-    }
-
-    pub struct Square {
-        // Field sides must be public for access from main.rs
-        pub x: f64,
-        pub y: f64,
-        pub side: f64,
-    }
-
-    // Trait block that implements HasArea for Square type
-    impl HasArea for Square {
-        fn area(&self) -> f64 {
-            self.side * self.side
-        }
-    }
-
-    // Traits implemented on i32 (different types supported)
-    // (considered poor style when used on primitives)
-    ////////////////////////////////
-
-    // Trait block that implements HasArea for i32 type
-    // Note: Trait implementation on primitives is considered poor style
-    impl HasArea for i32 {
-        fn area(&self) -> f64 {
-            *self as f64
-        }
-    }
-
-    // Trait Constraint added to Generic T to ensure T implements the 'area' method,
-    // otherwise T may be any type and so may not.
-    // <T: HasArea> means any type that implements the HasArea trait.
-    // Traits define Function Type Signatures, so any type that implements HasArea must have 
-    // a .area() method.
-    pub fn print_area<T: HasArea>(shape: T) {
-        println!("This shape has an area of {}", shape.area());
-    }
-
-}

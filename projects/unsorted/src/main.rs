@@ -92,21 +92,8 @@ use std::io::prelude::*;
 // Library (i.e. snappy) for subsequent calling into a C++ Library.
 // Note: snappy must be installed
 //
-// http://doc.rust-lang.org/libc/libc/index.html
 extern crate libc;
 use libc::{c_int, size_t};
-
-// Import Crate Module with shapes
-use hello_world::shapes;
-// use hello_world::shapes::HasArea;
-
-// Compile and link to the 'hello_world' Crate so its Modules may be used in main.rs
-extern crate hello_world;
-
-// Import Crate Modules into current scope using shorter names
-// Best Practice is to import the module rather than the function directly
-// to avoid namespace conflict
-use hello_world::german::{greetings, farewells}; // Shortcut syntax to import nultiple names from same Module
 
 // Configure the Ordering Enum
 // 'cmp' is a Function that compares two given parameters and returns an Ordering
@@ -126,9 +113,6 @@ fn cmp(a: u64, b: u64) -> Ordering {
 fn main() {
 
     loop {
-
-        println!("Hello in German: {}", greetings::guten_tag() );
-
         // Standard Input
         println!("Enter a number...");
 
@@ -1423,9 +1407,9 @@ fn try_iterators() {
 
     // Creates an Iterator that maps each element to an iterator, and 
     // yields the elements of the produced iterators
-    let smalls = [2u, 3];
-    let bigs = [0u, 1, 0, 1, 2, 3];
-    let mut my_iterator = smalls.iter().flat_map(|&small| count(0u, 1).take(small));
+    let smalls = [3];
+    let bigs = [1, 0, 1, 2, 3];
+    let mut my_iterator = smalls.iter().flat_map(|&small| count(1).take(small));
     // Check that 'my_iterator' has the same elements as 'bigs'
     let mut i = 0;
     for iteration in my_iterator {
@@ -1563,36 +1547,6 @@ fn try_generics() {
 
     println!("Inverse of {} is {:?}", 0.0f32, inverse_64_and_32_generic(0.0f32));
     println!("Inverse of {} is {:?}", 0.0f64, inverse_64_and_32_generic(0.0f64));
-
-}
-
-// Traits are defined similar to the 'impl' keyword that is used to call a function
-// with method syntax (implementing a 'struct')
-// 'trait' blocks are similar to the 'impl' block (however only a Type Signature is
-// defined Without a Body) and 'impl Trait for Item' is used rather than 'impl Item'
-// Rule: Traits must be used in any scope where the Trait method is used.
-// Rule: Trait or the type the 'impl' of the trait is being written for must be inside the crate
-fn try_traits() {
-
-    // uses code in /src/shapes/shapes.rs
-
-    let my_circle = shapes::Circle {
-        x: 0.0f64,
-        y: 0.0f64,
-        radius: 1.0f64,
-    };
-
-    let my_square = shapes::Square {
-        x: 0.0f64,
-        y: 0.0f64,
-        side: 1.0f64,
-    };
-
-    // print_area is now Generic and ensures only correct Types are passed in
-    shapes::print_area(my_circle); // outputs 3.141593
-    shapes::print_area(my_square); // outputs 1
-
-    shapes::print_area(5); // outputs 5
 
 }
 
