@@ -119,6 +119,7 @@ Key Terminology of the Rust language and ecosystem:
     ```
     cargo build
     ```
+    - Note: There is a rust-toolchain file in the root of the repository, so it automatically checks the rust version specified in that file that is supported, and downloads, switches to, and installs that version, and it shows that new version when you run `rustup toolchain list`.
     - Note: To quickly check it compiles without building run `cargo check`
     - Run (run the executable file 'hello_world')
     ```
