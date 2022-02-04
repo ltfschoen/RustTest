@@ -1,0 +1,8 @@
+[package]
+name = "endow"
+version = "0.1.0"
+authors = ["Luke Schoen <ltfschoen@gmail.com>"]
+
+[dependencies]
+hex = "0.4.3"
+hex-literal = "0.3.1"
