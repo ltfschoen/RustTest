@@ -2,7 +2,21 @@
 name = "endow"
 version = "0.1.0"
 authors = ["Luke Schoen <ltfschoen@gmail.com>"]
+edition = '2021'
 
 [dependencies]
 hex = "0.4.3"
 hex-literal = "0.3.1"
+
+sp-core = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.13" }
+sp-runtime = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.13" }
+
+# derive_more = '0.99.2'
+# log = '0.4.14'
+scale-info = { version = "1.0", default-features = false, features = ["derive"] }
+codec = { package = 'parity-scale-codec', version = '2.2.0', default-features = false, features = ['derive', 'max-encoded-len'] }
+# structopt = "0.3.8"
+serde_json = "1.0"
+serde = { version = "1.0.119", features = ["derive"] }
+# RPC related dependencies
+# jsonrpc-core = "18.0.0"

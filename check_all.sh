@@ -12,3 +12,4 @@ cargo build --manifest-path ./projects/traits/Cargo.toml
 cargo build --manifest-path ./projects/traits_shapes/Cargo.toml
 cargo build --manifest-path ./projects/unsorted/Cargo.toml
 cargo build --manifest-path ./projects/users/Cargo.toml
+cargo build --manifest-path ./projects/endow/Cargo.toml
