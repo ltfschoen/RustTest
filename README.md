@@ -8,6 +8,7 @@ README
   * [About](#about)
   * [Progress](#progress)
   * [Glossary](#glossary)
+  * [Docker Setup](#docker-setup)
   * [Setup](#setup)
   * [Learning](#learning)
   * [Debugging](#debugging)
@@ -60,6 +61,53 @@ Key Terminology of the Rust language and ecosystem:
   - **Crate Root Module & Sub-Modules**: Code contents of a Crate may be Partitioned by defining a tree layout with a Root Module and Sub-Modules. Crates are defined in files with .rs file extension and build with Cargo to compiled crates with .rlib file extension. [Read more here](http://doc.rust-lang.org/book/crates-and-modules.html)
   - **Modules**: Rust's Module System is used to partition code (Modules) within a Crate. It facilitates the software engineering practice of splitting projects into smaller more manageable parts and with an interface whereby functionality may be public or private. Modules is defined with ```mod my_module``` (where ```my_module``` is the associated name identifer). Sub-modules (and Functions inside them) are defined and referred to by using the ```::``` notation (i.e. ```my_module::my_sub_module::my_function()```). Import External Crates (link separate files containing a Crate and its associated Modules) with ```extern crate my_module;```. Private Interfaces are the default in Rust. Modules and Functions may be exported as Public Interfaces instead by prefixing with the ```pub``` keyword (i.e. ```pub mod my_module``` or ```pub fn my_function```) [Read more here](http://smallcultfollowing.com/rust-int-variations/imem-umem/guide-crates.html)
   - **Rust [Releases Channel System](http://blog.rust-lang.org/2014/09/15/Rust-1.0.html)**: Nightly (latest updates including unstable features and libraries that may change), Beta (excludes unstable updates), Stable
+
+## Docker Setup <a id="docker-setup"></a>
+
+* Install and run [Docker](https://www.docker.com/) Desktop or Docker CE
+* Run Rust from a Docker container.
+```bash
+export PROJECT_NAME="zk" && ./docker.sh
+
+CONTAINER_ID=$(docker ps -q)
+docker exec -it $CONTAINER_ID /bin/sh
+```
+
+### Useful Docker Commands
+
+* Remove relevant containers and images
+```bash
+docker stop rust_test && docker rm rust_test && docker rmi rusttest-app
+```
+
+* List Docker containers
+```bash
+docker ps -a
+```
+
+* List Docker images
+```bash
+docker images -a
+```
+
+* Enter Docker container shell
+```bash
+docker exec -it $CONTAINER_ID /bin/sh
+```
+
+* View Docker container logs
+```bash
+docker logs -f $CONTAINER_ID
+```
+
+* Remove Docker container
+docker stop $CONTAINER_ID; docker rm $CONTAINER_ID;
+```
+
+* Remove Docker image
+```bash
+docker rmi $IMAGE_ID
+```
 
 ## Setup <a id="setup"></a>
 

@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+    app:
+      container_name: rust_test
+      build:
+        context: "."
+        dockerfile: ./Dockerfile.1
+        args:
+          - PROJECT_NAME=${PROJECT_NAME}
+      volumes:
+          - ./projects/${PROJECT_NAME}:/app/projects/${PROJECT_NAME}
+      # command: sh -c "cargo watch -x run"

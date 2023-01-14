@@ -1,7 +1,22 @@
 {
-  "version": "0.1.0",
+  "version": "2.0.0",
   "command": "cargo",
-  "isShellCommand": true,
-  "args": ["build"],
-  "showOutput": "always"
+  "args": [
+    "build"
+  ],
+  "tasks": [
+    {
+      "label": "cargo",
+      "type": "shell",
+      "command": "cargo",
+      "args": [
+        "build"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "_id": "build",
+        "isDefault": false
+      }
+    }
+  ]
 }

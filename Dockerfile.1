@@ -1,0 +1,24 @@
+# Using official rust base image
+FROM rust:1.65
+
+ARG PROJECT_NAME=${PROJECT_NAME}
+
+# Set the application directory
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y musl-dev
+
+# # Install musl-tools to make many crates compile successfully
+# RUN apk add --no-cache musl-dev
+
+# Install cargo-watch
+RUN cargo install cargo-watch
+
+RUN mkdir -p /app/projects/${PROJECT_NAME}
+
+# Copy the files to the Docker image
+COPY ./projects/${PROJECT_NAME} /app/projects/${PROJECT_NAME}
+
+CMD tail -f /dev/null
+
+# cargo watch -x run

@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  app:
+    container_name: rust_test
+    restart: always
+    build:
+      context: "."
+      dockerfile: ./Dockerfile
+      args:
+        - PROJECT_NAME=${PROJECT_NAME}
+    ports:
+      - '8080:8080'
+    volumes:
+      # - .:/app/projects:delegated
+      - .:/app
+      - registry:/root/.cargo/registry
+
+volumes:
+  registry:
+    driver: local
