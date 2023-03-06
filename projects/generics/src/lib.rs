@@ -4,8 +4,7 @@ pub mod examples;
 #[cfg(test)]
 mod tests {
     use super::examples::{
-        function_definitions,
-        struct_definitions
+        function_definitions
     };
 
     #[test]

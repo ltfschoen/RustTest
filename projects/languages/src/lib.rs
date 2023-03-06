@@ -12,6 +12,9 @@
 //! assert_eq!(4, greetings::add_two(2));
 //! ```
 
+#![feature(test)]
+extern crate test;
+
 ///////////
 //  
 // HELPER METHODS
@@ -45,8 +48,6 @@ pub fn add_two(a: i32) -> i32 {
 //
 ///////////
 
-// extern crate test;
-
 // cfg Attribute allows grouping of Unit Tests separate from rest of Crate
 // cfg Attribute only compiles containing code when running tests saving compile time
 
@@ -79,13 +80,13 @@ mod tests {
     // Invert Test Failure with 'should_fail'
 
     #[test]
-    #[should_fail]
+    #[should_panic]
     fn it_fails() {
         assert!(false);
     }
 
     #[test]
-    #[should_fail(expected = "english")]
+    #[should_panic(expected = "english")]
     fn it_fails_equality_comparison() {
         // assert!(false);
         assert_eq!("english", "german");

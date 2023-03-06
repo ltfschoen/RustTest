@@ -1,12 +1,9 @@
-use scale_info::TypeInfo;
-use codec::{
-  Decode, Encode,
-};
+
+
 use hex_literal::hex;
 use serde_json::{Result};
 use serde::{Deserialize, Serialize};
 use sp_runtime::{
-  generic,
   traits::{
       IdentifyAccount,
       Verify,
@@ -17,7 +14,6 @@ use sp_runtime::{
 use sp_core::{
   crypto::{
       UncheckedFrom,
-      UncheckedInto,
   },
 };
 use std::fs::File;
@@ -94,7 +90,7 @@ const INITIAL_DHX: u128 = 30_000_000_000_000_000_000_000_u128;
 
 fn main() {
   let mut endowed_accounts_with_balances: Vec<(AccountId, Balance)> = vec![];
-  let mut endowed_accounts: Vec<(AccountId)> =
+  let endowed_accounts: Vec<AccountId> =
     vec![
       hex!["a42b7518d62a942344fec55d414f1654bf3fd325dbfa32a3c30534d5976acb21"].into(),
       hex!["106c208ac262aa3733629ad0860d0dc72d8b9152e1cdcab497949a3f9504517a"].into(),

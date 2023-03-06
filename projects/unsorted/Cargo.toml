@@ -2,6 +2,7 @@
 name = "unsorted"
 version = "0.1.0"
 authors = ["Luke Schoen <ltfschoen@gmail.com>"]
+edition = '2021'
 
 [dependencies]
 num = "*"

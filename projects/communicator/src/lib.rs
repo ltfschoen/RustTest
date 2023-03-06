@@ -5,7 +5,7 @@ pub mod network;
 
 #[cfg(test)]
 mod tests {
-    use std::panic;
+    
     use super::client;
     use super::network;
 

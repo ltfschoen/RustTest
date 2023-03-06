@@ -13,7 +13,7 @@ pub fn run() {
         user_input = user_input;
 
         // Allow potentially negative numbers
-        let result: () = match user_input.to_string().trim().parse::<i32>() {
+        let _result: () = match user_input.to_string().trim().parse::<i32>() {
             Ok(T) => { println!("Success: {:?}", T); T; },
             Err(E) => { println!("Error: {:?}", E); E; }
         };

@@ -9,8 +9,8 @@ pub fn threads_example() {
 
     let v = vec![1, 2, 3];
 
-    let sender1 = mpsc::Sender::clone(&sender);
-    let sender2 = mpsc::Sender::clone(&sender);
+    let _sender1 = mpsc::Sender::clone(&sender);
+    let _sender2 = mpsc::Sender::clone(&sender);
 
    /* - New Thread - spawn new thread "detached" from current thread that produces
     *   a `JoinHandle` that may be used to wait for completion of child thread.
@@ -35,7 +35,7 @@ pub fn threads_example() {
 
                 let val = String::from("hi");
 
-                match sender1.send(val) {
+                match _sender1.send(val) {
                     Ok(msg) => { println!("Success Transmitted child1 message {:?}", msg); },
                     Err(err) => { println!("Error Transmitting child1 message {}", err); }
                 };
@@ -82,7 +82,7 @@ pub fn threads_example() {
      * Alternative: `try_recv` method does not block. See:
      *   https://github.com/rust-lang/book/blob/master/2018-edition/src/ch16-02-message-passing.md
      */
-    let received_message_blocking = match receiver.recv() {
+    let _received_message_blocking = match receiver.recv() {
         Ok(msg) => { println!("Success Receiving message {}", msg); },
         Err(err) => { println!("Error Receiving message {}", err); }
     };
@@ -90,7 +90,7 @@ pub fn threads_example() {
     /* `join` method returns `Result` with final value produced by child thread if `Ok`
     * of `Err` if child panicked. Alternatively use `child_handle.join().unwrap();`
     */
-    let res = match child_handle.join()  {
+    let _res = match child_handle.join()  {
         Ok(final_value) => println!("Final value {:?}", final_value),
         Err(error) => println!("Error {:?}", error),
     };
@@ -108,7 +108,7 @@ pub fn threads_example() {
 //    loop {
 //        thread::sleep(Duration::from_millis(1));
 //
-//        let received_message_non_blocking = match receiver.try_recv() {
+//        let _received_message_non_blocking = match receiver.try_recv() {
 //            Ok(msg) => { println!("Success Receiving message non-blocking {}", msg); true }
 //            Err(mpsc::TryRecvError::Empty) => {
 //                drop(receiver);

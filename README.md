@@ -155,6 +155,11 @@ Key Terminology of the Rust language and ecosystem:
     cargo check
     ```
 
+* **Fix linting errors**:
+    ```
+    cargo fix
+    ```
+
 * **Unit & Integration Tests**
     - Builds test runner binary to run functions annotated with
     the `test` attribute
