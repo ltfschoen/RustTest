@@ -47,6 +47,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
   * [ ] Chapters 11
   * [ ] Chapters 13
   * [ ] Chapters 19
+* [ ] Setup rustfmt/clippy
 * [ ] Fix ./projects/privacy
 * [ ] Fix ./projects/users
 * [ ] Fix ./projects/unsorted
