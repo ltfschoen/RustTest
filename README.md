@@ -215,9 +215,11 @@ Use `{:#?}` for better readability.
 ### Debugging with Visual Studio Code
 
 * Install [VS Code](https://code.visualstudio.com/download)
-* Install rust-src
+* Install rust libraries
   ```
   rustup component add rust-src
+  rustup component add rustfmt
+  rustup component add clippy
   ```
 * Review
   * https://code.visualstudio.com/docs/languages/rust

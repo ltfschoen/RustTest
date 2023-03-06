@@ -6,5 +6,9 @@
                 "fontStyle": "", // set to empty string to disable underline, which is the default
             },
         }
+    },
+    // "editor.formatOnSave": true,
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
     }
 }
