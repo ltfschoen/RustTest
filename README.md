@@ -1,8 +1,6 @@
 README
 ============
 
-[![Build Status](https://api.travis-ci.org/ltfschoen/RustTest.svg)](https://travis-ci.org/ltfschoen/RustTest) (Note: Travis-CI builds failing due to use of FFI, however the code compiles successfully when run locally)
-
 # Table of Contents
 
   * [About](#about)
@@ -63,7 +61,6 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [ ] Read [Hygienic Macro System](http://en.wikipedia.org/wiki/Hygienic_macro)
 * [ ] Fix [Rust Documentation](http://doc.rust-lang.org/book/documentation.html)
   - Only documentation for the Library is being generated, not the Binary
-* [ ] Fix Travis-CI Build Error ```error: linking with `cc` failed: exit code: 1``` caused by using FFI (although the code compiles when run locally, Travis-CI does not like it)
 * [ ] Read [The Rust Reference](http://doc.rust-lang.org/reference.html)
 * [ ] Read [Rustonomicon (Advanced Rust)](https://doc.rust-lang.org/stable/nomicon/README.html)
 * [ ] [Exercises with HashMaps](https://github.com/rust-lang/book/blob/master/2018-edition/src/ch08-03-hash-maps.md)
