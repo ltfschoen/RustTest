@@ -299,8 +299,6 @@ fn main() {
 
         try_generics();
 
-        try_traits();
-
         try_traits_with_where_clause();
 
         try_static_dispatch();
@@ -583,7 +581,7 @@ fn try_arrays() {
     // Note: uses 'use std::num::ToPrimitive'
     let mut arr_numbers = [1u8, 2, 3, 4, 5, 6];
     println!("Before: {:?}", arr_numbers);
-    for elem in range(0, arr_numbers.len()) {
+    for elem in 0..arr_numbers.len() {
         let elem_u8 = elem.to_u8().unwrap();
         arr_numbers[elem] = elem_u8 + arr_numbers[elem];
     }
@@ -1964,8 +1962,8 @@ fn try_concurrency() {
     // <locked> by the time it gets there)
     println!("Data before thread mutation: {:?}", data);
 
-    for i in range(0, 3) {
-    // for i in 0...3 {
+    // for i in range(0, 3) {
+    for i in 1..=3 {
         // clone() is called on Arc to increase internal count
         let data = data.clone();
         // "data" variable binding handle is moved into the New Thread

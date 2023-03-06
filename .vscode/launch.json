@@ -8,7 +8,7 @@
       "name": "LLDB Debug - Program - Sharding",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/projects/sharding/target/debug/sharding",
+      "program": "${workspaceFolder}/target/debug/sharding",
       "args": [],
       "cwd": "${workspaceFolder}",
       "preRunCommands": [],
@@ -18,7 +18,7 @@
       "name": "LLDB Debug - Program - Traits",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/projects/traits/target/debug/traits",
+      "program": "${workspaceFolder}/target/debug/traits",
       "args": [],
       "cwd": "${workspaceFolder}",
       "preRunCommands": [],
@@ -28,7 +28,7 @@
       "name": "LLDB Debug - Program - Generics",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceRoot}/projects/generics/target/debug/generics",
+      "program": "${workspaceRoot}/target/debug/generics",
       "args": [],
       "cwd": "${workspaceRoot}",
       "terminal": "integrated"
@@ -37,7 +37,7 @@
       "name": "LLDB Debug - Program - Find Word",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceRoot}/projects/find_word/target/debug/find_word",
+      "program": "${workspaceRoot}/target/debug/find_word",
       "args": [],
       "cwd": "${workspaceRoot}",
       "terminal": "integrated"
@@ -46,7 +46,7 @@
       "name": "LLDB Debug - Program - Guessing Game",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceRoot}/projects/guessing_game/target/debug/guessing_game",
+      "program": "${workspaceRoot}/target/debug/guessing_game",
       "args": [],
       "cwd": "${workspaceRoot}",
       "terminal": "integrated"
@@ -55,7 +55,7 @@
     //   "name": "GDB Debug - Program - Find Word",
     //   "type": "gdb",
     //   "request": "launch",
-    //   "target": "${workspaceRoot}/projects/find_word/target/debug/find_word",
+    //   "target": "${workspaceRoot}/target/debug/find_word",
     //   "cwd": "${workspaceRoot}"
     // }
   ]

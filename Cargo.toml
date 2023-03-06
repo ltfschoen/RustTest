@@ -1,0 +1,19 @@
+[workspace]
+
+members = [
+	"projects/clang",
+	"projects/communicator",
+	"projects/endow",
+	"projects/find_word",
+	"projects/generics",
+	"projects/guessing_game",
+	"projects/languages",
+	"projects/lifetimes",
+	#"projects/privacy",
+	"projects/shapes",
+    "projects/sharding",
+	"projects/traits",
+	"projects/traits_shapes",
+	#"projects/unsorted",
+	#"projects/users",
+]

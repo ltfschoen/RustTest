@@ -1,10 +1,10 @@
 extern {
-    fn hello_function();
+    fn hello();
 }
 
 pub fn call() {
     unsafe {
-        hello_function();
+        hello();
     }
 }
 

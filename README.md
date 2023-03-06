@@ -32,8 +32,25 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [x] 2nd edition (re-learning) - After 5 Structs
 * [x] Convert Function and Variable names to snake case instead of camel case
 * [x] Change to 4-space indentation
-* [ ] Fix ./projects/clang
-* [ ] [The Rust Programming Language Book 2018 Edition (Second Edition deprecated)](https://github.com/rust-lang/book/blob/master/2018-edition)
+* [ ] [The Rust Programming Language](https://doc.rust-lang.org/book/)
+  * [ ] [Quiz Version](https://rust-book.cs.brown.edu/)
+  * [ ] Chapters 1
+  * [ ] Chapters 2
+  * [ ] Chapters 3
+  * [ ] Chapters 4
+  * [ ] Chapters 5
+  * [ ] Chapters 6
+  * [ ] Chapters 7
+  * [ ] Chapters 8
+  * [ ] Chapters 9
+  * [ ] Chapters 10
+  * [ ] Chapters 11
+  * [ ] Chapters 13
+  * [ ] Chapters 19
+* [ ] Fix ./projects/privacy
+* [ ] Fix ./projects/users
+* [ ] Fix ./projects/unsorted
+* N/A [The Rust Programming Language Book 2018 Edition (Second Edition deprecated)](https://github.com/rust-lang/book/blob/master/2018-edition)
 * [ ] [The Cargo Book](https://doc.rust-lang.org/cargo/)
 * [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
 * [ ] Create Examples showing "immutability", "orthogonality" and "idempotence" trait importance
@@ -104,6 +121,7 @@ Key Terminology of the Rust language and ecosystem:
     ```
     ./check_all
     ```
+    * Note: There is now a Cargo.toml workspace file in the project root directory, so it is possible to build all projects that are specified as member projects in that file from the project root directory and the output generated together in ./target/debug
 
   * Option #1 (Compile and Run)
     - Compile (generates an executable file 'main' in current directory). Since Rust is an ahead-of-time compiled language. Run (run the executable file 'main')
@@ -197,49 +215,37 @@ Use `{:#?}` for better readability.
 ### Debugging with Visual Studio Code
 
 * Install [VS Code](https://code.visualstudio.com/download)
-* Follow [this blog post](https://medium.com/@royalstream/rust-development-using-vs-code-on-os-x-debugging-included-bc10c9863777) to setup debugging with breakpoints using LLDB in VS Code.
-* Troubleshoot [by following these steps](https://medium.com/@ltfschoen/im-using-macos-10-12-861c8211006) 
-* Example Debug Config file **<PROJECT_NAME>/.vscode/launch.json**. Use by going to menu: Debug > Start Debugging. * Build any changes in terminal with `cargo build`
-* Further information is [here](https://gitter.im/Drops-of-Diamond/Development?at=5aca2b7227c509a774ed9908). Use CTRL+P before entering `ext install <insert-extension>`.
-```
-{
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "lldb",
-      "request": "launch",
-      "name": "Debug - Insert Program Name",
-      "program": "${workspaceFolder}/target/debug/program_name",
-      "args": "",
-      "cwd": "${workspaceFolder}",
-      "terminal": "integrated"
-    }
-  ]
-}
-```
+* Install rust-src
+  ```
+  rustup component add rust-src
+  ```
+* Review
+  * https://code.visualstudio.com/docs/languages/rust
+  * https://rust-analyzer.github.io/manual.html
+* Install VSCode Extensions in .vscode/extensions.json.
+  * CTRL + P before entering `ext install <insert-extension>`. OR
+  * Install from terminal:
+    ```
+    code --install-extension vadimcn.vscode-lldb
+    code --install-extension rust-lang.rust-analyzer
+    code --install-extension ms-vscode-remote.vscode-remote-extensionpack
+    code --install-extension bungcip.better-toml
+    ```
+* Code > Preferences > Settings > debug.allowBreakpointsEverywhere > Enable
+* Code > Preferences > Settings > debug.showBreakpointsInOverviewRuler > Enable
+* Code > Preferences > Settings > editor.inlayHints.enabled > Enable
+* Use [VSCode Logpoints](https://code.visualstudio.com/docs/editor/debugging#_logpoints)
+* Formatter using rustfmt - SHIFT + OPTION + F
+* Manual Code Suggestion - CTRL + SPACE
+* Build All Projects in VSCode at Tasks > Run Build Task - SHIFT + CMD + B. Configure Task Config file **/.vscode/tasks.json**. Possible options https://gist.github.com/deadalusai/9e13e36d61ec7fb72148
+  * Run binary from ./target/debug folder
+* Debug Projects with Run & Debug > Choose "LLDB Debug - Program - ...". Configure Debug Config file **/.vscode/launch.json**.
+* Note: If you get error `rust-analyzer failed to discover workspace`, it should be resolved following these steps https://stackoverflow.com/a/75649115/3208553. If not, try: Code > Preferences > Settings > rust-analyzer.linkedProjects. Update in settings.json
 
-* Example Build Task file **<PROJECT_NAME>/.vscode/tasks.json**. Use by going to menu: Tasks > Run Build Task
-```
-{
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-  // for the documentation about the tasks.json format
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "cargo build",
-      "type": "shell",
-      "command": "cargo build",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    }
-  ]
-}
-```
+* Old links
+  * Follow [this blog post](https://medium.com/@royalstream/rust-development-using-vs-code-on-os-x-debugging-included-bc10c9863777) to setup debugging with breakpoints using LLDB in VS Code.
+  * Troubleshoot [by following these steps](https://medium.com/@ltfschoen/im-using-macos-10-12-861c8211006) 
+  * Further information is [here](https://gitter.im/Drops-of-Diamond/Development?at=5aca2b7227c509a774ed9908). Use 
 
 ### Debugging with IntelliJ Rust Plugin
 

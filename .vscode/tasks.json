@@ -1,7 +1,27 @@
 {
-  "version": "0.1.0",
-  "command": "cargo",
-  "isShellCommand": true,
-  "args": ["build"],
-  "showOutput": "always"
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Projects",
+      "type": "shell",
+      "problemMatcher": [
+        "$rustc"
+      ],
+      "args": [
+        "build",
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "/bin/bash",
+          "args": ["-c", "-i"]
+        }
+      },
+      "command": "cargo",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+      }
+    },
+  ]
 }
