@@ -403,6 +403,7 @@ name = "datetime"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "env_logger",
  "log",
  "thiserror",
 ]
@@ -512,6 +513,15 @@ dependencies = [
  "serde_json",
  "sp-core",
  "sp-runtime",
+]
+
+[[package]]
+name = "env_logger"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85cdab6a89accf66733ad5a1693a4dcced6aeff64602b634530dd73c1f3ee9f0"
+dependencies = [
+ "log",
 ]
 
 [[package]]
@@ -1055,6 +1065,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "abb12e687cfb44aa40f41fc3978ef76448f9b6038cad6aef4259d3c095a2382e"
 dependencies = [
  "cfg-if",
+ "serde",
 ]
 
 [[package]]

@@ -6,5 +6,6 @@ edition = "2021"
 
 [dependencies]
 chrono = { version = "0.4.23", default_features = false, features = ["alloc", "clock"] }
-log = { version = "0.4.17", default-features = false }
+env_logger = { version = "0.10.0", default_features = false }
+log = { version = "0.4.17", default-features = false, features = ["std", "serde", "max_level_debug", "release_max_level_warn"] }
 thiserror = { version = "1.0.39", default-features = false }
