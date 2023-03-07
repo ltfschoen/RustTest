@@ -36,6 +36,8 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
   * [X] Chapters 2
   * [X] Chapters 3
   * [ ] Chapters 4
+    * [X] 4.1-4.3
+    * [ ] 4.4 Slices
   * [ ] Chapters 5
   * [ ] Chapters 6
   * [ ] Chapters 7
