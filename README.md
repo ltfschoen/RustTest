@@ -32,8 +32,8 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [x] Change to 4-space indentation
 * [ ] [The Rust Programming Language](https://doc.rust-lang.org/book/)
   * [ ] [Quiz Version](https://rust-book.cs.brown.edu/)
-  * [ ] Chapters 1
-  * [ ] Chapters 2
+  * [X] Chapters 1
+  * [X] Chapters 2
   * [ ] Chapters 3
   * [ ] Chapters 4
   * [ ] Chapters 5
@@ -184,12 +184,14 @@ Key Terminology of the Rust language and ecosystem:
     ```
     cargo update
     ```
+    * [Reference](https://rust-book.cs.brown.edu/ch02-00-guessing-game-tutorial.html#updating-a-crate-to-get-a-new-version)
 
 ## Learning <a id="learning"></a>
 
 ### Guides
 
 * [Play Rust](https://play.rust-lang.org/)
+* [Rust Prelude](https://doc.rust-lang.org/std/prelude/index.html)
 * [Rust Standard Library](http://doc.rust-lang.org/std/)
 * [Rust By Example](http://rustbyexample.com/)
 * [Programming Rust Book Example Code](https://github.com/ProgrammingRust/examples)

@@ -1,0 +1,10 @@
+[package]
+name = "datetime"
+version = "0.1.0"
+authors = ["Luke Schoen <ltfschoen@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+chrono = { version = "0.4.23", default_features = false, features = ["alloc", "clock"] }
+log = { version = "0.4.17", default-features = false }
+thiserror = { version = "1.0.39", default-features = false }

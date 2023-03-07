@@ -67,6 +67,7 @@ fn main() {
         guess = sample(&guess);
 
         // Allow potentially negative numbers
+        // https://doc.rust-lang.org/std/primitive.str.html#method.parse
         let guess: Guess = match guess.trim().parse::<i32>() {
             Ok(num) => Guess::new(num),
             Err(_) => continue,
