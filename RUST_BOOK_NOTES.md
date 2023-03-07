@@ -795,6 +795,7 @@ consuming `self`. Rust makes "borrowing" implicit for method receivers.
 ## Loops <a id="chapter-e22d77"></a>
 
 * `break` to stop executing the loop
+* specify "loop labels" to exit outermost loop https://rust-book.cs.brown.edu/ch03-05-control-flow.html#loop-labels-to-disambiguate-between-multiple-loops
 * Example:
     ```rust
     loop {
@@ -842,7 +843,8 @@ consuming `self`. Rust makes "borrowing" implicit for method receivers.
 * **Ownership**
 
     * About
-        * Rust memory is managed through an **ownership** system with a set of rules the compiler checks at compile time
+        * Rust memory is managed through an **ownership** (discipline of **pointer** management) system with a set of rules the compiler checks at compile time
+        * Rust does not allow manual memory management (manually allocation and deallocation of memory)
     * Pros:
         * Allows Rust to make memory safety guarantees without need for garbage collector
         * No run time costs incurred for any ownership features
@@ -862,13 +864,18 @@ consuming `self`. Rust makes "borrowing" implicit for method receivers.
         * Fast access to data from top (not need search where to insert/remove data from)
         * Faster processing since data is all close together
         * Usage: With a **Known fixed size** for all data on the stack
+        * Variables live on the **location** of a **stack** (or possibly a **register**).
+            * Reference https://rust-book.cs.brown.edu/ch04-01-what-is-ownership.html#variables-live-in-the-stack
+        * Variables live in **slots** of **frames** (mapping from variables to values within a single scope) in a **stack**
+        * **Frames** are organised into a **stack** of currently-called functions. After a function returns it deallocates the frame of that function 
         * Example 1
             * Calling a function, values passed to the function, **pointers** to data on the **heap**, and local variables of a function, are pushed onto the **stack**
             * End of a function causes values to be popped off the **stack**
         * Data Types stored on the stack including:
-            * Integers, Floating-point numbers, Boolean, Chars, Tuples, and Arrays
+            * **Integers, Floating-point numbers, Boolean, Chars, Tuples, and Arrays**
+                * Note: **String is implemented with Vec, and Vec is implemented with RawVec rather than Box**. But types like **RawVec is still box-like (they own memory in the heap)**
         * Example 2
-            * Since its dealing with integers that are simple values with a **Known fixed size** it binds value 5 to x, makes copy of value in x and binds it to y, and then pushes the two 5 values onto **stack** entirely so copies of actual values are quick (since not storing any values on the **heap** and no pointers necesary)
+            * Since its dealing with integers that are simple values with a **Known fixed size** it binds value 5 to x, makes copy of value in x and binds it to y, and then pushes the two 5 values onto **stack** entirely so copies of actual values are quick (since not storing any values on the **heap** and no pointers necessary)
                 ```rust
                 let x = 5;
                 let y = x;
@@ -876,16 +883,32 @@ consuming `self`. Rust makes "borrowing" implicit for method receivers.
         * Special annotation called `Copy` Trait may be placed on simple scalar types (i.e. integer, boolean, char, tuples with elements containing simple types) (if the type has not already implemented the `Drop` Trait) that are stored on the **stack** so an older variable is still usable after assignment. See Appendix C of Rust Second Edition
 
     * **Heap**
-        * Usage: With **Unknown size** data or size that may change at compile time
+        * Usage: With **Unknown size** data or size that may change at compile time (dynamic data)
+            * Note: The **stack** has to be known at compile-time.
         * Less organised
-        * **Allocating on the heap** (aka allocating) is where amount of space is requested to store data in empty spot on operating system that is marked in use and we are returned a **pointer** (address of the location)
+        * **Pointer** is created by **allocating (memory) on the heap** (aka allocating), where amount of space is requested to store data in empty spot on operating system (**heap** region of memory where data may live indefinately, and not tied to a specific **stack frame**) that is marked in use and we are returned a **pointer** (address of the location)
+            * Note: Store data on the **heap** by wrapping a value using the `Box` construct that is **owned** by a variable (may **move** (aka copy the pointer to the heap) ownership of the `Box` to another variable) whose value is a pointer, which stores the variable in a **frame** on a **stack**, whose value is a **pointer** to the data stored on the **heap**.
+                * Reference: https://rust-book.cs.brown.edu/ch04-01-what-is-ownership.html#boxes-live-in-the-heap
+        * **Ownership** does not actually exist at runtime. It is a concept that only exists within the compiler
+        * **Stack frames** are automatically managed by Rust (e.g. allocates when function called and deallocates when function ends to a stack frame)
         * **Pointer** is a **known fixed size** that we can store on the **stack** but when we want to retrieve the actual data we must follow the pointer
         * Slower access to data since must follow the **pointer** to get to data and different parts of data in different places
-        * Data Types stored on the heap include:
-            * Strings
+        * Data Types stored on the **heap** include:
+            * Note: `Box` are used by Rust data structures like collections including **String, Vec, HashMap** to hold a **dynamic** number of elements
+                * Reference: https://rust-book.cs.brown.edu/ch04-01-what-is-ownership.html#collections-use-boxes
+            * If "implicitly" heap allocations performed by on-stack structs where one of the members is a pointer to a heap-allocated buffer **e.g. String, Vec, HashMap**
+                * Note: These types are allocated on the **heap** since they have an unknown size (trait objects, recursive structures) and cannot be statically defined at compile-time, since they may add (expand) and remove elements after compile-time
+                * Note: In case of recursive structures and `dyn Trait` you have to explicitly use `Box`
+                    * Reference: https://doc.rust-lang.org/std/ptr/struct.DynMetadata.html
+            * If explicitly wrapped in a "smart pointer" (a technique to store in the heap instead of the stack), **e.g. Box, Rc, Arc**
+                * Note: These types like `Rc` and `Arc` have an indeterministic life since they decide when to deallocate, based on reference counting.
+            * References:
+                * https://doc.rust-lang.org/book/ch08-03-hash-maps.html#creating-a-new-hash-map
 
     * **Move** (aka "shallow copy" + invalidation)
 
+        * **Moved heap data principle:** If a variable x moves ownership of **heap** data to another variable y, then x cannot be used after the move. e.g. Since `String` uses a pointer to the **heap** whereas **Integer** only uses the **stack frame**, this principle only applies to types like `String` that use the **heap**
+            * Reference: https://rust-book.cs.brown.edu/ch04-01-what-is-ownership.html#variables-cannot-be-used-after-being-moved
         * Example 1
             * Since its dealing with a `String` type it stores the variables group of data on
             the **stack** that is made up of a pointer (to the memory on the **heap** holding the string value with each char at different index), length (in bytes that `String` value is using), and capacity (total memory in bytes the `String` received from the operating system) (see diagram in book/second-edition/ch04-01-what-is-ownership.html).
@@ -932,6 +955,18 @@ consuming `self`. Rust makes "borrowing" implicit for method receivers.
 
     * **Return Values, Ownership Transfer, Scope, References, Mutable References, Dangling References**
 
+        * **Immutable References** (Shared References) are non-owning pointers using `& <variable>`, because they do not own the data they point to.
+            * **Immutable References** Permit aliasing but disallow mutation
+            * Example:
+                * Pointer to variable `x` on the stack: `let r1: &Box<i32> = &x`
+                * Pointer direct to the heap value (that is also pointed to by `x`): `let r2: &i32 = &*x`
+        * **Dereferencing** a pointer using `* <variable>` accesses its data on the heap and may be used to modify the heap value (i.e. `*x += 1` where stored as `Box<i32>`)
+            * If you have a pointer `&x` to a heap value `x`, then you access the value itself with two dereferences `**x`
+        * **Pointer Safety Principle**: data should never be aliased and mutated at the same time (i.e. create pointer to an index of a vector and then resize the array by pushing another element onto the vector)
+            * Rust enforces this principle for `Box` (owned pointers) by disallowing aliasing. Assigning a `Box` from one variable to another will move ownership, invalidating the previous variable. Owned data can only be accessed through the owner — no aliases.
+            * Rust ensures the safety of **references** (non-owning pointers that temporarily create aliases) through the **borrow checker**
+        * **Data must outlive all of its references**: It is unsafe to return a reference to data on a function's stack frame, and to then use that reference. The reference cannot outlive the data. It is unsafe to add a reference to a vector of references
+
         * Example 1: Passing **ownership** to every function and then have it return ownership each time is tedious
             ```rust
             fn main() {
@@ -977,8 +1012,8 @@ consuming `self`. Rust makes "borrowing" implicit for method receivers.
                 ```
 
             * **References** are **immutable** so we cannot modify it in the function that was called
-            unless we create a **Mutable Reference** with `&mut` and receive it with `&mut` too.
-
+            unless we create a **Mutable Reference** (Unique References) with `&mut` and receive it with `&mut` too.
+                * **Mutable Reference** allow mutation but prevent aliasing. They may be temporarily "downgraded" to read-only references by creating a pointer to the dereferenced pointer (i.e. `&* <variable>`). Removing all permissions (including read permissions) from the variable that was referenced, while the dereferenced pointer to the value on the heap of the new mutable reference variable gains write permissions
                 ```rust
                 fn main() {
                     let mut s = String::from("hello");
@@ -1056,6 +1091,42 @@ consuming `self`. Rust makes "borrowing" implicit for method receivers.
     Reference: book/second-edition/ch04-03-slices.html
 
     * Examples: [find_word](./projects/find_word/src/main.rs).
+
+* **Strings Reuse Memory**
+
+    * Does not re-use storage
+        * `to_string`
+            ```
+            let mut s = String::from("first");
+            s = "second".to_string();
+            ```
+    * Re-uses storage
+        * `replace_range`
+            ```
+            let mut s = String::from("first");
+            s.replace_range(.., "second");
+            ```
+        
+        * `clear` and `push_str`
+            ```
+            let mut s = String::from("first");
+            s.clear(); s.push_str("second");
+            ```
+
+        * `clone_from`
+            ```
+            let mut s1 = String::from("first");
+            let s2 = String::from("second");
+            println!("s2 = {}", s1);
+            s1.clone_from(&s2);
+            ```
+
+        * `clone_into` https://doc.rust-lang.org/std/borrow/trait.ToOwned.html#method.clone_into
+            ```
+            let mut s1: String = String::new();
+            let s2 = String::from("change");
+            s2.clone_into(&mut s1);
+            ```
 
 ## Modules <a id="chapter-b944a7"></a>
 

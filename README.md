@@ -34,7 +34,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
   * [ ] [Quiz Version](https://rust-book.cs.brown.edu/)
   * [X] Chapters 1
   * [X] Chapters 2
-  * [ ] Chapters 3
+  * [X] Chapters 3
   * [ ] Chapters 4
   * [ ] Chapters 5
   * [ ] Chapters 6

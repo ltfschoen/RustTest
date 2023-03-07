@@ -51,12 +51,41 @@
       "cwd": "${workspaceRoot}",
       "terminal": "integrated"
     },
-    // {
-    //   "name": "GDB Debug - Program - Find Word",
-    //   "type": "gdb",
-    //   "request": "launch",
-    //   "target": "${workspaceRoot}/target/debug/find_word",
-    //   "cwd": "${workspaceRoot}"
-    // }
+    {
+      "name": "LLDB Debug - Program - Datetime",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/target/debug/datetime",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
+    },
+    {
+      "name": "LLDB Debug - Program - Lifetimes",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/target/debug/lifetimes",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
+    },
+    {
+      "name": "LLDB Debug - Program - Shapes",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/target/debug/shapes",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
+    },
+    {
+      "name": "LLDB Debug - Program - Traits Shapes",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/target/debug/traits_shapes",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
+    },
   ]
 }
