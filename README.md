@@ -53,6 +53,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [ ] Fix ./projects/unsorted
 * N/A [The Rust Programming Language Book 2018 Edition (Second Edition deprecated)](https://github.com/rust-lang/book/blob/master/2018-edition)
 * [ ] [The Cargo Book](https://doc.rust-lang.org/cargo/)
+* [ ] [Rustlings](https://github.com/rust-lang/rustlings)
 * [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
 * [ ] Create Examples showing "immutability", "orthogonality" and "idempotence" trait importance
 * [ ] Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
