@@ -9,16 +9,24 @@ fn main() {
     println!("Given string {}: ", my_string);
 
     let _word = first_word(&my_string);
+    println!("First world {}: ", _word);
 
     let _my_string_literal = "hello world";
+    let _word_literal = first_word(&_my_string_literal[..]);
+    println!("First world literal{}: ", _word);
 
-    let _word = first_word(&_my_string_literal[..]);
+    println!(
+        "&String={} &str={}",
+        std::mem::size_of::<&String>(),
+        std::mem::size_of::<&str>(),
+    );
 }
 
 /* Purpose: Return "String Slice" value that is tied to the underlying data.
  * Parameter "borrowed" is the "reference" since we do not want ownership
- * and we use `&str` instead of `&String` so we may pass a String Slice directly
- * or a "reference" to a String.
+ * and we use `&str` instead of `&String` so we may pass a String Slice (already string literal) directly
+ * or a "reference" to a String, by taking advantage of **deref coercions**.
+ * https://rust-book.cs.brown.edu/ch15-02-deref.html#implicit-deref-coercions-with-functions-and-methods
  * Convert `String` into array of bytes. Iterate over `String` element by element
  * using `iter` that returns each element in a collection, and wrap `iter` with
  * `enumerate` to return each element in a tuple instead.

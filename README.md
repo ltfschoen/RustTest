@@ -37,7 +37,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
   * [X] Chapters 3
   * [ ] Chapters 4
     * [X] 4.1-4.3
-    * [ ] 4.4 Slices
+    * [X] 4.4 Slices
   * [ ] Chapters 5
   * [ ] Chapters 6
   * [ ] Chapters 7
@@ -315,3 +315,8 @@ without the hello Library
 * [C vs Rust Slides](http://www-verimag.imag.fr/~mounier/Enseignement/Software_Security/19RustVsC.pdf)
 * [Seminar of Rust Programming Language](http://www8.cs.umu.se/kurser/5DV086/VT18/resources/seminar/rust.pdf)
 * [Mozilla Research Projects including Servo](https://www.mozilla.org/en-US/research/projects/)
+
+## Troubleshooting
+
+* Running `cargo build` outputs: `Blocking waiting for file lock on build directory` 
+  * Try disabling rust-analyser extension in VSCode, or in Ubuntu run: `rm ~/.cargo/.package-cache`
