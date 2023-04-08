@@ -235,8 +235,10 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
             }
             ```
 
-        * Example 2: **Method** (refactored to use Method instead of Function)
-            * If we are only **reading** from the Struct data we use `&self`
+        * Example 2: **Method** (refactored to use Method instead of Function with an `impl` block)
+            * If we are only **reading** from the Struct data we use `&self`. Note: `&self` is actually short for `self: &Self`, since the method borrows the `Self` instance immutably since we just want to read the data in the struct (but methods may also take ownership of parameters like `self` or borrow `self` mutably). `Self` is an **alias** for the type the `impl` block is for (i.e. `&Rectangle`)
+            * If you want the method to take ownership of the instance you would use just `self` (consuming), but that is rare (i.e. since it might prevent caller from using the original instance afterwards)
+            * Note: In a **method** call like `country.area(&name)`, Rust provides automatic referencing by automatically adding in `&` (reading), `&mut` (mutating), or `*` (consuming) so the object `country` matches the signature of the method where the receiver is type `self`. So `country.area(&name)` is equivalent to `(&country).area(&name)`.
             * If we want to **write** to the Struct instance we use `&mut self` as first parameter
             ```rust
             #[derive(Debug)]
@@ -263,14 +265,29 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
             }
             ```
 
+    * **Getters**
+        * When you give a method the same name as a field where you only want it to return the value in the field
+        * Getters are not implemented automatically in Rust structs
+        * Useful since you may make the field private but the getter method public for read-only access to that field of the struct type's public API
+
     * **Associated Functions** (i.e. **Static Functions** of a Struct that do not require a Struct Instance)
-        * Do not require `self` since do not require an **instance** of the Struct, so are not methods
+        * All functions defined within an `impl` block are called **Associated Functions** since they're associated with the type `impl <TYPE>`
+        * Do not require `self` as the first parameter since do not require an **instance** of the Struct, so are not methods
         * Namespaced by the Struct so call with say `let sq = Rectangle::square(3);`
 
         * Examples 1: `String::from`
-
-        * Example 2:
+        * Example 2: In constructors to return a new instance of a struct `Rectangle::new(3)` that must first be defined
+        * Example 3:
             * See `fn square` in [shapes](./projects/shapes/src/main.rs).
+            ```
+            impl Rectangle {
+                fn new(size: u32) -> Self {
+                    Self {
+                        width: size,
+                        height: size,
+                    }
+                }
+            ```
 
     * **Tuple Structs**
         * Structs without named fields. Function parameters with Tuple Structs only accept the name of that specific type of Tuple Struct. See https://doc.rust-lang.org/1.30.0/book/second-edition/ch05-01-defining-structs.html#using-tuple-structs-without-named-fields-to-create-different-types

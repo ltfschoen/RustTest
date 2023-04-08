@@ -41,7 +41,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
   * [ ] Chapters 5
     * [X] 5.1
     * [X] 5.2
-    * [ ] 5.3
+    * [X] 5.3
   * [ ] Chapters 6
   * [ ] Chapters 7
   * [ ] Chapters 8
