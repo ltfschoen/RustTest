@@ -207,6 +207,7 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
         is being called on.
         * Multiple `impl` blocks of the same Struct may be used to house the various
         Methods and Associated Functions
+        * Note: Accessing fields of borrowed struct `&Rectangle` passed into a function does not move the field values from the calling function that retains ownership.
         * Pros:
             * Organises capabilities of a Struct instance type into a `impl` block
 
@@ -272,17 +273,38 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
             * See `fn square` in [shapes](./projects/shapes/src/main.rs).
 
     * **Tuple Structs**
-        * Structs without labels. See https://doc.rust-lang.org/1.30.0/book/second-edition/ch05-01-defining-structs.html#using-tuple-structs-without-named-fields-to-create-different-types
+        * Structs without named fields. Function parameters with Tuple Structs only accept the name of that specific type of Tuple Struct. See https://doc.rust-lang.org/1.30.0/book/second-edition/ch05-01-defining-structs.html#using-tuple-structs-without-named-fields-to-create-different-types
+        * Example:
+            ```rust
+            struct Colour(i32, i32);
+            ...
+            let blue = Colour(0, 0);
+    
+    * **Unit-like Structs**
+        * Reference: https://doc.rust-lang.org/book/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
+        * Similar behaviour to Unit Type `()`.
+        * Use to implement a trait on a type without knowing what data it should store.
+        * Use to implement behaviour for a type so every instance of the Unit-like
+        Struct is always equal to all other instances of it to have known results
+        for testing.
+        * Use Unit-like Structs to implement defined traits on any type
+        ```rust
+        // define
+        struct AlwaysEqual;
+        ...
+        // instance
+        let subject = AlwaysEqual;
+        ```
 
     * **Ownership of Struct Data**
+        * Reference: https://doc.rust-lang.org/book/ch05-01-defining-structs.html#ownership-of-struct-data
         * Use the **"owned" `String` type** rather than the **`&str` String Slice type**
         if want instances of the Struct to own all of its data and for that data
         to be valid for as long as the entire Struct is valid.
 
         * **Store References in Structs using Lifetime Specifiers**
-            * Structs may store "references" to data that is "owned" by something else
-            through use of "lifetimes" that ensure the data "referenced" by the
-            Struct is valid as long as the Struct is:
+            * Structs may store "references" to data that is "owned" by something else through use of "lifetimes" that ensure the data "referenced" by the
+            Struct is valid as long as the Struct is (advanced), otherwise it may error and a quick fix is using owned types like `String` instead of references like `&str` that require adding lifetime specifiers.
                 ```rust
                 struct User {
                     username: &str,

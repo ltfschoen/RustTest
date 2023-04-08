@@ -35,10 +35,13 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
   * [X] Chapters 1
   * [X] Chapters 2
   * [X] Chapters 3
-  * [ ] Chapters 4
+  * [X] Chapters 4
     * [X] 4.1-4.3
     * [X] 4.4 Slices
   * [ ] Chapters 5
+    * [X] 5.1
+    * [X] 5.2
+    * [ ] 5.3
   * [ ] Chapters 6
   * [ ] Chapters 7
   * [ ] Chapters 8
@@ -215,10 +218,12 @@ Key Terminology of the Rust language and ecosystem:
 
 ## Debugging <a id="debugging"></a>
 
-* `println!` macro uses `Display` default formatter when it uses `{}` for primitive types.
+* Reference: https://doc.rust-lang.org/book/ch05-02-example-structs.html#adding-useful-functionality-with-derived-traits
+* `println!` macro takes a reference of an expression and prints to standard output `stdout` and uses the `Display` default formatter when it uses `{}` for primitive types.
 * `Debug` Trait output formatter may be used with `{:?}` to debug Structs after opting into
-its usage by including the derive annotation `#[derive(Debug)]` before the Struct definition.
+its usage by including the derive annotation attribute `#[derive(Debug)]` before the Struct definition (e.g. `println!("{}")` macro) since 
 Use `{:#?}` for better readability.
+* Alternative to print values using `Debug` format is using `dbg!` macro that prints to standard error console `stderr` and takes ownership of the expression and includes the line number, resultant value, and returns ownership of the value.
 
 ### Debugging with Visual Studio Code
 
