@@ -451,12 +451,14 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
 
 * **Collections**
 
+    * References:
+        * https://doc.rust-lang.org/book/ch08-00-common-collections.html
+        * https://doc.rust-lang.org/std/collections/index.html
     * Definition
         * Contain multiple values
         * Collections point to data stored in the **heap** (differing from Arrays and Tuples)
             * Data does not need to be known at compile time and may grow/shrink during runtime
         * Collections each have different capabilities and **costs**
-        * See Collections in the documentation for more collection types
 
     * **Vectors**
         * Definition: Allows storing multiple number of values of the **same type**
@@ -570,6 +572,7 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
                 ```
 
     * **String Literal**
+        * e.g. `"..."`
         * **Immutable** string value that is hard-coded
         * Pros:
             * Fast and efficient since immutable and contents known in executable
@@ -578,6 +581,12 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
             * Does not cater for string values that are not known at compile time
 
     * **Strings**
+        * `String` is a wrapper over a `Vec<u8>`
+            * `let hello = String::from("HЗдр")` is an encoded UTF-8 String Literal with length `5` and the vector storing the string "Hello" is 5 bytes (40 bits) long, where each letter like `H` is 1 byte (when encoded UTF-8), where bits is how they are stored on the computer.
+                * Note Some Unicode scalar value letters like `Здр` in UTF-8 String Literals take 2 bytes of storage each (so indexing into the bytes of a string do not always correlate to a valid Unicode scalar value like Rust's `char` type)
+        * **WARNING**: **Do not index into a String using just [] with a single number**, because the return type isn't clear (i.e. `u8`, `char`, grapheme cluster, or string slice)
+            * Instead indexing with [] using a **range** to create a string slice containing particular bytes (i.e. `let s = &hello[0..6]` so `s` is a `&str` containing the first 5 bytes of the string, which would be `HЗд`). 
+            * Rust would panic if we tried to slice only part of a character's (i.e. only half of `д`) bytes with &hello[0..5]
         * `String` type ("owned") is UTF-8 encoded and may be used to take user input and store it on the **heap**
             * Supports **Mutable** (growable text) by allocating memory on the **heap**
             to hold the data that is unknown at compile time, so memory is requested from
@@ -595,7 +604,7 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
                     ```
 
                 * Access Index of Characters in a String
-                    * Note: Rust strings don't support indexing, so we can't do
+                    * Note: Rust strings don't support indexing, so we **can't** do
                     `let s1 = String::from("hello"); s1[0];`
 
                     * See for details of how to use here: https://github.com/rust-lang/book/blob/master/2018-edition/src/ch08-02-strings.md#indexing-into-strings
@@ -654,6 +663,7 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
                         println!("{}", c);
                     }
                     ```
+                    * Note: `for c in "ने".bytes() { println!("{}", c); }` is 6 bytes long
 
                 * Strings are UTF-8 encoded so we can include any properly encoded data on them 
                     ```rust
