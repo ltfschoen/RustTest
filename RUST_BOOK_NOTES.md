@@ -130,6 +130,9 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
         let five_hundred = tup.0; // access first index in tuple
         println!("The value of y is: {}", y);
         ```
+    * **Empty Tuple**
+        * `()` may be used to indicate not to execute any more code for value in a `match` (e.g. in the catch-all variant `_ => (),`)
+            * See https://doc.rust-lang.org/book/ch06-02-match.html#catch-all-patterns-and-the-_-placeholder
 
 * **Arrays**
     * Usage:
@@ -332,7 +335,7 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
 * **Enums and Pattern Matching**
 
     * Definition:
-        * Allow define a type by enumerating its possible values
+        * Allow define a type by enumerating its possible values **variants**
         * Allows encoding meaning along with data
         * `Option` enum expresses that a value can be something or nothing
         (since Rust does not have nulls), so the compiler
@@ -345,20 +348,98 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
                 None,
             }
             ```
-            * In order to have a value that can possibly be null, you must explicitly opt in
+            * In order to have a value that can possibly be null, you must explicitly opt-in
             by making the type of that value `Option<T>`. Then, when you use that value,
-            you are required to explicitly handle the case when the value is null.
+            you are required to explicitly handle the case when the value is null (e.g. where `x.is_some()` returns `false`, where `x` is of type `Option`).
             Whenever a value has a type that isn't an `Option<T>`, you can safely assume
             that the value isn't null
             * Note: Must convert `Option<T>` to a `T` before can perform `T` operations with it
         * Pattern Matching in `match` expression allows running different code
         for different enum values
-        * `if let` for handling enums conveniently is syntactic sugar (less code than using `match`)
+        * `if let` for handling enums conveniently is syntactic sugar (less code than using `match`), but only matches one pattern and ignores all other values, so it loses the exhaustive checking of `match`, so using it is **risky** unless you use `else` (equivalent to the catch-all `_` match case).
+            * Reference: https://doc.rust-lang.org/book/ch06-03-if-let.html
+            * e.g. if only one variant, using `match` requires exhaustive all possibilities so we have to have a variant `_ => ()`, but with `if let Some(x) = y { x }` then we don't. The code in the block only runs if its a match, and `x` binds to the value inside `Some`. 
         * Enum values can only be one of the variants
+        * Enums may contain named Structs as data in their variants
+            ```rust
+            struct Ipv4Addr {
+                // --snip--
+            }
+
+            struct Ipv6Addr {
+                // --snip--
+            }
+
+            enum IpAddr {
+                V4(Ipv4Addr),
+                V6(Ipv6Addr),
+            }
+            ```
         * Enums may contain anonymous structs as data
         * Enums may define embedded methods using `impl`
-        * Enums may be used to create Custom Data Types and instances of them
+            ```rust
+            struct Ipv4Addr {
+                fn create(&self, addr: &str) -> Self {
+                    Self {
+                        add
+                    }
+                }
+            }
+            enum IpAddr {
+                V4(Ipv4Addr),
+                V6(Ipv6Addr),
+            }
+            // define method on enum
+            impl IpAddr {
+                fn call(&self) {
+                    match self {
+                        IpAddr::V4 => return ...,
+                        IpAddr::V6(ip_addr) => return ...,
+                    }
+                }
+            }
+            let ipv4addr = Ipv4Addr::create(String::from("127.0.0.1"));
+            let m = IpAddr::V4(ipv4addr);
+            m.call();
+            ```
+        * Enums may be used to create Custom Data Types and instances of them. e.g.
+            ```rust
+            // custom data type
+            enum ColourTypes {
+                Green,
+                Red
+            }
+            // instance of a variant, where both are of the same type `ColourTypes`
+            let green = ColourTypes::Green;
+            let red = ColourTypes::Red;
+            fn movement(colour_kind: ColourType) {}
+            movement(ColourTypes::Green);
+            ```
 
+        * Enums vs Structs
+            * Structs (e.g. `Rectangle`) group related fields (e.g. `width`) and data
+            * Enums allows saying a value (e.g. `Rectangle`) is one of a possible **set** of values (e.g. `Circle`, `Triangle`) by encoding all possibile variants as an enum
+                * All possible variants (kinds) of an enum may be **enumerated**
+                * Enum with data directly inside is more concise than an enum inside a struct.
+                * Enums allows easily defining a function that takes any of the variant types, but it wouldn't be as easy if we used Structs instead each with its own type
+                * The name of each enum variant that we define also becomes a function that constructs an instance of the enum
+                    ```rust
+                    // attach data to enum directly so no need for an extra struct
+                    enum FrogTypes {
+                        Green(String),
+                        Red(String),
+                    }
+                    let green = FrogTypes::Green(String::from("F0F"));
+                    let red = FrogTypes::Red(String::from("0FF"));
+                    ```
+                * Enums allow each variant to have different types and amounts of associated data, which Structs don't allow
+                    ```
+                    enum FrogTypes {
+                        White(u8, u8),
+                        Green(String),
+                        Red(String),
+                    }
+                    ```
     * See book/second-edition/ch06-01-defining-an-enum.html
     * See [users](./projects/users/src/main.rs)
     * Reference on Options: https://medium.com/adventures-in-rust/deal-with-it-option-type-in-rust-4246e1dd9e47
@@ -446,7 +527,7 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
 
                     match *third {
                         Some(x) => { println!("Reachable element {}", x); () },
-                        None => { println!("Unreachable element"); }
+                        None => { println!("Unreachable element"); } // Null
                     }
                     ```
 
@@ -624,7 +705,7 @@ Examples: [guessing_game](./projects/guessing_game/src/main.rs).
 
             let team_name = String::from("Blue");
             // `get` returns Option<&V>, so the result will be `Some(&10)` or 
-            // if no value for the key it returns `None`, which we have to handle
+            // if no value for the key it returns `None` (similar to Null in other languages), which we have to handle
             let score = scores.get(&team_name);
             ```
 
@@ -1169,15 +1250,24 @@ consuming `self`. Rust makes "borrowing" implicit for method receivers.
 
 ## Modules <a id="chapter-b944a7"></a>
 
-* Modules are **namespaces** containing definitios of functions or types
+* Modules are **namespaces** containing definitions of functions or types
 * Module visibility may be **public** or **private**
     * `private` by default: functions, types, constants, and modules
 * Rust module system allows splitting code into chunks for code reuse
 * Extract functions, structs, and enums into different modules
 * Declare module with `mod` followed by block of code or in another file
-* Use `use` keyword to import Modules or Enums into another scope.
+* Use `use` keyword to import Modules or Enums into another scope. `use` only applies in the scope its in (i.e. move `use` into child module or `super::`)
 Bring all names into scope with a Glob Operator like `use TrafficLight::*;`,
 but may cause name conflicts.
+* Use `as` keyword for aliasing imported types
+* Important: Only use new or older style of file path. See https://doc.rust-lang.org/book/ch07-05-separating-modules-into-different-files.html#alternate-file-paths
+* Paths
+    * Reference: https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html
+    * Absolute
+        * Start at crate root (i.e. src/main.rs or src/lib.rs) and starts with crate name then `::`. Starts with `crate` for code from current crate. Use if called function is in same crate as caller.
+    * Relative
+        * Starts from current module using `self`, `super::` (parent module), or identifier in current module, then `::`.
+
     * Example:
 
         ```rust
@@ -1213,6 +1303,7 @@ but may cause name conflicts.
     * We are in the `communicator` library
     * Paths are relative to the current module `tests` inside `mod tests`
     * With `use` the paths are relative to the crate root by default.
+    `use` keyword creates shortcuts to paths. If you use `use crate::garden::Lettuce` then you can just write `Lettuce` instead of `crate::garden::Lettuce` to access it
     * Add to `tests` module to make the `client` module in scope by going up
     one module in the module hierarchy in order to call `client::connect()`,
     which is a good way to start from the root when deep in the module hierarchy.
@@ -1222,6 +1313,7 @@ but may cause name conflicts.
         ```rust
         // Communicator Library
 
+        // tells compiler to include code it finds in the crate src/client.rs
         pub mod client;
 
         pub mod network;
@@ -1246,10 +1338,11 @@ where to find other files
 the `extern crate ___` should go in the root module (so in src/main.rs or src/lib.rs).
 The submodules then refer to items from external crates as if the items are
 top-level modules.
+* If a module is part of your crate then you can refer to it with `crate::<path>::<Struct>`
 
 * **Privacy Rules**
-    * Public - accessed through any parent module
-    * Private - accessed only by immediate parent + any child modules
+    * Public - accessed through any parent module `pub mod`
+    * Private - Default. accessed only by immediate parent `mod` + any child modules
 
 * Examples: [communicator](./projects/communicator/src/main.rs).
 

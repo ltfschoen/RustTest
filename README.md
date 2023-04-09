@@ -38,12 +38,15 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
   * [X] Chapters 4
     * [X] 4.1-4.3
     * [X] 4.4 Slices
-  * [ ] Chapters 5
+  * [X] Chapters 5
     * [X] 5.1
     * [X] 5.2
     * [X] 5.3
-  * [ ] Chapters 6
-  * [ ] Chapters 7
+  * [X] Chapters 6
+    * [X] 6.1
+    * [X] 6.2
+    * [X] 6.3
+  * [X] Chapters 7
   * [ ] Chapters 8
   * [ ] Chapters 9
   * [ ] Chapters 10
@@ -123,7 +126,7 @@ Key Terminology of the Rust language and ecosystem:
 
   * Quick Cargo Check Script
     ```
-    ./check_all
+    ./check_all.sh
     ```
     * Note: There is now a Cargo.toml workspace file in the project root directory, so it is possible to build all projects that are specified as member projects in that file from the project root directory and the output generated together in ./target/debug
 
