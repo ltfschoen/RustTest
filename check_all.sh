@@ -1,4 +1,5 @@
 # cargo build --manifest-path ./projects/clang/Cargo.toml
+cargo build --manifest-path ./projects/closures/Cargo.toml
 cargo build --manifest-path ./projects/communicator/Cargo.toml
 cargo build --manifest-path ./projects/find_word/Cargo.toml
 cargo build --manifest-path ./projects/generics/Cargo.toml

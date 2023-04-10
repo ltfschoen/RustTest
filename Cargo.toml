@@ -8,6 +8,7 @@ exclude = [
 
 members = [
 	"projects/clang",
+	"projects/closures",
 	"projects/communicator",
 	"projects/datetime",
 	"projects/endow",
