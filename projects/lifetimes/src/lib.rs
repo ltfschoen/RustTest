@@ -3,8 +3,8 @@ use std::fmt::Display;
 /* Given two strings, determine the longest.
  * - Parameters are String Slice "references" so the function 
  *   does not take "ownership" of the parameters
- * - Return type contains a "borrowed" value of either `x` or `y`
- *   that needs a Generic Lifetime Parameter associated so 
+ * - Return type contains a "borrowed" value `&str`, which is either `x` or `y`
+ *   so it needs a Generic Lifetime Parameter associated so 
  *   the Borrow Checker knows the "lifetimes" of `x` and `y`.
  * - Lifetime Annotations are used in the Function Signature as Constraints 
  *   for Rust to enforce that for lifetime `'a` the function takes two parameters

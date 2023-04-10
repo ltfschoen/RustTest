@@ -1528,7 +1528,11 @@ top-level modules.
 
     * If the value of the `Result` is an `Ok`, the value inside `Ok` will get returned from this expression and the program will continue. If the value is an `Err`, the value inside `Err` will be returned from the whole function as if we had used the return keyword so the error value gets **propagated** to the calling code
 
-    * `?` can only be used in functions that have a return type of `Result`
+    * Only use `?` on `Option` in a function that returns an `Option`.
+    If value is `None` then `None` is returned early. If value is `Some` the value inside the Some is the resulting value of the expression and the function continues.
+
+
+    * `?` can only be used in functions that have a return type of `Result`, `Option`, or another type that implements `FromResidual`
 
         * Example 1:
             ```rust
@@ -1564,6 +1568,22 @@ top-level modules.
                 Ok(s)
             }
             ```
+
+* **Return Type from main function**
+    * If returns `Result<(), E>`, executable exits with value `0` if main fn returns `Ok(())`. Exit with a nonzero value if main returns an `Err` value.
+    * The main function may return any types that implement the `std::process::Termination` trait, which contains a function report that returns an `ExitCode`
+
+    * Reference:
+    ```rust
+    use std::error::Error;
+    use std::fs::File;
+
+    fn main() -> Result<(), Box<dyn Error>> {
+        let greeting_file = File::open("hello.txt")?;
+
+        Ok(())
+    }
+    ```
 
 * **Create Custom Type for Validation**
 
@@ -1644,10 +1664,45 @@ top-level modules.
         * **Trait Bounds** constrain Generic Types to ensure their type is limited to
         types that implement particular Trait or Behaviour by using Traits with Generic Type Parameters.
             * Allow **multiple Trait Bounds** on a Generic Type using the `+` syntax (i.e. use Display formatting as well as the `summarize` method on the type `T` by specifying `T: Summary + Display` to say that `T` may be any type that implements `Summary` and `Display`)
+                * Example
+                    ```
+                    pub fn notify(item: &(impl Summary + Display)) {
+
+                    // or:
+
+                    pub fn notify<T: Summary + Display>(item: &T) {
+                    ```
             * Alternately use the `where` clause after the Function Signature instead of using `+` to specify Trait Bounds so the Function Signature remains easy to read when multiple Trait Bounds are specified
+                * Example
+                    ```rust
+                    fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {
+
+                    // or:
+
+                    fn some_function<T, U>(t: &T, u: &U) -> i32
+                    where
+                        T: Display + Clone,
+                        U: Clone + Debug,
+                    {
+                    ```
             * **Trait Bounds to Conditionally Implement Methods**
                 * Implement methods conditionally only for types that implement the traits specified in the `impl` Function Signature, by using a Trait Bound in the `impl` block using Generic Type Parameters.
             * Examples: [traits - lib.rs](./projects/traits/src/lib.rs) implemented in [traits - main.rs](./projects/traits/src/main.rs).
+            * Example: 
+                * Use `impl Trait syntax` to have two parameters that implement `Summary`, as it is appropriate if we want this function to **allow `item1` and `item2` to have different types (if both types implement `Summary`)**
+                    * `pub fn notify(item1: &impl Summary, item2: &impl Summary) {`
+                * Use **Trait Bounds** instead to **force both parameters to have the same type**, since the generic type `T` constrains that they must be the same type 
+                    * `pub fn notify<T: Summary>(item1: &T, item2: &T) {`
+            * Example: 
+                * Return types that Implement Traits.
+                    * Use `impl Trait syntax` in the return position to return a value of some type that implements a trait. This is especially useful in the context of **Closures and Iterators**.
+                    ```rust
+                    fn returns_summarizable() -> impl Summary {
+                        Tweet {
+                            username: String::from("blah"),
+                        }
+                    }
+                    ```
 
         * **Blanket Implementations**
             * Implementations of a Trait on any type that satisfies the Trait Bounds. See https://github.com/rust-lang/book/blob/master/2018-edition/src/ch10-02-traits.md
@@ -1752,6 +1807,7 @@ top-level modules.
                 }
                 ```
         * Note: More information about [`next()`](https://doc.rust-lang.org/std/iter/trait.Iterator.html#tymethod.next)
+
     * **Lifetime Elision Rules**
         * Specific cases that the Rust Compiler considers, and if your code fits one of the cases then you do not need to write "lifetime" annotations explicitly, since "inference" may be in-built.
         Due to these rules we often do not have to use lifetime annotations in method signatures often.

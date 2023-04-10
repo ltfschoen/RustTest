@@ -48,8 +48,14 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
     * [X] 6.3
   * [X] Chapters 7
   * [X] Chapters 8
-  * [ ] Chapters 9
-  * [ ] Chapters 10
+  * [X] Chapters 9
+    * [X] 9.1
+    * [X] 9.2
+    * [X] 9.3
+  * [X] Chapters 10
+    * [X] 10.1
+    * [X] 10.2
+    * [X] 10.3
   * [ ] Chapters 11
   * [ ] Chapters 13
   * [ ] Chapters 19
