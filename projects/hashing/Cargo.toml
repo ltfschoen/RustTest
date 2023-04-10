@@ -1,0 +1,9 @@
+[package]
+name = "hashing"
+version = "0.1.0"
+authors = ["Luke Schoen <ltfschoen@gmail.com>"]
+edition = '2021'
+
+[dependencies]
+rand = "0.8.5"
+rand_core = "0.6.4"

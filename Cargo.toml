@@ -14,6 +14,7 @@ members = [
 	"projects/find_word",
 	"projects/generics",
 	"projects/guessing_game",
+	"projects/hashing",
 	"projects/languages",
 	"projects/lifetimes",
 	"projects/shapes",

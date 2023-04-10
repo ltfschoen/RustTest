@@ -47,7 +47,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
     * [X] 6.2
     * [X] 6.3
   * [X] Chapters 7
-  * [ ] Chapters 8
+  * [X] Chapters 8
   * [ ] Chapters 9
   * [ ] Chapters 10
   * [ ] Chapters 11
@@ -60,6 +60,10 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * N/A [The Rust Programming Language Book 2018 Edition (Second Edition deprecated)](https://github.com/rust-lang/book/blob/master/2018-edition)
 * [ ] [The Cargo Book](https://doc.rust-lang.org/cargo/)
 * [ ] [Rustlings](https://github.com/rust-lang/rustlings)
+* [ ] [Rust and WebAssembly Book](https://rustwasm.github.io/book/)
+* [ ] [Rust Course - Udemy](https://www.udemy.com/course/ultimate-rust-crash-course/)
+* [ ] [Rust Course - Educative.io](https://www.educative.io/courses/ultimate-guide-to-rust-programming)
+* [ ] [Rust Course - ZTM](https://zerotomastery.io/courses/learn-rust/)
 * [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
 * [ ] Create Examples showing "immutability", "orthogonality" and "idempotence" trait importance
 * [ ] Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
