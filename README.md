@@ -58,6 +58,10 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
     * [X] 10.3
   * [ ] Chapters 11
   * [ ] Chapters 13
+    * [X] 13.1
+    * [ ] 13.2
+    * [ ] 13.3
+    * [ ] 13.4
   * [ ] Chapters 19
 * [ ] Setup rustfmt/clippy
 * [ ] Fix ./projects/privacy
@@ -183,7 +187,7 @@ Key Terminology of the Rust language and ecosystem:
     - Builds test runner binary to run functions annotated with
     the `test` attribute
     ```
-    cargo test
+    cargo test -- --nocapture
     ```
 
 * **Benchmark Production Release with Tests**
@@ -237,6 +241,7 @@ Key Terminology of the Rust language and ecosystem:
 its usage by including the derive annotation attribute `#[derive(Debug)]` before the Struct definition (e.g. `println!("{}")` macro) since 
 Use `{:#?}` for better readability.
 * Alternative to print values using `Debug` format is using `dbg!` macro that prints to standard error console `stderr` and takes ownership of the expression and includes the line number, resultant value, and returns ownership of the value.
+* Show debugging logs when running tests with `cargo test -- --nocapture`
 
 ### Debugging with Visual Studio Code
 

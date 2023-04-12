@@ -1,37 +1,13 @@
-#[derive(Debug, PartialEq, Copy, Clone)]
-enum ShirtColor {
-    Red,
-    Blue,
-}
+use std::error::Error;
 
-struct Inventory {
-    shirts: Vec<ShirtColor>,
-}
+/* Import closures library crate into scope
+ */
+extern crate closures;
 
-impl Inventory {
-    fn giveaway(&self, user_preference: Option<ShirtColor>) -> ShirtColor {
-        user_preference.unwrap_or_else(|| self.most_stocked())
-    }
+use closures::{Inventory, ShirtColor};
+use closures::play;
 
-    fn most_stocked(&self) -> ShirtColor {
-        let mut num_red = 0;
-        let mut num_blue = 0;
-
-        for color in &self.shirts {
-            match color {
-                ShirtColor::Red => num_red += 1,
-                ShirtColor::Blue => num_blue += 1,
-            }
-        }
-        if num_red > num_blue {
-            ShirtColor::Red
-        } else {
-            ShirtColor::Blue
-        }
-    }
-}
-
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     let store = Inventory {
         shirts: vec![ShirtColor::Blue, ShirtColor::Red, ShirtColor::Blue],
     };
@@ -49,4 +25,7 @@ fn main() {
         "The user with preference {:?} gets {:?}",
         user_pref2, giveaway2
     );
+
+    play::play::play();
+    Ok(())
 }
