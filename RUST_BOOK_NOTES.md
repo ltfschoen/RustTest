@@ -21,6 +21,8 @@
     * [Errors](#chapter-e6d169)
     * [Generic Types, Traits, Lifetimes](#chapter-576c5a)
     * [Testing](#chapter-26543f)
+    * [Closures](#chapter-98e300)
+    * [Iterators](#chapter-98e400)
     * [Threads](#chapter-98e538)
     * [Channels](#chapter-a9f98d)
     * [Comments](#chapter-688de0)
@@ -1879,6 +1881,108 @@ top-level modules.
         ```
 
     * Examples: [guessing_game](./projects/guessing_game/src/main.rs)
+
+## Closures <a id="chapter-98e300"></a>
+
+* Closures captures environment values by doing the following for use in function body:
+    * **borrowing immutably**
+    * **borrowing mutably**
+    * **taking ownership** by using the `move` keyword (i.e. passing a closure as an argument to a new thread to move the data ownership to it). after a closure takes ownership no other borrows are allowed
+* Closures capture and handle values from the environment, and are affected by which traits the closure implements.
+* Traits are how Functions and Structs can _specify what kinds of closures_ they can use. `Fn` traits may be specified as trait bounds, for example if `FnOnce` is used it specifies that the closure must be able to be called at most once.
+* Closures will automatically implement one, two, or all three of these `Fn` traits, in an additive fashion, depending on how the closure’s body handles the values.
+    * `FnOnce` closures:
+        * can be called only once.
+        * All closures implement at least this trait (since all closures are callable)
+        * A closure that moves captured values out of its body will **only** implement `FnOnce` and none of the other `Fn` traits.
+        * note: to count how many times the function is called capture a mutable reference.
+        * e.g. `unwrap_or_else`
+
+    * `FnMut` closures: 
+        * can be called more than once
+        * don’t move captured values out of their body,
+        * might mutate the captured values.
+        * e.g. `sort_by_key` from std library calls the closure multiple times. once for each item in a slice for each struct instance that is being sorted by their keys
+
+    * `Fn` closures:
+        * can be called more than once without mutating their environment (important in cases such as calling a closure multiple times concurrently)
+        * don’t move captured values out of their body
+        * don’t mutate captured values
+        * closures that capture nothing from their environment
+* Examples in to projects/closures
+
+## Iterators <a id="chapter-98e400"></a>
+
+* Reference: https://doc.rust-lang.org/book/ch13-02-iterators.html
+* Iterators may perform a task on different sequences of items, but Rust iterators are **lazy**, as they only have effect once you call methods that consume the iterator
+* Steps:
+    * **Create** an iterator and assign to variable (e.g. over `Vec` with `.iter()`)
+        * `iter` method produces iterator over **immutable references**
+        * `into_iter` method **takes ownership** and returns owned values
+        * `into_mut` method allows iterating over **mutable references**
+    * **Use** iterator to iterate over each element in its array with a `for` loop _or_ using `next`
+        * **Consuming Adapter** methods call `next` to use the iterator
+            * `sum` **takes ownership**  of iterator and iterators items repeatedly calling `next` and adding them to a total that is returned when complete
+            * `collect` to consume the iterator adaptor (i.e. `map`)
+        * **Iterator Adapter** methods defined on `Iterator` trait don't consume it, instead they produce different iterators by changing aspects of the original iterator.
+            * `map` method takes a closure (specifying any operation to perform on each item) to call on each item during iteration and returns a new iterator that produces modified items.
+                * Use `collect` to consume the iterator so it runs and collect the resulting values into a collection data type
+            * Note: Iterator adapters take closures as arguments, that may **capture their environment**
+                * Use `filter` method to take a closure, which gets an item from the iterator and returns a boolean (if true the value is included in the iteration)
+* Iterators implement the `Iterator` trait from the Rust Standard Library. Inspecting its definition, it requires that you define an `Item` type that is returned wrapped in a `Some` from its `next` method that may be called directly, then returns `None` when its finished.
+* Note: Chain multiple calls to iterator adaptors to perform complex operations. Always also call a consuming adaptor method (since iterators are lazy) to get results from calling the iterator adaptor
+
+* Refer to projects/unsorted
+
+```rust
+#[test]
+fn iterator_demo_1_without_next() {
+    let v1 = vec![1, 2];
+    // must be mutable. calling `next` on iterator changes its internal state.
+    // updates where it is in sequence.
+    // not necessary for this to be mutable since `for` loop takes ownership and
+    // makes it mutable behind the scenes
+    let v1_iter = v1.iter();
+    for val in v1_iter {
+        println!("Value: {}", val);
+    }
+}
+```
+
+```rust
+#[test]
+// with `next` method
+fn iterator_demo_2_with_next() {
+    let v1 = vec![1, 2];
+    // must be mutable. calling `next` on iterator changes its internal state.
+    // updates where it is in sequence
+    let mut v1_iter = v1.iter();
+    assert_eq!(v1_iter.next(), Some(&1)); // immutable reference to value in the vector
+    assert_eq!(v1_iter.next(), Some(&2));
+    assert_eq!(v1_iter.next(), None);
+}
+```
+
+```rust
+#[test]
+fn iterator_sum() {
+    let v1 = vec![1, 2];
+    let v1_iter = v1.iter();
+    let total: i32 = v1_iter.sum(); // `sum` is consuming adapter of iterator
+    assert_eq!(total, 3);
+}
+```
+
+```rust
+#[test]
+fn iterator_map() {
+    let v1: Vec<i32> = vec![1, 2];
+    // consume the iterator with `collect`
+    let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
+    assert_eq!(v2, vec![2, 3]);
+}
+```
+
 
 ## Threads <a id="chapter-98e538"></a>
 

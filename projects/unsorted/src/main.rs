@@ -1312,7 +1312,7 @@ fn try_iterators() {
 
     // num is of Type &i32 (a Reference to an i32) as we explicitly requested a Reference with &
     // so we are just Borrowing a Reference to the Data (just Pass-By-Reference without a Move)
-    // rather than dealing with the Data itself, being its Owner, andhaving to make a Copy of it.
+    // rather than dealing with the Data itself, being its Owner, and having to make a Copy of it.
     // println! handles Dereferencing automatically so prefixing with * is optional
     for num in &nums {
         // println!("{}", num); OK too
@@ -1427,7 +1427,7 @@ fn try_iterators() {
     // New Iterator where the Closure given as an argument to map() is
     // called on each Element Reference. Since Iterator Adapters are Lazy the
     // Closure below would never execute. Using println!("{}", x) instead of x + 1 will
-    // not print any numbers. Instead use a 'for'
+    // not print any numbers. Instead use a 'for' loop, or use `.collect()` at the end.
     (1..100).map(|x| x + 1);
 
     // 'for' is used to execute a Closure on an Iterator for its Side-Effects
@@ -1446,7 +1446,7 @@ fn try_iterators() {
 
     // (prints all even numbers b/w 1 and 100)
     // filter() does Not Consume elements it Iterates over, it is passed a reference to
-    // each element through the filter() predicate (using &x patter to extract the
+    // each element through the filter() predicate (using &x pattern to extract the
     // integer value itself)
     for i in (1..30).filter(|&x| x % 7 == 0) {
         println!("Modulus of 7 between 1 and 30 is: {}", i);

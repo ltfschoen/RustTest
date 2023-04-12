@@ -5,6 +5,7 @@ cargo build --manifest-path ./projects/find_word/Cargo.toml
 cargo build --manifest-path ./projects/generics/Cargo.toml
 cargo build --manifest-path ./projects/guessing_game/Cargo.toml
 cargo build --manifest-path ./projects/hashing/Cargo.toml
+cargo build --manifest-path ./projects/iterators/Cargo.toml
 cargo build --manifest-path ./projects/languages/Cargo.toml
 cargo build --manifest-path ./projects/lifetimes/Cargo.toml
 # cargo build --manifest-path ./projects/privacy/Cargo.toml

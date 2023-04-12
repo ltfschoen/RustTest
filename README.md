@@ -59,7 +59,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
   * [ ] Chapters 11
   * [ ] Chapters 13
     * [X] 13.1
-    * [ ] 13.2
+    * [X] 13.2
     * [ ] 13.3
     * [ ] 13.4
   * [ ] Chapters 19
