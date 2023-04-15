@@ -63,6 +63,12 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
     * [ ] 13.3
     * [ ] 13.4
   * [ ] Chapters 19
+    * [X] 19.1 Unsafe Rust
+    * [ ] 19.2
+    * [ ] 19.3
+    * [ ] 19.4
+    * [ ] 19.5 Macros
+      * [ ] [Macro's Reference Docs](http://doc.rust-lang.org/reference.html#macros)
 * [ ] Setup rustfmt/clippy
 * [ ] Fix ./projects/privacy
 * [ ] Fix ./projects/users
@@ -71,6 +77,9 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [ ] [The Cargo Book](https://doc.rust-lang.org/cargo/)
 * [ ] [Rustlings](https://github.com/rust-lang/rustlings)
 * [ ] [Rust and WebAssembly Book](https://rustwasm.github.io/book/)
+* [ ] [The Rust Reference](http://doc.rust-lang.org/reference.html)
+* [ ] [Rustonomicon (Advanced Rust)](https://doc.rust-lang.org/stable/nomicon/README.html)
+* [ ] [Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook/intro.html)
 * [ ] [Rust Course - Udemy](https://www.udemy.com/course/ultimate-rust-crash-course/)
 * [ ] [Rust Course - Educative.io](https://www.educative.io/courses/ultimate-guide-to-rust-programming)
 * [ ] [Rust Course - ZTM](https://zerotomastery.io/courses/learn-rust/)
@@ -78,14 +87,10 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [ ] Create Examples showing "immutability", "orthogonality" and "idempotence" trait importance
 * [ ] Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
 * [ ] Try different [Iterators in std::iter Module](http://doc.rust-lang.org/std/iter/)
-* [ ] Read [Macro's Reference Docs](http://doc.rust-lang.org/reference.html#macros)
-* [ ] Read [Advanced Macros](http://doc.rust-lang.org/book/advanced-macros.html)
 * [ ] Read [Macros Repetition - Macro-by-Example](http://www.cs.indiana.edu/ftp/techreports/TR206.pdf)
 * [ ] Read [Hygienic Macro System](http://en.wikipedia.org/wiki/Hygienic_macro)
 * [ ] Fix [Rust Documentation](http://doc.rust-lang.org/book/documentation.html)
   - Only documentation for the Library is being generated, not the Binary
-* [ ] Read [The Rust Reference](http://doc.rust-lang.org/reference.html)
-* [ ] Read [Rustonomicon (Advanced Rust)](https://doc.rust-lang.org/stable/nomicon/README.html)
 * [ ] [Exercises with HashMaps](https://github.com/rust-lang/book/blob/master/2018-edition/src/ch08-03-hash-maps.md)
 
 ## Glossary <a id="glossary"></a>

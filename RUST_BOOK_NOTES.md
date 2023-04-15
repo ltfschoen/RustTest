@@ -26,6 +26,7 @@
     * [Threads](#chapter-98e538)
     * [Channels](#chapter-a9f98d)
     * [Comments](#chapter-688de0)
+    * [Unsafe Rust](#chapter-688dee)
 
 Note: Generate a new chapter with `openssl rand -hex 3`
 
@@ -2112,3 +2113,208 @@ fn iterator_map() {
 * Module comments `!//`
 * Comments `//`
 * `#` is part of the Docsets
+
+## Unsafe Rust <a id="chapter-688dee"></a>
+        
+* Benefits
+    * Allows low-level systems programming to directly interact with OS or write your own OS
+    * Possibility to achieve greater performance
+    * Interface with other languages or hardware where Rust guarantes do not apply
+
+* Use Cases:
+    * **raw pointers** to interface with C code
+    * **raw pointers** in building Safe abstractions that use `unsafe` code that the borrow checker doesn't understand.
+
+* Risks
+    * Allows null pointer dereferencing in runtime since no memory safety guarantees enforced at compile time
+
+* Note:
+    * **Safe** Rust has assurance from compiler that references always valid
+
+* Usage
+    * Write `unsafe` then start a block with unsafe code. This enables the following features but they are not checked by the compiler for memory safety. But it doesn't turn off Rust safety checks like the borrow checker. Errors related to memory safety are then contained to that block.
+        * Features
+            1. Dereference a raw pointer (developer must access memory in valid ways)
+                * Includes **raw pointers** (similar to "references" in Safe Rust, but also different to smart pointers) where the asterisk is part of the type name, not a dereferencing operator:
+                    * Immutable raw pointer `*const T` (pointer cannot be directly assigned to after being dereferenced) or;
+                    * Mutable raw pointer `*mut T` .
+                    * Example
+                        ```rust
+                        // given a reference that is guaranteed to be valid
+                        // we know that the raw pointers created from them are valid too
+                        let mut num = 5;
+
+
+                        // note: below create **raw pointers** instead of references for it to compile, because Rust ownership rules do not allow a mutable reference and any immutable references at the same time.
+
+                        // risk: **raw pointers** allow creation of mutable pointers to
+                        // the same location, and allow changing data through a mutable
+                        // pointer than may create a data race.
+
+                        // create immutable raw pointer, casting from immutable reference
+                        let r1 = &num as *const i32;
+                        // create mutable raw pointer, casting from mutable reference
+                        let r2 = &mut num as *mut i32;
+
+                        // unsafe block required to dereference raw pointers and read the data they point to
+                        unsafe {
+                            println!("r1 is: {}", *r1);
+                            println!("r2 is: {}", *r2);
+                        }
+                        ```
+                * Note:
+                    * **raw pointers** can by used in Safe code, but we cannot dereference raw pointers or read the data being pointed to in Safe code. We can only do that in an `unsafe` block. 
+                    * Features of **raw pointers**. They opt out of having Rust enforce these guarantees:
+                        * Allowed ignoring borrowing rules by having both immutable and mutable pointers or multiple mutable pointers to the same location
+                        * No guarantee they point to valid memory
+                        * Allowed to be null
+                        * No implementation of any automatic cleanup
+            2. Call an `unsafe` Function/Method
+                * Example
+                    ```rust
+                    // `unsafe` function
+                    unsafe fn dangerous() {
+                        // todo: add unsafe operations
+                    }
+
+                    unsafe {
+                        // call from an `unsafe` block
+                        dangerous();
+                    }
+                    ```
+                2.1 Wrap Unsafe Code in a Safe Abstraction
+                    * Isolate `unsafe` code by enclosing it in safe abstractions with a safe API
+                    * Example 1a. Safe Rust (compiler error)
+                        ```rust
+                        fn split_at_mut(values: &mut [i32], mid: usize)
+                            -> (&mut [i32], &mut [i32]) {
+                            let len = values.len();
+
+                            assert!(mid <= len);
+
+                            (&mut values[..mid], &mut values[mid..])
+                        }
+                        ```
+                    * Example 1b. Unsafe Rust (compiles ok). Callable from Safe Rust
+                        * Note: Slice is a pointer to data and length of the slice
+                        ```rust
+                        use std::slice;
+
+                        fn split_at_mut(values: &mut [i32], mid: usize)
+                            -> (&mut [i32], &mut [i32]) {
+                            let len = values.len();
+                            // access raw pointer of the mutable slice
+                            // returns a raw pointer of type `*mut i32`
+                            let ptr = values.as_mut_ptr();
+
+                            assert!(mid <= len);
+
+                            // unsafe block, a raw pointer, calls to unsafe functions.
+                            // but since we've added the assertion above, all the below
+                            // raw pointers will be valid pointers to data in the slice
+                            // since we own the memory in the slide locations.
+                            unsafe {
+                                (
+                                    // unsafe function since takes raw pointer and 
+                                    // trust it is valid
+                                    slice::from_raw_parts_mut(ptr, mid),
+                                    // the `.add` method on raw pointers is unsafe
+                                    // since must trust offset location is valid pointer
+                                    slice::from_raw_parts_mut(ptr.add(mid), len - mid),
+                                )
+                            }
+                        }
+                        ```
+                    * Note: Safe Rust borrow checker returns an error that we cannot mutably borrow from the same slice multiple times, even though
+                    borrowing different parts of a slice is fundamentally ok, but Rust is not smart enough to know. In this case when we know the code is actually ok, we should use `unsafe` Rust
+                2.2 Call External code using `extern` function
+                    * Interact with code from different language using `extern`
+                    * Creates and uses a Foreign Function Interface (FFI) that defines functions and enables a foreign language to call those functions
+                    * `unsafe` block used for FFI since other languages do not enforce Rust rules and guarantees, so developer responsible for ensuring safety. 
+                        ```rust
+                        // list names and signatures of external functions of
+                        // another language we want to call.
+                        // where "C" defines the ABI the external function uses
+                        // and may be called at the assembly level.
+                        // the "C" ABI follows the C programming language ABI.
+                        extern "C" {
+                            fn abs(input: i32) -> i32;
+                        }
+
+                        fn main() {
+                            unsafe {
+                                println!("Absolute value of -3 according to C: {}", abs(-3));
+                            }
+                        }
+                        ```
+                2.3 Call Rust from other languages
+                    *
+                        ```rust
+                        #[no_mangle]
+                        // make `call_from_c` function accessible from C code
+                        pub extern "C" fn call_from_c() {
+                            println!("Just called a Rust function from C!");
+                        }
+                        ```
+            3. Access or modify a mutable **static variable** (aka global variable)
+                * **global variables** (aka **static variables** in Rust) may be problematic with Rust ownership rules if two threads are accessing the same mutable global variable it may cause a data race.
+                    * Accessing an immutable **static variable** is safe
+                    * Preferable to instead us concurrency techniques and thread-safe smart pointers so compiler checks data is accessed safely from different threads
+                    * Difference between **constants** and **immutable static variables** is that:
+                         * **static variable** values have a fixed address in memory. Using the value will always access the same data.
+                         * **static variables** can be mutable (i.e. mutable **static variables**). Accessing and modifying mutable **static variables** is `unsafe`
+                         ```rust
+                         // compiles since single threaded.
+                         // risk of data race if changed to be multi-threaded
+
+                         // mutable data that is globally accessible
+                         static mut COUNTER: u32 = 0;
+
+                        fn add_to_count(inc: u32) {
+                            // read/write with **static variable** using `unsafe` block
+                            unsafe {
+                                COUNTER += inc;
+                            }
+                        }
+
+                        fn main() {
+                            add_to_count(3);
+
+                            unsafe {
+                                println!("COUNTER: {}", COUNTER);
+                            }
+                        }
+                         ```
+                    * **constants** are allowed to duplicate their data when they are used
+                    * Note: **static variables** can only store references with the `'static` lifetime, so Rust compiler can figure out the lifetime and explicit annotation is not required.
+                    ```rust
+                    static HELLO_WORLD: &str = "Hello, world!";
+
+                    fn main() {
+                        println!("name is: {}", HELLO_WORLD);
+                    }
+                    ```
+            4. Implement an unsafe trait
+                * Trait is `unsafe` when at least one method has an invariant the compiler cannot verify
+                * When using `unsafe impl` we must uphold the invariants the compiler cannot verify.
+                * Example: If you implement a type that contains a type that is _not_ `Send` or `Sync` like **raw pointers** then you must use `unsafe` to mark the type as `Send` or `Sync`, since you need to manually verify that the type upholds the guarantees that it can be safely sent across threads or accessed from multiple threads.
+                    * If your types a entirely composed of `Send` and `Sync` types, then the compiler will _automatically_ implement the `Send` and `Sync` market traits.
+                ```rust
+                // define `unsafe` trait
+                unsafe trait Foo {
+                    // methods go here
+                }
+
+                // implement `unsafe` trait
+                unsafe impl Foo for i32 {
+                    // method implementations go here
+                }
+
+                fn main() {}
+                ```
+            5. Access fields of unions
+                * Reference: https://doc.rust-lang.org/reference/items/unions.html
+                * **union** is similar to a `struct`, but where only one declared field is used in a particular instance at one time
+                * Unions are primarily used to interface with unions in C code. * Accessing union fields is `unsafe` because Rust cannot guarantee the type of the data currently being stored in the union instance
+
+   
