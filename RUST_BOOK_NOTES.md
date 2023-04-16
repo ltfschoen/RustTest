@@ -1789,11 +1789,33 @@ top-level modules.
                 }
                 ```
         * **Newtype Pattern**
-            * See below
+            * Reference: https://doc.rust-lang.org/book/ch19-03-advanced-traits.html#using-the-newtype-pattern-to-implement-external-traits-on-external-types
+            * Recall the **Orphan Rule** restrictions _"we’re only allowed to implement a trait on a type (i.e. a trait on a struct) if either the trait or the type are local to our crate"_ (e.g. cannot implement `Display` on `Vec<T>`).
+                * However, using the **Newtype Pattern** we can get around this restriction, by creating a new type in a tuple struct with one field that is a "wrapper type" (wrapper around the type we want to implement a trait for that is local to our crate).
+            * Example 1: Wrapper type around type `Vec<String>` that we want to implement the trait `<Display>` for.
+                * Disadvantage: Since `Wrapper` is a new type, so it doesn't have the methods of the value it's holding (i.e. `Vec<T>`). So we would have to implement all the methods of `Vec<T>` directly on `Wrapper` such that the methods delegate to `self.0`, which would allow us to treat `Wrapper` exactly like a `Vec<T>`. If we wanted the new type to have every method the inner type has, implementing the `Deref` trait (discussed in Chapter 15 in the “Treating Smart Pointers Like Regular References with the Deref Trait” section) on the `Wrapper` to return the inner type would be a solution. If we don't want the Wrapper type to have all the methods of the inner type—for example, to restrict the `Wrapper` type's behavior—we would have to implement just the methods we do want manually.
+
+                ```rust
+                use std::fmt;
+
+                struct Wrapper(Vec<String>);
+
+                impl fmt::Display for Wrapper {
+                    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+                        write!(f, "[{}]", self.0.join(", "))
+                    }
+                }
+
+                fn main() {
+                    let w = Wrapper(vec![String::from("hello"), String::from("world")]);
+                    println!("w = {}", w);
+                }
+                ```
+            * Example 2:
                 ```rust
                 use std::ops::Add;
 
-                // Wrap existing type `
+                // Wrap existing type
                 struct Millimeters(u32);
                 struct Meters(u32);
 
@@ -1811,6 +1833,10 @@ top-level modules.
                 ```rust
                 <Type as Trait>::function(receiver_if_method, next_arg, ...);
                 ```
+
+        * **Supertraits** (require a trait functionality in another trait)
+            * Reference: https://doc.rust-lang.org/book/ch19-03-advanced-traits.html#using-supertraits-to-require-one-traits-functionality-within-another-trait
+            * Example: Refer to projects/traits_fly
 
     * Setup Steps
         * Trait combined with a Generic Type to constrain it to only types with a specific behaviour

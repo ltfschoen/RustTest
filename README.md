@@ -64,7 +64,7 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
     * [ ] 13.4
   * [ ] Chapters 19
     * [X] 19.1 Unsafe Rust
-    * [ ] 19.2
+    * [X] 19.2 Advanced Traits
     * [ ] 19.3
     * [ ] 19.4
     * [ ] 19.5 Macros
