@@ -88,6 +88,15 @@
       "terminal": "integrated"
     },
     {
+      "name": "LLDB Debug - Program - Traits Fly",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/target/debug/traits_fly",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
+    },
+    {
       "name": "LLDB Debug - Program - Hashing",
       "type": "lldb",
       "request": "launch",

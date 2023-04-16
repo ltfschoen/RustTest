@@ -2368,6 +2368,10 @@ name = "traits"
 version = "0.1.0"
 
 [[package]]
+name = "traits_fly"
+version = "0.1.0"
+
+[[package]]
 name = "traits_shapes"
 version = "0.1.0"
 

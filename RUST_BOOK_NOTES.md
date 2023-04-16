@@ -1633,6 +1633,7 @@ top-level modules.
 
         * Generic Structs
             * Multiple Generic Type Parameters to allow multiple different types as parameters
+            * Default concrete type for the generic type `<PlaceholderType=ConcreteType>`
 
             * Examples: [generics - function_definition](./projects/generics/src/examples/struct_definitions.rs).
 
@@ -1659,7 +1660,7 @@ top-level modules.
 
     * Definition: 
         * Define **Generic Behaviour that may be Shared between different Types**, where the 
-        **Type's Behaviour** comprises the Methods we may call on that Type
+        * **Type's Behaviour** comprises the Methods we may call on that Type
         * Traits are similar to **"Interfaces"** in other languages
         * **Trait Definitions** group the Type's Method Signatures together to define a set of the Type's Behaviours 
         * Traits inform the Rust compiler about a specific Type's Functionality to: 
@@ -1745,6 +1746,72 @@ top-level modules.
         * **Coherence / Orphan Rule**
             * Where the Parent Type is not present there is a Restriction to ensure your code is not broken by another person's code. It's a rule that prevents two crates implementing the same Trait for the same Type where Rust wouldn't know which implementation to use. See https://github.com/rust-lang/book/blob/master/2018-edition/src/ch10-02-traits.md
 
+        * **Operator Overloading & Default Type Parameters**
+            * Overload operations and traits listed in `std::ops` by implementing traits associated with the operator.
+            * Usage of Default **Generic Type Parameter** of a trait:
+                * Extend a type without breaking existing code
+                * Customize specific cases most users do not need (below example)
+            * e.g. Customizing behaviour of an operator (e.g. `+`)
+                ```rust
+                // generic type parameter `Rhs` in `Add` trait has default value `Self`
+                trait Add<Rhs=Self> {
+                    type Output;
+
+                    fn add(self, rhs: Rhs) -> Self::Output;
+                }
+                ```
+
+                ```rust
+                use std::ops::Add;
+
+                #[derive(Debug, Copy, Clone, PartialEq)]
+                struct Point {
+                    x: i32,
+                    y: i32,
+                }
+
+                impl Add for Point {
+                    type Output = Point;
+
+                    fn add(self, other: Point) -> Point {
+                        Point {
+                            x: self.x + other.x,
+                            y: self.y + other.y,
+                        }
+                    }
+                }
+
+                fn main() {
+                    assert_eq!(
+                        Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
+                        Point { x: 3, y: 3 }
+                    );
+                }
+                ```
+        * **Newtype Pattern**
+            * See below
+                ```rust
+                use std::ops::Add;
+
+                // Wrap existing type `
+                struct Millimeters(u32);
+                struct Meters(u32);
+
+                // set value of `Rhs` type parameter to be `Meters` instead of default `Self`
+                impl Add<Meters> for Millimeters {
+                    type Output = Millimeters;
+
+                    fn add(self, other: Meters) -> Millimeters {
+                        Millimeters(self.0 + (other.0 * 1000))
+                    }
+                }
+                ```
+        * **Fully Qualified Syntax for Disambiguating Method Calls**
+            * Example: https://doc.rust-lang.org/book/ch19-03-advanced-traits.html#fully-qualified-syntax-for-disambiguation-calling-methods-with-the-same-name
+                ```rust
+                <Type as Trait>::function(receiver_if_method, next_arg, ...);
+                ```
+
     * Setup Steps
         * Trait combined with a Generic Type to constrain it to only types with a specific behaviour
         * When declaring a Trait with `trait`, instead of providing an implementation block after the Method Signature, we just use a semicolon, like an **"Interface"**. Each Type implementing this Trait must provide its own custom behavior for the Method Body. The compiler will enforce that any Type that has the Trait will have the exact Method Signature we defined.
@@ -1754,6 +1821,29 @@ top-level modules.
 
     * Examples: [traits - main.rs](./projects/traits/src/lib.rs)
 
+    * **Associated Types**
+        * Reference: https://doc.rust-lang.org/book/ch19-03-advanced-traits.html#specifying-placeholder-types-in-trait-definitions-with-associated-types
+        * Differs from Generics because you cannot implement a trait on a type multiple times, we can only choose the type for `Item`` once, since there may only be one `impl Iterator for Counter`, so we do not have to provide type annotations to indicate which implementation to use.
+        * Example: Definition of `Iterator` trait
+            ```rust
+            pub trait Iterator {
+                // trait **type placeholder** for use in method definition signatures.
+                // implementor of trait specifies the concrete type to be used (i.e. `u32`).
+                // e.g. the type `Item` is a placeholder. it stands in for the type of the values the type implementing the `Iterator` trait is iterating over
+                type Item;
+
+                fn next(&mut self) -> Option<Self::Item>;
+            }
+            ```
+        * Example: Implementation of `Iterator` trait
+            ```rust
+            impl Iterator for Counter {
+                // specifies `Item` type as `u32`
+                type Item = u32;
+
+                fn next(&mut self) -> Option<Self::Item> {
+                    // --snip--
+            ```
 
 * **Lifetimes**
 

@@ -22,5 +22,6 @@ members = [
 	"projects/shapes",
     "projects/sharding",
 	"projects/traits",
+	"projects/traits_fly",
 	"projects/traits_shapes",
 ]
