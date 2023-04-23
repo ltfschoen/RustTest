@@ -1759,7 +1759,7 @@ fn try_macros() {
         // however the matching occurs on Rust syntax trees compile-time.
         // Format: 
         // (  <matcher>:<identifier> ) => { <expanded_syntax_block_w_multiple_statements>
-            // Special Matcher Syntax - given below (i.e. $x:expr) matches any Rust expression binding that syntax tree 
+            // Special Matcher Syntax - given below (i.e. $x:expr) matches any Rust expression, binding that syntax tree 
             // to Metavariable $x
             // Metavariable - $x 
             // (each Metavariable must be under at least as many $(...)* as it was matched against)

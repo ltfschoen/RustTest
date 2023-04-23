@@ -80,9 +80,11 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [ ] [The Rust Reference](http://doc.rust-lang.org/reference.html)
 * [ ] [Rustonomicon (Advanced Rust)](https://doc.rust-lang.org/stable/nomicon/README.html)
 * [ ] [Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook/intro.html)
+* [ ] [Rust Unofficial](https://rust-unofficial.github.io/patterns/intro.html)
 * [ ] [Rust Course - Udemy](https://www.udemy.com/course/ultimate-rust-crash-course/)
 * [ ] [Rust Course - Educative.io](https://www.educative.io/courses/ultimate-guide-to-rust-programming)
 * [ ] [Rust Course - ZTM](https://zerotomastery.io/courses/learn-rust/)
+* [ ] [Rust Cheatsheet - ZTM](https://zerotomastery.io/cheatsheets/rust-cheat-sheet/)
 * [x] Read [Ownership, Meta, Borrowing, Lifetimes, Shared Ownership](http://doc.rust-lang.org/book/ownership.html)
 * [ ] Create Examples showing "immutability", "orthogonality" and "idempotence" trait importance
 * [ ] Read [Cyclone Regions](http://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf)
@@ -92,6 +94,9 @@ Applied code using the book [The Rust Programming Language](http://doc.rust-lang
 * [ ] Fix [Rust Documentation](http://doc.rust-lang.org/book/documentation.html)
   - Only documentation for the Library is being generated, not the Binary
 * [ ] [Exercises with HashMaps](https://github.com/rust-lang/book/blob/master/2018-edition/src/ch08-03-hash-maps.md)
+* [ ] Testing
+  * [ ] [TryBuild](https://docs.rs/trybuild/latest/trybuild/)
+    * Use to test for a compilation failure with the most control, such as calling a function that returns error `mismatched types`. Alternative is to use a [doctest marked `compile_fail`](https://doc.rust-lang.org/rustdoc/write-documentation/documentation-tests.html#attributes)
 
 ## Glossary <a id="glossary"></a>
 
