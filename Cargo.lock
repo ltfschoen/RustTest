@@ -154,10 +154,22 @@ version = "0.20.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7774144344a4faa177370406a7ff5f1da24303817368584c6206c8303eb07848"
 dependencies = [
- "funty",
- "radium",
+ "funty 1.1.0",
+ "radium 0.6.2",
  "tap",
- "wyz",
+ "wyz 0.2.0",
+]
+
+[[package]]
+name = "bitvec"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1bc2832c24239b0141d5674bb9174f9d68a8b5b3f2753311927c172ca46f7e9c"
+dependencies = [
+ "funty 2.0.0",
+ "radium 0.7.0",
+ "tap",
+ "wyz 0.5.1",
 ]
 
 [[package]]
@@ -223,6 +235,22 @@ name = "byteorder"
 version = "1.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
+
+[[package]]
+name = "bytes"
+version = "0.4.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "206fdffcfa2df7cbe15601ef46c813fce0965eb3286db6b56c583b814b51c81c"
+dependencies = [
+ "byteorder",
+ "iovec",
+]
+
+[[package]]
+name = "bytes"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "89b2fd2a0dcf38d7971e2194b6b6eebab45ae01067456a7fd93d5547a61b70be"
 
 [[package]]
 name = "cc"
@@ -511,7 +539,7 @@ version = "0.1.0"
 dependencies = [
  "hex",
  "hex-literal",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "scale-info",
  "serde",
  "serde_json",
@@ -548,6 +576,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "ethbloom"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c22d4b5885b6aa2fe5e8b9329fb8d232bf739e434e6b87347c63bdd00c120f60"
+dependencies = [
+ "crunchy 0.2.2",
+ "fixed-hash 0.8.0",
+ "impl-rlp",
+ "impl-serde 0.4.0",
+ "tiny-keccak 2.0.2",
+]
+
+[[package]]
 name = "ethcore-bytes"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -560,12 +601,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c48729b8aea8aedb12cf4cb2e5cef439fdfe2dda4a89e47eeebd15778ef53b6"
 dependencies = [
  "crunchy 0.1.6",
- "ethbloom",
+ "ethbloom 0.5.3",
  "ethereum-types-serialize",
  "fixed-hash 0.2.5",
  "rustc_version 0.2.3",
  "serde",
  "uint 0.2.1",
+]
+
+[[package]]
+name = "ethereum-types"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "02d215cbf040552efcbe99a38372fe80ab9d00268e20012b79fcd0f073edd8ee"
+dependencies = [
+ "ethbloom 0.13.0",
+ "fixed-hash 0.8.0",
+ "impl-rlp",
+ "impl-serde 0.4.0",
+ "primitive-types 0.12.1",
+ "uint 0.9.5",
 ]
 
 [[package]]
@@ -612,6 +667,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "fixed-hash"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "835c052cb0c08c1acf6ffd71c022172e18723949c8282f2b9f27efbc51e64534"
+dependencies = [
+ "byteorder",
+ "rand 0.8.5",
+ "rustc-hex 2.1.0",
+ "static_assertions",
+]
+
+[[package]]
 name = "fuchsia-cprng"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -622,6 +689,12 @@ name = "funty"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fed34cd105917e91daa4da6b3728c47b068749d6a62c59811f06ed2ac71d9da7"
+
+[[package]]
+name = "funty"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
 name = "futures"
@@ -774,6 +847,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "hash"
+version = "0.1.0"
+dependencies = [
+ "bytes 0.4.12",
+ "ethcore-bytes",
+ "ethereum-types 0.14.1",
+ "hex",
+ "keccak-hash",
+]
+
+[[package]]
 name = "hash-db"
 version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -902,7 +986,25 @@ version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "161ebdfec3c8e3b52bf61c4f3550a1eea4f9579d10dc1b936f3171ebdcd6c443"
 dependencies = [
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
+]
+
+[[package]]
+name = "impl-codec"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba6a270039626615617f3f36d15fc827041df3b78c439da2cadfa47455a77f2f"
+dependencies = [
+ "parity-scale-codec 3.5.0",
+]
+
+[[package]]
+name = "impl-rlp"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f28220f89297a075ddc7245cd538076ee98b01f2a9c23a53a4f1105d5a322808"
+dependencies = [
+ "rlp",
 ]
 
 [[package]]
@@ -910,6 +1012,15 @@ name = "impl-serde"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4551f042f3438e64dbd6226b20527fc84a6e1fe65688b58746a2f53623f25f5c"
+dependencies = [
+ "serde",
+]
+
+[[package]]
+name = "impl-serde"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ebc88fc67028ae3db0c853baa36269d398d5f45b6982f95549ff5def78c935cd"
 dependencies = [
  "serde",
 ]
@@ -960,6 +1071,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "iovec"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b2b3ea6ff95e175473f8ffe6a7eb7c00d054240321b84c57051175fe3c1e075e"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "iterators"
 version = "0.1.0"
 
@@ -985,6 +1105,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3afef3b6eff9ce9d8ff9b3601125eec7f0c8cbac7abd14f355d053fa56c98768"
 dependencies = [
  "cpufeatures",
+]
+
+[[package]]
+name = "keccak-hash"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4b286e6b663fb926e1eeb68528e69cb70ed46c6d65871a21b2215ae8154c6d3c"
+dependencies = [
+ "primitive-types 0.12.1",
+ "tiny-keccak 2.0.2",
 ]
 
 [[package]]
@@ -1239,10 +1369,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "373b1a4c1338d9cd3d1fa53b3a11bdab5ab6bd80a20f7f7becd76953ae2be909"
 dependencies = [
  "arrayvec 0.7.2",
- "bitvec",
+ "bitvec 0.20.4",
  "byte-slice-cast",
  "impl-trait-for-tuples",
- "parity-scale-codec-derive",
+ "parity-scale-codec-derive 2.3.1",
+ "serde",
+]
+
+[[package]]
+name = "parity-scale-codec"
+version = "3.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5ddb756ca205bd108aee3c62c6d3c994e1df84a59b9d6d4a5ea42ee1fd5a9a28"
+dependencies = [
+ "arrayvec 0.7.2",
+ "bitvec 1.0.1",
+ "byte-slice-cast",
+ "impl-trait-for-tuples",
+ "parity-scale-codec-derive 3.1.4",
  "serde",
 ]
 
@@ -1251,6 +1395,18 @@ name = "parity-scale-codec-derive"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1557010476e0595c9b568d16dcfb81b93cdeb157612726f5170d31aa707bed27"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "parity-scale-codec-derive"
+version = "3.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "86b26a931f824dd4eca30b3e43bb4f31cd5f0d3a403c5f5ff27106b805bfde7b"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -1269,7 +1425,7 @@ dependencies = [
  "impl-trait-for-tuples",
  "parity-util-mem-derive",
  "parking_lot",
- "primitive-types",
+ "primitive-types 0.10.1",
  "winapi",
 ]
 
@@ -1364,9 +1520,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "05e4722c697a58a99d5d06a08c30821d7c082a4632198de1eaa5a6c22ef42373"
 dependencies = [
  "fixed-hash 0.7.0",
- "impl-codec",
- "impl-serde",
+ "impl-codec 0.5.1",
+ "impl-serde 0.3.2",
  "scale-info",
+ "uint 0.9.5",
+]
+
+[[package]]
+name = "primitive-types"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9f3486ccba82358b11a77516035647c34ba167dfa53312630de83b12bd4f3d66"
+dependencies = [
+ "fixed-hash 0.8.0",
+ "impl-codec 0.6.0",
+ "impl-rlp",
+ "impl-serde 0.4.0",
  "uint 0.9.5",
 ]
 
@@ -1403,6 +1572,12 @@ name = "radium"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "643f8f41a8ebc4c5dc4515c82bb8abd397b527fc20fd681b7c011c2aee5d44fb"
+
+[[package]]
+name = "radium"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc33ff2d4973d518d823d61aa239014831e521c75da58e3df4840d3f47749d09"
 
 [[package]]
 name = "rand"
@@ -1588,6 +1763,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
 
 [[package]]
+name = "rlp"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bb919243f34364b6bd2fc10ef797edbfa75f33c252e7998527479c6d6b47e1ec"
+dependencies = [
+ "bytes 1.4.0",
+ "rustc-hex 2.1.0",
+]
+
+[[package]]
 name = "rustc-demangle"
 version = "0.1.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1641,10 +1826,10 @@ version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5c55b744399c25532d63a0d2789b109df8d46fc93752d46b0782991a931a782f"
 dependencies = [
- "bitvec",
+ "bitvec 0.20.4",
  "cfg-if",
  "derive_more",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "scale-info-derive",
 ]
 
@@ -1794,7 +1979,7 @@ name = "sharding"
 version = "0.1.0"
 dependencies = [
  "ethcore-bytes",
- "ethereum-types",
+ "ethereum-types 0.3.2",
  "indextree",
  "tiny-keccak 1.5.0",
 ]
@@ -1825,7 +2010,7 @@ name = "sp-application-crypto"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
 dependencies = [
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "scale-info",
  "serde",
  "sp-core",
@@ -1840,7 +2025,7 @@ source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.13#af
 dependencies = [
  "integer-sqrt",
  "num-traits",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "scale-info",
  "serde",
  "sp-debug-derive",
@@ -1863,16 +2048,16 @@ dependencies = [
  "hash-db",
  "hash256-std-hasher",
  "hex",
- "impl-serde",
+ "impl-serde 0.3.2",
  "lazy_static",
  "libsecp256k1",
  "log",
  "merlin",
  "num-traits",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "parity-util-mem",
  "parking_lot",
- "primitive-types",
+ "primitive-types 0.10.1",
  "rand 0.7.3",
  "regex",
  "scale-info",
@@ -1925,7 +2110,7 @@ version = "0.10.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
 dependencies = [
  "environmental",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "sp-std",
  "sp-storage",
 ]
@@ -1939,7 +2124,7 @@ dependencies = [
  "hash-db",
  "libsecp256k1",
  "log",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "parking_lot",
  "sp-core",
  "sp-externalities",
@@ -1963,7 +2148,7 @@ dependencies = [
  "derive_more",
  "futures",
  "merlin",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "parking_lot",
  "schnorrkel",
  "sp-core",
@@ -1989,7 +2174,7 @@ dependencies = [
  "hash256-std-hasher",
  "impl-trait-for-tuples",
  "log",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "parity-util-mem",
  "paste",
  "rand 0.7.3",
@@ -2008,8 +2193,8 @@ version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
 dependencies = [
  "impl-trait-for-tuples",
- "parity-scale-codec",
- "primitive-types",
+ "parity-scale-codec 2.3.1",
+ "primitive-types 0.10.1",
  "sp-externalities",
  "sp-runtime-interface-proc-macro",
  "sp-std",
@@ -2039,7 +2224,7 @@ dependencies = [
  "hash-db",
  "log",
  "num-traits",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "parking_lot",
  "rand 0.7.3",
  "smallvec",
@@ -2064,8 +2249,8 @@ name = "sp-storage"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
 dependencies = [
- "impl-serde",
- "parity-scale-codec",
+ "impl-serde 0.3.2",
+ "parity-scale-codec 2.3.1",
  "ref-cast",
  "serde",
  "sp-debug-derive",
@@ -2077,7 +2262,7 @@ name = "sp-tracing"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
 dependencies = [
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "sp-std",
  "tracing",
  "tracing-core",
@@ -2091,7 +2276,7 @@ source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.13#af
 dependencies = [
  "hash-db",
  "memory-db",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "scale-info",
  "sp-core",
  "sp-std",
@@ -2105,7 +2290,7 @@ version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
 dependencies = [
  "impl-trait-for-tuples",
- "parity-scale-codec",
+ "parity-scale-codec 2.3.1",
  "sp-std",
  "wasmi",
 ]
@@ -2612,6 +2797,15 @@ name = "wyz"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "85e60b0d1b5f99db2556934e21937020776a5d31520bf169e851ac44e6420214"
+
+[[package]]
+name = "wyz"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "05f360fc0b24296329c78fda852a1e9ae82de9cf7b27dae4b7f62f118f77b9ed"
+dependencies = [
+ "tap",
+]
 
 [[package]]
 name = "zeroize"

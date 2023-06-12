@@ -16,6 +16,7 @@ members = [
 	"projects/generics",
 	"projects/guessing_game",
 	"projects/hashing",
+	"projects/hash",
 	"projects/iterators",
 	"projects/languages",
 	"projects/lifetimes",

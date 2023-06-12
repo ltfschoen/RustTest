@@ -105,5 +105,14 @@
       "cwd": "${workspaceRoot}",
       "terminal": "integrated"
     },
+    {
+      "name": "LLDB Debug - Program - Hash",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/target/debug/hash",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "terminal": "integrated"
+    },
   ]
 }
