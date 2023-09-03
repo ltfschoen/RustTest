@@ -5,8 +5,7 @@
 * Execution
 
 ```bash
-cd projects/jsonrpsee_pubsub
-cargo build
+cargo build --manifest-path ./projects/jsonrpsee_pubsub/Cargo.toml
 ./target/debug/jsonrpsee_pubsub
 cargo doc --open
 ```
