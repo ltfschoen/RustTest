@@ -17,4 +17,4 @@ cargo build --manifest-path ./projects/traits_shapes/Cargo.toml
 # cargo build --manifest-path ./projects/unsorted/Cargo.toml
 # cargo build --manifest-path ./projects/users/Cargo.toml
 # cargo build --manifest-path ./projects/endow/Cargo.toml
-cargo build --manifest-path ./projects/jsonrpcsee_pubsub/Cargo.toml
+cargo build --manifest-path ./projects/jsonrpsee_pubsub/Cargo.toml

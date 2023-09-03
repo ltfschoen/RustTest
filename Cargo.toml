@@ -18,7 +18,7 @@ members = [
 	"projects/hashing",
 	"projects/hash",
 	"projects/iterators",
-	"projects/jsonrpcsee_pubsub",
+	"projects/jsonrpsee_pubsub",
 	"projects/languages",
 	"projects/lifetimes",
 	"projects/shapes",

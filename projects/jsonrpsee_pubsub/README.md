@@ -5,8 +5,8 @@
 * Execution
 
 ```bash
-cd projects/jsonrpcsee_pubsub;
-cargo build;
-./target/debug/jsonrpcsee_pubsub;
-cargo doc --open;
+cd projects/jsonrpsee_pubsub
+cargo build
+./target/debug/jsonrpsee_pubsub
+cargo doc --open
 ```
