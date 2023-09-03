@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  rusttest:
+    container_name: ${NAME_MAIN}-dev
+    restart: always
+    build:
+      context: "."
+      dockerfile: ./docker/Dockerfile.dev
+      args:
+        - NAME_MAIN=${NAME_MAIN}
+        - NODE_ENV=${NODE_ENV}
+        - PUBLIC_IP_ADDRESS=${PUBLIC_IP_ADDRESS}
+        - HOST=${HOST}
+      # size when building
+      shm_size: 1gb
+    # size when running
+    shm_size: 1gb
+    volumes:
+      - ./:/apps/${NAME_MAIN}:delegated
+      - ignore:/apps/${NAME_MAIN}/node_modules
+    # https://docs.docker.com/desktop/networking/#i-want-to-connect-from-a-container-to-a-service-on-the-host
+    # use this to avoid connection to 127.0.0.1:3050 being refused
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "3050-3051:3050-3051"
+    env_file:
+      - ./.env
+
+volumes:
+  ignore:

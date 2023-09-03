@@ -1,0 +1,45 @@
+FROM docker.io/library/ubuntu:23.04
+
+ARG HOST=${HOST}
+ARG RUST_NIGHTLY="2023-03-05"
+ARG BRANCH_NAME=master
+ARG REPO_NAME="RustTest"
+ARG REPO_URL="https://github.com/ltfschoen/${REPO_NAME}.git"
+
+ARG PATH_PROJECT=/apps
+ARG PATH_MAIN=/${PATH_PROJECT}/${REPO_NAME}
+
+ENV HOME /root
+WORKDIR ${PATH_MAIN}
+
+ENV RUSTUP_HOME=$HOME/rustup \
+  CARGO_HOME=$HOME/cargo \
+  PATH=$HOME/cargo/bin:$PATH \
+  # error/warn/info/debug/trace
+  RUST_LOG=DEBUG \
+  HOST=${HOST}
+
+RUN set -e && \
+  apt-get -y update --fix-missing && \
+  apt-get -y upgrade && \
+  apt-get install -y build-essential pkg-config && \
+  apt-get install -y git curl wget jq lsof unzip vim && \
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs/ | sh -s -- --default-toolchain nightly -y && \
+  rustup component add rust-src rustfmt clippy && \
+  rustup target add wasm32-unknown-unknown && \
+  rustup toolchain install "nightly-${RUST_NIGHTLY}" --profile minimal --component rustfmt && \
+  rustup default "nightly-${RUST_NIGHTLY}" && \
+  rustup override set "nightly-${RUST_NIGHTLY}" && \
+  # install wasm target into nightly toolchain
+  rustup target add wasm32-unknown-unknown --toolchain "nightly-${RUST_NIGHTLY}" && \
+  . $HOME/cargo/env && \
+  rustc --version && \
+  rustup show && \
+  cd ${PATH_PROJECT} && \
+  git clone ${REPO_URL} && \
+  cd ${REPO_NAME} && \
+  bash ./check_all.sh
+
+EXPOSE 3050-3051
+
+CMD tail -f /dev/null

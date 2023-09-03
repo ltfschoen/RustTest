@@ -7,6 +7,7 @@ README
   * [Progress](#progress)
   * [Glossary](#glossary)
   * [Setup](#setup)
+  * [Setup (using Docker)](#docker-setup)
   * [Learning](#learning)
   * [Debugging](#debugging)
   * [Documentation](#documentation)
@@ -218,6 +219,23 @@ Key Terminology of the Rust language and ecosystem:
     cargo update
     ```
     * [Reference](https://rust-book.cs.brown.edu/ch02-00-guessing-game-tutorial.html#updating-a-crate-to-get-a-new-version)
+
+## Setup (using Docker) <a id="docker-setup"></a>
+
+* Install and run [Docker](https://www.docker.com/)
+* Configure .env files if necessary
+* Run Docker container
+    ```bash
+    time ./docker/docker.sh
+    ```
+* Enter the Docker container. To exit Docker container run CTRL+D
+  ```bash
+  docker exec -it --user=root rusttest-dev /bin/bash
+  ```
+* View logs
+  ```bash
+  docker logs -f rusttest
+  ```
 
 ## Learning <a id="learning"></a>
 

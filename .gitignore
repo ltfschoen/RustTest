@@ -11,3 +11,5 @@
 /target/
 /projects/*/target/
 main
+
+.env
