@@ -230,11 +230,11 @@ Key Terminology of the Rust language and ecosystem:
     ```
 * Enter the Docker container. To exit Docker container run CTRL+D
   ```bash
-  docker exec -it --user=root rusttest-dev /bin/bash
+  docker exec -it --user=root RustTest-dev /bin/bash
   ```
 * View logs
   ```bash
-  docker logs -f rusttest
+  docker logs -f RustTest-dev
   ```
 
 ## Learning <a id="learning"></a>

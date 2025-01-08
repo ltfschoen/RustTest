@@ -97,9 +97,9 @@ if [ "$NODE_ENV" != "development" ]; then
   kill "$PPID"; exit 1;
 fi
 
-NAME_MAIN_FALLBACK=rusttest
+NAME_MAIN_FALLBACK=RustTest
 
-export NAME_MAIN=$(jq '.name' $PWD/package.json | sed 's/\"//g' | sed 's/.*\///g')
+# export NAME_MAIN=$(jq '.name' $PWD/package.json | sed 's/\"//g' | sed 's/.*\///g')
 
 export PUBLIC_IP_ADDRESS NODE_ENV HOST
 
