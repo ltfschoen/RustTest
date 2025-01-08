@@ -9,6 +9,7 @@ cargo build --manifest-path ./projects/iterators/Cargo.toml
 cargo build --manifest-path ./projects/languages/Cargo.toml
 cargo build --manifest-path ./projects/lifetimes/Cargo.toml
 # cargo build --manifest-path ./projects/privacy/Cargo.toml
+cargo build --manifest-path ./projects/ptop/Cargo.toml
 cargo build --manifest-path ./projects/shapes/Cargo.toml
 cargo build --manifest-path ./projects/sharding/Cargo.toml
 cargo build --manifest-path ./projects/traits/Cargo.toml

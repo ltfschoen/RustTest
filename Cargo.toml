@@ -21,6 +21,7 @@ members = [
 	"projects/jsonrpsee_pubsub",
 	"projects/languages",
 	"projects/lifetimes",
+	"projects/ptop",
 	"projects/shapes",
 	"projects/sharding",
 	"projects/traits",
